@@ -1,2 +1,1 @@
-# NRSC
-Non-Referencial Sequence Classification Tool for DNA sequences in metagenomic samples
+<p align="center"> <img src="Logo.png"> </p>
