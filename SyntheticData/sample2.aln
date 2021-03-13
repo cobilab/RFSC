@@ -1,5 +1,5 @@
 ##ART_Illumina	read_length	150
-@CM	art_illumina -rs 0 -ss HS25 -sam -i SyntheticGenerator/Inputs/mix1.fa -p -l 150 -f 40 -m 200 -s 10 -o SyntheticData/sample 
+@CM	art_illumina -rs 0 -ss HS25 -sam -i SyntheticGenerator/Inputs/mix4.fa -p -l 150 -f 40 -m 200 -s 10 -o SyntheticData/sample 
 @SQ	MT682520.1 Human parvovirus B19 isolate AA-11, partial genome	5596
 @SQ	NC_043528.1 Capuchin monkey hepatitis B virus isolate M12, complete genome	3182
 @SQ	MT228741.1 Human betaherpesvirus 5 strain Han22947 membrane glycoprotein UL16 (UL16) and UL17 (UL17) genes, complete cds	1457
