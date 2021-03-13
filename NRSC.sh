@@ -22,8 +22,12 @@ REF_FILE4="";
 LAST_MIX=0;
 #
 CRYFA_FLAG=0;
-TRIMMOMATIC_FLAG=0;
-FASTP_FLAG=0;
+#
+TRIMMING_FLAG=0;
+TRIMMING_TYPE="";
+TRIMMING_THREADS=0;
+#
+ASSEMBLY_FLAG=0;
 FALCON_FLAG=0;
 BLASTN_FLAG=0;
 #
@@ -39,6 +43,39 @@ GENERATE_SYNTHETIC () {
 	./SyntheticGenerator/mixRefs.sh "$REF_FILE1" "$REF_FILE2" "$REF_FILE3";
 	LAST_MIX=$( ls SyntheticGenerator/Inputs/ | wc -l )
 	./SyntheticGenerator/syntheticGen.sh SyntheticGenerator/Inputs/"mix${LAST_MIX}.fa";
+}
+#
+# ==================================================================
+# TRIMMING/FILTERING SEQUENCES
+#
+TRIMMING_SEQUENCE() {
+	if [[ $TRIMMING_TYPE == "TT" ]]; then
+		echo "Trimming with Trimmomatic"
+		trimmomatic PE -threads 8 -phred33 SyntheticData/sample1.fq.gz SyntheticData/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
+	elif [[ $TRIMMING_TYPE == "FP" ]]; then
+		echo "Trimming with FASTP"
+		fastp -i SyntheticData/sample1.fq.gz -I SyntheticData/sample2.fq.gz -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
+		mv fastp.html Outputs/
+		mv fastp.json Outputs/
+	else
+		echo "Invalid Argument - $TRIMMING_TYPE!";
+		echo "Use one of the follow:";
+		echo "TT : To use the Trimmomatic Tool";
+		echo "FP : To use the FASTP Tool";
+		exit 0;
+	fi
+}
+#
+# ==================================================================
+# DE-NOVO ASSEMBLY
+#
+SPADES_ASSEMBLY() {
+	if [[ $TRIMMING_TYPE == "TT" ]]; then
+		spades.py -t 16 --careful -o GeneratedFiles/out_spades_$1 -1 GeneratedFiles/o_fw_pr.fq -2 GeneratedFiles/o_rv_pr.fq -s GeneratedFiles/o_fw_unpr.fq -s GeneratedFiles/o_rv_unpr.fq
+	else
+		spades.py -t 16 --careful -o GeneratedFiles/out_spades_$1 -1 GeneratedFiles/out1.fq.gz -2 GeneratedFiles/out2.fq.gz 
+	fi
+
 }
 #
 # ==================================================================
@@ -68,6 +105,16 @@ while [[ $# -gt 0 ]]
 			REF_FILE2="$3";
 			REF_FILE3="$4";
 			shift 4
+		;;
+		-trim|--filter)
+			TRIMMING_FLAG=1;
+			TRIMMING_TYPE="$2";
+			TRIMMING_THREADS="$3";
+			shift 3
+		;;
+		-rda|--run-de-novo)
+			ASSEMBLY_FLAG=1;
+			shift
 		;;
 		-*) # Unknown option
 		echo "Invalid arg ($1)!";
@@ -104,6 +151,14 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -synt, --synthetic [FILE1] : [FILE3]                  "
 	echo "                  Generate a synthetical sequence using  "
 	echo "                  3 reference files for testing purposes "
+	echo "                                                         "
+	echo "   -trim, --filter <MODE> <THREADS>                      "
+	echo "                  Filter Reads using Trimmomatic (TT)    "
+	echo "                  or using FASTP (FP)                    "
+	echo "                                                         "
+	echo "   -rda, --run-de-novo                                   "
+	echo "                  De-Novo Sequence Assembly              "
+	echo "                                                         "
 	exit 1;
 fi
 #
@@ -131,4 +186,16 @@ if [[ "$GEN_SYNTHETIC" -eq "1" ]]; then
 fi
 #
 # ===================================================================
+#
+if [[ "$TRIMMING_FLAG" -eq "1" ]]; then
+	echo "Start Trimming the Sequence!"
+	TRIMMING_SEQUENCE "$TRIMMING_TYPE" "$TRIMMING_THREADS";
+fi
+#
+# ===================================================================
+#
+if [[ "$ASSEMBLY_FLAG" -eq "1" ]]; then
+	echo "Start De-Novo Assembly!"
+	SPADES_ASSEMBLY;
+fi
 #
