@@ -1,4 +1,7 @@
 .DS_Store
 
+# FASTP Analyse docs
+Outputs/fastp.*
+
 # metaSPAdes Generated files
 GeneratedFiles/out_spades_
