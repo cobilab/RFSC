@@ -51,7 +51,9 @@ GENERATE_SYNTHETIC () {
 TRIMMING_SEQUENCE() {
 	if [[ $TRIMMING_TYPE == "TT" ]]; then
 		echo "Trimming with Trimmomatic"
-		trimmomatic PE -threads 8 -phred33 SyntheticData/sample1.fq.gz SyntheticData/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
+		TRIMMING_THREADS=`cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l`;
+		echo "Using $TRIMMING_THREADS available Threads!"
+		trimmomatic PE -threads $TRIMMING_THREADS -phred33 SyntheticData/sample1.fq.gz SyntheticData/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
 	elif [[ $TRIMMING_TYPE == "FP" ]]; then
 		echo "Trimming with FASTP"
 		fastp -i SyntheticData/sample1.fq.gz -I SyntheticData/sample2.fq.gz -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
@@ -109,8 +111,7 @@ while [[ $# -gt 0 ]]
 		-trim|--filter)
 			TRIMMING_FLAG=1;
 			TRIMMING_TYPE="$2";
-			TRIMMING_THREADS="$3";
-			shift 3
+			shift 2
 		;;
 		-rda|--run-de-novo)
 			ASSEMBLY_FLAG=1;
@@ -152,7 +153,7 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                  Generate a synthetical sequence using  "
 	echo "                  3 reference files for testing purposes "
 	echo "                                                         "
-	echo "   -trim, --filter <MODE> <THREADS>                      "
+	echo "   -trim, --filter <MODE>                                "
 	echo "                  Filter Reads using Trimmomatic (TT)    "
 	echo "                  or using FASTP (FP)                    "
 	echo "                                                         "
@@ -189,7 +190,7 @@ fi
 #
 if [[ "$TRIMMING_FLAG" -eq "1" ]]; then
 	echo "Start Trimming the Sequence!"
-	TRIMMING_SEQUENCE "$TRIMMING_TYPE" "$TRIMMING_THREADS";
+	TRIMMING_SEQUENCE "$TRIMMING_TYPE";
 fi
 #
 # ===================================================================
