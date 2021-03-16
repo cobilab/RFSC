@@ -5,3 +5,9 @@ Outputs/fastp.*
 
 # metaSPAdes Generated files
 GeneratedFiles/out_spades_
+
+# Test Scripts
+run.sh
+
+# NCBI Databases
+# References/NCBI-Virus/*
