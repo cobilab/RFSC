@@ -11,3 +11,6 @@ run.sh
 
 # NCBI Databases
 # References/NCBI-Virus/*
+
+# Cleaner of Generated Files
+clean.sh
