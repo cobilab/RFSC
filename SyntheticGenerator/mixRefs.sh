@@ -33,7 +33,7 @@ fi
 NUM_FILES=$( ls SyntheticGenerator/Inputs/ | wc -l )
 NUM_FILES=$((NUM_FILES+1))
 
-cat $1 $2 $3 $4 $5 $6 $7 $8 $9 > "SyntheticGenerator/Inputs/mix${NUM_FILES}.fa"
+zcat $1 $2 $3 $4 $5 $6 $7 $8 $9 > "SyntheticGenerator/Inputs/mix${NUM_FILES}.fa"
 echo "Success! File mix${NUM_FILES}.fa has been created."
 
 #echo "${NUM_FILES}"
