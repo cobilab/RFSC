@@ -34,7 +34,7 @@ else
 fi
 
 # CLEAR OLD GENERATED FILES
-rm SyntheticData/*
+rm SyntheticData/sample*
 #rm -rf SyntheticOutputs/out_spades_
 
 # GENERATE RANDOM DNA GENOME
