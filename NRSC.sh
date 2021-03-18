@@ -28,7 +28,9 @@ TRIMMING_TYPE="";
 TRIMMING_THREADS=0;
 #
 ASSEMBLY_FLAG=0;
+#
 FALCON_FLAG=0;
+FALCON_MODE="";
 BLASTN_FLAG=0;
 #
 # ==================================================================
@@ -81,6 +83,24 @@ SPADES_ASSEMBLY() {
 }
 #
 # ==================================================================
+#
+FALCON_ANALYSIS() {
+	if [[ $FALCON_MODE == "SO" ]]; then
+		FALCON -n 8 -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
+		echo "Outputs/falcon_SO_results.txt file was generated successfully!"
+	elif [[ $FALCON_MODE == "RM" ]]; then
+		echo "NOT IMPLEMENTED YET!!"
+	else
+		echo "Invalid Argument - $FALCON_MODE!";
+                echo "Use one of the follow:";
+                echo "SO : To analyse only the scaffold";
+		echo "RM : To use redundancy in the analyse (Run each Read)";
+                exit 0;
+        fi
+
+}
+#
+# ==================================================================
 # OPTIONS
 #
 if [ "$#" -eq 0 ]; then
@@ -117,9 +137,14 @@ while [[ $# -gt 0 ]]
 			ASSEMBLY_FLAG=1;
 			shift
 		;;
+		-rfa|--run-falcon)
+			FALCON_FLAG=1;
+			FALCON_MODE="$2";
+			shift 2
+		;;
 		-*) # Unknown option
 		echo "Invalid arg ($1)!";
-		echo "For help, try: bash NRSC.sh -h"
+		echo "For help, try: ./NRSC.sh -h"
 		exit 1;
 		;;
 	esac
@@ -160,6 +185,11 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -rda, --run-de-novo                                   "
 	echo "                  De-Novo Sequence Assembly              "
 	echo "                                                         "
+	echo "   -rfa, --run-falcon <MODE>                             "
+	echo "                  Run Data Analysis with FALCON using    "
+	echo "                  only the scaffolds (SO) or analysing by"
+	echo "                  each Read as well (RM)                 "
+	echo "                                                         "
 	exit 1;
 fi
 #
@@ -198,5 +228,13 @@ fi
 if [[ "$ASSEMBLY_FLAG" -eq "1" ]]; then
 	echo "Start De-Novo Assembly!"
 	SPADES_ASSEMBLY;
+fi
+#
+#
+# ===================================================================
+#
+if [[ "$FALCON_FLAG" -eq "1" ]]; then
+	echo "Starting Data Analysis!"
+	FALCON_ANALYSIS "$FALCON_MODE";
 fi
 #
