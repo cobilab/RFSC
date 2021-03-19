@@ -89,7 +89,28 @@ FALCON_ANALYSIS() {
 		FALCON -n 8 -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
 		echo "Outputs/falcon_SO_results.txt file was generated successfully!"
 	elif [[ $FALCON_MODE == "RM" ]]; then
-		echo "NOT IMPLEMENTED YET!!"
+		# Create the output based on Scaffolds as in SO Mode
+		FALCON -n 8 -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
+		echo "Start Breaking File into Reads"
+		mkdir GeneratedFiles/out_spades_/Reads
+		awk '/>/{filename="GeneratedFiles/out_spades_/Reads/"NR".fasta"}; {print >filename}' GeneratedFiles/out_spades_/scaffolds.fasta
+		# 
+		reads=0
+		while read line # Get all the Read Files Names
+		do
+        		array[ $reads ]="$line"
+        		(( reads++ ))
+		done < <(ls -ls GeneratedFiles/out_spades_/Reads)
+		#
+		mkdir Outputs/FalconReads
+		len=${#array[@]}
+		for (( i=0; i<$len; i++ ));
+			do
+				R=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
+				echo "Analysing Read $R"
+				FALCON -n 8 -v -F -x Outputs/FalconReads/falcon_RM_"${i}"_results.txt GeneratedFiles/out_spades_/Reads/$R References/NCBI-Virus/VDB.fa
+			done
+
 	else
 		echo "Invalid Argument - $FALCON_MODE!";
                 echo "Use one of the follow:";
@@ -229,7 +250,6 @@ if [[ "$ASSEMBLY_FLAG" -eq "1" ]]; then
 	echo "Start De-Novo Assembly!"
 	SPADES_ASSEMBLY;
 fi
-#
 #
 # ===================================================================
 #
