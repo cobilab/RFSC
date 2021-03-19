@@ -55,7 +55,13 @@ TRIMMING_SEQUENCE() {
 		echo "Trimming with Trimmomatic"
 		TRIMMING_THREADS=`cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l`;
 		echo "Using $TRIMMING_THREADS available Threads!"
+		#
+		cp SyntheticData/adapters.fa adapters.fa
+		#
 		trimmomatic PE -threads $TRIMMING_THREADS -phred33 SyntheticData/sample1.fq.gz SyntheticData/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
+		#
+		rm adapters.fa
+		#
 	elif [[ $TRIMMING_TYPE == "FP" ]]; then
 		echo "Trimming with FASTP"
 		fastp -i SyntheticData/sample1.fq.gz -I SyntheticData/sample2.fq.gz -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
@@ -84,33 +90,57 @@ SPADES_ASSEMBLY() {
 #
 # ==================================================================
 #
+FALCON_SO_MODE(){
+	FALCON -n 8 -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
+        echo "Outputs/falcon_SO_results.txt file was successfully been generated!"
+	#
+	readarray -t results <Outputs/falcon_SO_results.txt
+	#
+	NUM_RES=${#results[@]}
+	for (( i=0; i<$NUM_RES; i++ ));
+		do
+			VIRUS=`echo "${results[i]}"|awk 'NF>1{print $NF}'`
+			PER=`echo "${results[i]}"|awk '{print $3}'`
+			BOOL=`echo "$PER > 70.000" | bc`
+			#
+			if [[ $BOOL -eq "1" ]]; then
+        			printf "$VIRUS\n" >> Results/ref_result.txt
+			fi
+		done
+}
+#
+# ==================================================================
+#
+FALCON_RM_MODE(){
+	echo "Start Breaking File into Reads"
+        mkdir GeneratedFiles/out_spades_/Reads
+        awk '/>/{filename="GeneratedFiles/out_spades_/Reads/"NR".fasta"}; {print >filename}' GeneratedFiles/out_spades_/scaffolds.fasta
+        # 
+        reads=0
+        while read line # Get all the Read Files Names
+        do
+        	array[ $reads ]="$line"
+                (( reads++ ))
+        done < <(ls -ls GeneratedFiles/out_spades_/Reads)
+        #
+        mkdir Outputs/FalconReads
+        len=${#array[@]}
+        for (( i=0; i<$len; i++ ));
+        	do
+                	R=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
+                        echo "Analysing Read $R"
+                        FALCON -n 8 -v -F -x Outputs/FalconReads/falcon_RM_"${i}"_results.txt GeneratedFiles/out_spades_/Reads/$R References/NCBI-Virus/VDB.fa
+                done
+}
+#
+# ==================================================================
+#
 FALCON_ANALYSIS() {
 	if [[ $FALCON_MODE == "SO" ]]; then
-		FALCON -n 8 -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
-		echo "Outputs/falcon_SO_results.txt file was generated successfully!"
+		FALCON_SO_MODE;
 	elif [[ $FALCON_MODE == "RM" ]]; then
-		# Create the output based on Scaffolds as in SO Mode
-		FALCON -n 8 -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
-		echo "Start Breaking File into Reads"
-		mkdir GeneratedFiles/out_spades_/Reads
-		awk '/>/{filename="GeneratedFiles/out_spades_/Reads/"NR".fasta"}; {print >filename}' GeneratedFiles/out_spades_/scaffolds.fasta
-		# 
-		reads=0
-		while read line # Get all the Read Files Names
-		do
-        		array[ $reads ]="$line"
-        		(( reads++ ))
-		done < <(ls -ls GeneratedFiles/out_spades_/Reads)
-		#
-		mkdir Outputs/FalconReads
-		len=${#array[@]}
-		for (( i=0; i<$len; i++ ));
-			do
-				R=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
-				echo "Analysing Read $R"
-				FALCON -n 8 -v -F -x Outputs/FalconReads/falcon_RM_"${i}"_results.txt GeneratedFiles/out_spades_/Reads/$R References/NCBI-Virus/VDB.fa
-			done
-
+		FALCON_SO_MODE;
+		FALCON_RM_MODE;
 	else
 		echo "Invalid Argument - $FALCON_MODE!";
                 echo "Use one of the follow:";
