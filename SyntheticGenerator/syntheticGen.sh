@@ -11,18 +11,18 @@
 # ============================================================== #
 #
 # ART ILLUMINA VALUES
-RAND_SEED=0;				# -rs
-SEQ_SYSTEM="HS25";			# -ss
-ART_INPUT=$1;				# -i
-ART_LEN=150;				# -l
-ART_FOLD=40;				# -f
-ART_SIZE=200;				# -m
-ART_DSV=10;				# -s
+RAND_SEED=0;						# -rs
+SEQ_SYSTEM="HS25";					# -ss
+ART_INPUT=$1;						# -i
+ART_LEN=150;						# -l
+ART_FOLD=40;						# -f
+ART_SIZE=200;						# -m
+ART_DSV=10;							# -s
 ART_OUTPUT="SyntheticData/sample";	# -o
 
 # GTO GENERATOR VALUES
-GTO_NUM_SYMBOLS=5000;			# -n
-GTO_LINE_SIZE=70;			# -l
+GTO_NUM_SYMBOLS=5000;				# -n
+GTO_LINE_SIZE=70;					# -l
 
 
 if [ -n "$ART_INPUT" ]; then
