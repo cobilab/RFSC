@@ -58,13 +58,25 @@ TRIMMING_SEQUENCE() {
 		#
 		cp SyntheticData/adapters.fa adapters.fa
 		#
-		trimmomatic PE -threads $TRIMMING_THREADS -phred33 SyntheticData/sample1.fq.gz SyntheticData/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
-		#
+		# Running with synthetic data
+		if [[ $GEN_SYNTHETIC == "1" ]]; then
+			trimmomatic PE -threads $TRIMMING_THREADS -phred33 SyntheticData/sample1.fq.gz SyntheticData/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
+		# Running with real data
+		else
+			echo "Read Data Mode Activated";
+		fi
 		rm adapters.fa
 		#
 	elif [[ $TRIMMING_TYPE == "FP" ]]; then
 		echo "Trimming with FASTP"
-		fastp -i SyntheticData/sample1.fq.gz -I SyntheticData/sample2.fq.gz -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
+		#
+		# Running with synthetic data
+		if [[ $GEN_SYNTHETIC == "1" ]]; then
+			fastp -i SyntheticData/sample1.fq.gz -I SyntheticData/sample2.fq.gz -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
+		# Running with real data
+		else
+			echo "Read Data Mode Activated";
+		fi
 		mv fastp.html Outputs/
 		mv fastp.json Outputs/
 	else
@@ -89,6 +101,7 @@ SPADES_ASSEMBLY() {
 }
 #
 # ==================================================================
+# FALCON ANALYSIS - SCAFFOLDS
 #
 FALCON_SO_MODE(){
 	FALCON -n 8 -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
@@ -110,6 +123,7 @@ FALCON_SO_MODE(){
 }
 #
 # ==================================================================
+# FALCON ANALYSIS - EACH READS
 #
 FALCON_RM_MODE(){
 	echo "Start Breaking File into Reads"
@@ -134,6 +148,7 @@ FALCON_RM_MODE(){
 }
 #
 # ==================================================================
+# FALCON ANALYSIS
 #
 FALCON_ANALYSIS() {
 	if [[ $FALCON_MODE == "SO" ]]; then
