@@ -4,7 +4,7 @@
 # ================================================================= #
 # =                                                               = #
 # =                            N R S C                            = #
-# =								  = #
+# =								  								  = #
 # =         A Non-Referencial Sequence Classification Tool        = # 
 # =            for DNA sequences in metagenomic samples.          = #
 # =                                                               = #
@@ -13,6 +13,8 @@
 #
 SHOW_HELP=0;
 SHOW_VERSION=0;
+#
+THREADS_AVAILABLE=`cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l`;
 #
 GEN_SYNTHETIC=0;
 REF_FILE1="";
@@ -53,7 +55,7 @@ GENERATE_SYNTHETIC () {
 TRIMMING_SEQUENCE() {
 	if [[ $TRIMMING_TYPE == "TT" ]]; then
 		echo "Trimming with Trimmomatic"
-		TRIMMING_THREADS=`cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l`;
+		TRIMMING_THREADS=$THREADS_AVAILABLE;
 		echo "Using $TRIMMING_THREADS available Threads!"
 		#
 		cp SyntheticData/adapters.fa adapters.fa
@@ -63,7 +65,7 @@ TRIMMING_SEQUENCE() {
 			trimmomatic PE -threads $TRIMMING_THREADS -phred33 SyntheticData/sample1.fq.gz SyntheticData/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
 		# Running with real data
 		else
-			echo "Read Data Mode Activated";
+			echo "Real Data Mode Activated";
 		fi
 		rm adapters.fa
 		#
@@ -75,7 +77,7 @@ TRIMMING_SEQUENCE() {
 			fastp -i SyntheticData/sample1.fq.gz -I SyntheticData/sample2.fq.gz -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
 		# Running with real data
 		else
-			echo "Read Data Mode Activated";
+			echo "Real Data Mode Activated";
 		fi
 		mv fastp.html Outputs/
 		mv fastp.json Outputs/
@@ -104,7 +106,7 @@ SPADES_ASSEMBLY() {
 # FALCON ANALYSIS - SCAFFOLDS
 #
 FALCON_SO_MODE(){
-	FALCON -n 8 -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
+	FALCON -n $THREADS_AVAILABLE -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
         echo "Outputs/falcon_SO_results.txt file was successfully been generated!"
 	#
 	readarray -t results <Outputs/falcon_SO_results.txt
@@ -139,12 +141,21 @@ FALCON_RM_MODE(){
         #
         mkdir Outputs/FalconReads
         len=${#array[@]}
-        for (( i=0; i<$len; i++ ));
-        	do
-                	R=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
-                        echo "Analysing Read $R"
-                        FALCON -n 8 -v -F -x Outputs/FalconReads/falcon_RM_"${i}"_results.txt GeneratedFiles/out_spades_/Reads/$R References/NCBI-Virus/VDB.fa
-                done
+        i=0
+		while [[ $i != $len ]]
+		do
+			if [[ $(( ($len - $i) % 2)) == 0 ]]; then
+				R1=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
+				R2=`echo "${array[i+1]}"|awk 'NF>1{print $NF}'`
+				echo "Analysing Read $R1 & $R2 with $(($THREADS_AVAILABLE/2)) threads each!"
+				FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Reads/$R1 References/NCBI-Virus/VDB.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Reads/$R2 References/NCBI-Virus/VDB.fa
+				(( i+=2 ))
+			else
+				R=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
+				FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconReads/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Reads/$R References/NCBI-Virus/VDB.fa
+				(( i++ ))
+			fi 
+		done
 }
 #
 # ==================================================================
@@ -158,11 +169,11 @@ FALCON_ANALYSIS() {
 		FALCON_RM_MODE;
 	else
 		echo "Invalid Argument - $FALCON_MODE!";
-                echo "Use one of the follow:";
-                echo "SO : To analyse only the scaffold";
+		echo "Use one of the follow:";
+		echo "SO : To analyse only the scaffold";
 		echo "RM : To use redundancy in the analyse (Run each Read)";
-                exit 0;
-        fi
+		exit 0;
+	fi
 
 }
 #
