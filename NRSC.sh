@@ -48,9 +48,9 @@ declare -a VIRUSES=("B19" "HBV");
 # GENERATE SYNTHETIC SEQUENCE
 #
 GENERATE_SYNTHETIC () { 
-	./SyntheticGenerator/mixRefs.sh "$REF_FILE1" "$REF_FILE2" "$REF_FILE3";
-	LAST_MIX=$( ls SyntheticGenerator/Inputs/ | wc -l )
-	./SyntheticGenerator/syntheticGen.sh SyntheticGenerator/Inputs/"mix${LAST_MIX}.fa";
+	./src/SyntheticGenerator/mixRefs.sh "$REF_FILE1" "$REF_FILE2" "$REF_FILE3";
+	LAST_MIX=$( ls src/SyntheticGenerator/Inputs/ | wc -l )
+	./src/SyntheticGenerator/syntheticGen.sh src/SyntheticGenerator/Inputs/"mix${LAST_MIX}.fa";
 }
 #
 # ==================================================================
