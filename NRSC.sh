@@ -273,21 +273,22 @@ set -- "${POSITIONAL[@]}" # Restore positional parameters
 if [ "$SHOW_HELP" -eq "1" ]; then
 
 	echo "                                                                             "
-	echo "                        _   _ ___   ____   ____                              "
-	echo "                       | \ | |  _ \/ ___| / ___|                             "
-	echo "                       |  \| | |_) \___ \| |                                 "
-	echo "                       | |\  |  _ < ___) | |___                              "
-	echo "                       |_| \_|_| \_\____/ \____|                             "
+	echo -e " \033[0;36m                       _   _ ___   ____   ____                             \033[0m "
+	echo -e " \033[0;36m                      | \ | |  _ \/ ___| / ___|                            \033[0m "
+	echo -e " \033[0;36m                      |  \| | |_) \___ \| |                                \033[0m "
+	echo -e " \033[0;36m                      | |\  |  _ < ___) | |___                             \033[0m "
+	echo -e " \033[0;36m                      |_| \_|_| \_\____/ \____|                            \033[0m "
 	echo "                                                                             "
-	echo "                            P I P E L I N E                                  "
+	echo -e " \033[1;34m                           P I P E L I N E                                 \033[0m "
 	echo "                                                                             "
-	echo "             A Non-Referencial Sequence Classification Tool                  "
-	echo "               for DNA sequences in metagenomic samples.                     "
+	echo -e " \033[3;34m            A Non-Referencial Sequence Classification Tool                 \033[0m "
+	echo -e " \033[3;34m              for DNA sequences in metagenomic samples.                    \033[0m "
 	echo "                                                                             "
 	echo "                       Usage: ./NRSC.sh [options]                            "
 	echo "                                                                             "
 	echo "   -h,  --help            Show this help message and exit                    "
 	echo "   -v,  --version         Show the version and some information              "
+	echo "   -i,  --install         Installation of all the needed tools               "
 	echo "                                                                             "
 	echo "   -synt, --synthetic [FILE1] : [FILE3]                                      "
 	echo "                          Generate a synthetical sequence using 3            "
@@ -308,6 +309,7 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -enc, --encrypt        Encrypt all files in /Data_Security/Encrypted_data "
 	echo "                                                                             "
 	echo "   -all, --run-all        Run all the options (considering real data)        "
+	echo "                                                                             "
 	exit 1;
 fi
 #
@@ -331,8 +333,7 @@ fi
 # INSTALLATIONS
 #
 if [ "$INSTALL" -eq "1" ]; then
-	
-	echo "Start Installation!"
+	./src/install.sh
 fi	
 #
 # ===================================================================
