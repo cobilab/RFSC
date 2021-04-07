@@ -4,7 +4,7 @@
 # ================================================================= #
 # =                                                               = #
 # =                            N R S C                            = #
-# =								  								  = #
+# =                                                               = #
 # =         A Non-Referencial Sequence Classification Tool        = # 
 # =            for DNA sequences in metagenomic samples.          = #
 # =                                                               = #
@@ -13,6 +13,7 @@
 #
 SHOW_HELP=0;
 SHOW_VERSION=0;
+INSTALL=0;
 #
 THREADS_AVAILABLE=`cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l`;
 #
@@ -34,6 +35,9 @@ ASSEMBLY_FLAG=0;
 FALCON_FLAG=0;
 FALCON_MODE="";
 BLASTN_FLAG=0;
+#
+RUN_DECRYPT=0;
+RUN_ENCRYPT=0;
 #
 # ==================================================================
 # CURRENT VIRUSES OR VIRUSES GROUPS ACCEPTED TO BE SEARCHED
@@ -58,11 +62,11 @@ TRIMMING_SEQUENCE() {
 		TRIMMING_THREADS=$THREADS_AVAILABLE;
 		echo "Using $TRIMMING_THREADS available Threads!"
 		#
-		cp SyntheticData/adapters.fa adapters.fa
+		cp Input_Data/adapters.fa adapters.fa
 		#
 		# Running with synthetic data
 		if [[ $GEN_SYNTHETIC == "1" ]]; then
-			trimmomatic PE -threads $TRIMMING_THREADS -phred33 SyntheticData/sample1.fq.gz SyntheticData/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
+			trimmomatic PE -threads $TRIMMING_THREADS -phred33 Input_Data/sample1.fq.gz Input_Data/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
 		# Running with real data
 		else
 			echo "Real Data Mode Activated";
@@ -74,7 +78,7 @@ TRIMMING_SEQUENCE() {
 		#
 		# Running with synthetic data
 		if [[ $GEN_SYNTHETIC == "1" ]]; then
-			fastp -i SyntheticData/sample1.fq.gz -I SyntheticData/sample2.fq.gz -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
+			fastp -i Input_Data/sample1.fq.gz -I Input_Data/sample2.fq.gz -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
 		# Running with real data
 		else
 			echo "Real Data Mode Activated";
@@ -113,15 +117,15 @@ FALCON_SO_MODE(){
 	#
 	NUM_RES=${#results[@]}
 	for (( i=0; i<$NUM_RES; i++ ));
-		do
-			VIRUS=`echo "${results[i]}"|awk 'NF>1{print $NF}'`
-			PER=`echo "${results[i]}"|awk '{print $3}'`
-			BOOL=`echo "$PER > 70.000" | bc`
-			#
-			if [[ $BOOL -eq "1" ]]; then
-        			printf "$VIRUS\n" >> Results/ref_result.txt
-			fi
-		done
+	do
+		VIRUS=`echo "${results[i]}"|awk 'NF>1{print $NF}'`
+		PER=`echo "${results[i]}"|awk '{print $3}'`
+		BOOL=`echo "$PER > 70.000" | bc`
+		#
+		if [[ $BOOL -eq "1" ]]; then
+				printf "$VIRUS\n" >> Results/ref_result.txt
+		fi
+	done
 }
 #
 # ==================================================================
@@ -178,6 +182,20 @@ FALCON_ANALYSIS() {
 }
 #
 # ==================================================================
+# ENCRYPTION
+#
+ENCRYPT_DATA() {
+	echo "Implement Encryption!"
+}
+#
+# ==================================================================
+# DECRYPTION
+#
+DECRYPT_DATA() {
+	echo "Implement Decryption!"
+}
+#
+# ==================================================================
 # OPTIONS
 #
 if [ "$#" -eq 0 ]; then
@@ -187,7 +205,7 @@ fi
 POSITIONAL=();
 #
 while [[ $# -gt 0 ]]
-	do
+do
 	i="$1";
 	case $i in
 		-h|--help|?)
@@ -196,6 +214,10 @@ while [[ $# -gt 0 ]]
 		;;
 		-v|-V|--version)
 			SHOW_VERSION=1;
+			shift
+		;;
+		-i|--install)
+			INSTALL=1;
 			shift
 		;;
 		-synt|--synthetic)
@@ -219,6 +241,22 @@ while [[ $# -gt 0 ]]
 			FALCON_MODE="$2";
 			shift 2
 		;;
+		-enc|--encrypt)
+			RUN_ENCRYPT=1;
+			shift
+		;;
+		-dec|--decrypt)
+			RUN_DECRYPT=1;
+			shift
+		;;
+		-all|--run-all)
+			TRIMMING_FLAG=1;
+			TRIMMING_TYPE="TT";
+			ASSEMBLY_FLAG=1;
+			FALCON_FLAG=1;
+			FALCON_MODE="SO";
+			shift
+		;;
 		-*) # Unknown option
 		echo "Invalid arg ($1)!";
 		echo "For help, try: ./NRSC.sh -h"
@@ -234,39 +272,42 @@ set -- "${POSITIONAL[@]}" # Restore positional parameters
 #
 if [ "$SHOW_HELP" -eq "1" ]; then
 
-	echo "                                                         "
-	echo "                 _   _ ___   ____   ____                 "
-	echo "                | \ | |  _ \/ ___| / ___|                "
-	echo "                |  \| | |_) \___ \| |                    "
-	echo "                | |\  |  _ < ___) | |___                 "
-	echo "                |_| \_|_| \_\____/ \____|                "
-	echo "                                                         "
-	echo "                     P I P E L I N E                     "
-	echo "                                                         "
-	echo "      A Non-Referencial Sequence Classification Tool     "
-	echo "        for DNA sequences in metagenomic samples.        "
-	echo "                                                         "
-	echo "                Usage: ./NRSC.sh [options]               "
-	echo "                                                         "
-	echo "   -h,  --help	Show this help message and exit,       "
-	echo "   -v,  --version Show the version and some information  "
-	echo "                                                         "
-	echo "   -synt, --synthetic [FILE1] : [FILE3]                  "
-	echo "                  Generate a synthetical sequence using  "
-	echo "                  3 reference files for testing purposes "
-	echo "                                                         "
-	echo "   -trim, --filter <MODE>                                "
-	echo "                  Filter Reads using Trimmomatic (TT)    "
-	echo "                  or using FASTP (FP)                    "
-	echo "                                                         "
-	echo "   -rda, --run-de-novo                                   "
-	echo "                  De-Novo Sequence Assembly              "
-	echo "                                                         "
-	echo "   -rfa, --run-falcon <MODE>                             "
-	echo "                  Run Data Analysis with FALCON using    "
-	echo "                  only the scaffolds (SO) or analysing by"
-	echo "                  each Read as well (RM)                 "
-	echo "                                                         "
+	echo "                                                                           "
+	echo "                        _   _ ___   ____   ____                            "
+	echo "                       | \ | |  _ \/ ___| / ___|                           "
+	echo "                       |  \| | |_) \___ \| |                               "
+	echo "                       | |\  |  _ < ___) | |___                            "
+	echo "                       |_| \_|_| \_\____/ \____|                           "
+	echo "                                                                           "
+	echo "                            P I P E L I N E                                "
+	echo "                                                                           "
+	echo "             A Non-Referencial Sequence Classification Tool                "
+	echo "               for DNA sequences in metagenomic samples.                   "
+	echo "                                                                           "
+	echo "                       Usage: ./NRSC.sh [options]                          "
+	echo "                                                                           "
+	echo "   -h,  --help            Show this help message and exit                  "
+	echo "   -v,  --version         Show the version and some information            "
+	echo "                                                                           "
+	echo "   -synt, --synthetic [FILE1] : [FILE3]                                    "
+	echo "                          Generate a synthetical sequence using 3          "
+	echo "                          reference files for testing purposes             "
+	echo "                                                                           "
+	echo "   -trim, --filter <MODE>                                                  "
+	echo "                          Filter Reads using Trimmomatic (TT)              "
+	echo "                          or using FASTP (FP)                              "
+	echo "                                                                           "
+	echo "   -rda, --run-de-novo    De-Novo Sequence Assembly                        "
+	echo "                                                                           "
+	echo "   -rfa, --run-falcon <MODE>                                               "
+	echo "                          Run Data Analysis with FALCON using only the     "
+	echo "                          scaffolds (SO) or analysing by each              "
+	echo "                          Read (RM)                                        "
+	echo "                                                                           "
+	echo "   -dec, --decrypt        Decrypt all files in /encrypted_data             "
+	echo "   -enc, --encrypt        Encrypt all files in /encrypted_data             "
+	echo "                                                                           "
+	echo "   -all, --run-all        Run all the options (considering real data)      "
 	exit 1;
 fi
 #
@@ -284,6 +325,14 @@ if [ "$SHOW_VERSION" -eq "1" ]; then
 	echo "             University of Aveiro, Portugal.             "
 	echo "                                                         "
 	exit 0;
+fi	
+#
+# ======================================================================
+# INSTALLATIONS
+#
+if [ "$INSTALL" -eq "1" ]; then
+	
+	echo "Start Installation!"
 fi	
 #
 # ===================================================================
@@ -312,5 +361,19 @@ fi
 if [[ "$FALCON_FLAG" -eq "1" ]]; then
 	echo "Starting Data Analysis!"
 	FALCON_ANALYSIS "$FALCON_MODE";
+fi
+#
+# ===================================================================
+#
+if [[ "$RUN_ENCRYPT" -eq "1" ]]; then
+	echo "Starting Encryption!"
+	ENCRYPT_DATA;
+fi
+#
+# ===================================================================
+#
+if [[ "$RUN_DECRYPT" -eq "1" ]]; then
+	echo "Starting Decryption!"
+	DECRYPT_DATA;
 fi
 #
