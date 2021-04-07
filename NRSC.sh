@@ -15,6 +15,8 @@ SHOW_HELP=0;
 SHOW_VERSION=0;
 INSTALL=0;
 #
+BUILD_DB_VIRUS=0;
+#
 THREADS_AVAILABLE=`cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l`;
 #
 GEN_SYNTHETIC=0;
@@ -220,6 +222,10 @@ do
 			INSTALL=1;
 			shift
 		;;
+		-bref|--build-ref-virus)
+			BUILD_DB_VIRUS=1;
+			shift
+		;;
 		-synt|--synthetic)
 			GEN_SYNTHETIC=1;
 			REF_FILE1="$2";
@@ -290,6 +296,9 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -v,  --version         Show the version and some information              "
 	echo "   -i,  --install         Installation of all the needed tools               "
 	echo "                                                                             "
+	echo "   -bref, --build-ref-virus                                                  "
+	echo "                          Build reference database of virus from NCBI        "
+	echo "                                                                             "
 	echo "   -synt, --synthetic [FILE1] : [FILE3]                                      "
 	echo "                          Generate a synthetical sequence using 3            "
 	echo "                          reference files for testing purposes               "
@@ -333,7 +342,14 @@ fi
 # INSTALLATIONS
 #
 if [ "$INSTALL" -eq "1" ]; then
-	./src/install.sh
+	./src/install_tools.sh
+fi
+#
+# ======================================================================
+# BUILD REFERENCE VIRUS DATABASE
+#
+if [ "$BUILD_DB_VIRUS" -eq "1" ]; then
+	./src/build_ref_db_virus.sh
 fi	
 #
 # ===================================================================
