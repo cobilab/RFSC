@@ -2,10 +2,10 @@
 
 Check_Installation() {
     if ! [ -x "$(command -v $1)" ]; then
-        echo -e "\e[41mERROR\e[49m: $1 is not installed!" >&2;
+        echo -e "\033[6;31mERROR\033[0;31m: $1 is not installed!" >&2;
         exit 1;
     else
-        echo -e "\e[42mSUCCESS!\e[49m";
+        echo -e "\033[1;32mSUCCESS!\033[0m";
     fi
 }
 
