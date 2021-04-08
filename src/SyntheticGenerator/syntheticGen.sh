@@ -26,10 +26,10 @@ GTO_LINE_SIZE=70;					# -l
 
 
 if [ -n "$ART_INPUT" ]; then
-	echo -e "\033[1;34m[NCRS]\033[0m Start FASTA Processing..."
+	echo -e "\033[1;34m[RFSC]\033[0m Start FASTA Processing..."
 else
-	echo -e "\033[1;34m[NCRS] \033[1;31m Argument Error - Insert Input File \033[0m"
-	echo -e "\033[1;34m[NCRS] \033[0;33m Usage: bash syntheticGen.sh [FILE] \033[0m"
+	echo -e "\033[1;34m[RFSC] \033[1;31m Argument Error - Insert Input File \033[0m"
+	echo -e "\033[1;34m[RFSC] \033[0;33m Usage: bash syntheticGen.sh [FILE] \033[0m"
 	exit 0
 fi
 

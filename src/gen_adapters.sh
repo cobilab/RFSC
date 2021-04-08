@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo -e "\033[1;34m[NCRS]\033[0m Generating adapters file (adapters.fa) ...";
+echo -e "\033[1;34m[RFSC]\033[0m Generating adapters file (adapters.fa) ...";
 #
 printf ">PrefixPE/1\nTACACTCTTTCCCTACACGACGCTCTTCCGATCT\n>PrefixPE/2\nGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT\n>PE1\nTACACTCTTTCCCTACACGACGCTCTTCCGATCT\n>PE1_rc\nAGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA\n>PE2\nGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT\n>PE2_rc\nAGATCGGAAGAGCACACGTCTGAACTCCAGTCAC\n" > Input_Data/adapters.fa
 #
-echo -e "\033[1;34m[NCRS] \033[1;32m adapters.fa has been generated! \033[0m";
+echo -e "\033[1;34m[RFSC] \033[1;32m adapters.fa has been generated! \033[0m";
