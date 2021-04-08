@@ -53,8 +53,9 @@ declare -a VIRUSES=("B19" "HBV");
 #
 CHECK_ADAPTERS() {
 	if [ ! -f Input_Data/adapters.fa ]; then
-	echo -e "\033[1;33m[NRSC] ERROR: adapter sequences (adapter.fa) not found! \033[0m"
-	echo -e "\033[1;34m[NCRS] \033[0;33m ./NRSC.sh --gen-adapters \033[0m : To generate the adapter sequences ...";
+		echo -e "\033[1;33m[NRSC] ERROR: adapter sequences (adapter.fa) not found! \033[0m"
+		echo -e "\033[1;34m[NCRS] \033[0;33m ./NRSC.sh --gen-adapters \033[0m : To generate the adapter sequences ...";
+	fi
 }
 #
 # ==================================================================
