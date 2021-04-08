@@ -3,9 +3,9 @@
 #####################################################################
 # ================================================================= #
 # =                                                               = #
-# =                            N R S C                            = #
+# =                            R F S C                            = #
 # =                                                               = #
-# =         A Non-Referencial Sequence Classification Tool        = # 
+# =         A Reference-Free Sequence Classification Tool         = # 
 # =            for DNA sequences in metagenomic samples.          = #
 # =                                                               = #
 # ================================================================= #
@@ -53,8 +53,8 @@ declare -a VIRUSES=("B19" "HBV");
 #
 CHECK_ADAPTERS() {
 	if [ ! -f Input_Data/adapters.fa ]; then
-		echo -e "\033[1;33m[NRSC] ERROR: adapter sequences (adapter.fa) not found! \033[0m"
-		echo -e "\033[1;34m[NCRS] \033[0;33m ./NRSC.sh --gen-adapters \033[0m : To generate the adapter sequences ...";
+		echo -e "\033[1;33m[RFSC] ERROR: adapter sequences (adapter.fa) not found! \033[0m"
+		echo -e "\033[1;34m[RFSC] \033[0;33m ./RFSC.sh --gen-adapters \033[0m : To generate the adapter sequences ...";
 	fi
 }
 #
@@ -72,9 +72,9 @@ GENERATE_SYNTHETIC () {
 #
 TRIMMING_SEQUENCE() {
 	if [[ $TRIMMING_TYPE == "TT" ]]; then
-		echo -e "\033[1;34m[NCRS]\033[0m Trimming using Trimmomatic";
+		echo -e "\033[1;34m[RFSC]\033[0m Trimming using Trimmomatic";
 		TRIMMING_THREADS=$THREADS_AVAILABLE;
-		echo -e "\033[1;34m[NCRS]\033[0m Currently using $TRIMMING_THREADS available threads!";
+		echo -e "\033[1;34m[RFSC]\033[0m Currently using $TRIMMING_THREADS available threads!";
 		#
 		CHECK_ADAPTERS;
 		cp Input_Data/adapters.fa adapters.fa
@@ -89,7 +89,7 @@ TRIMMING_SEQUENCE() {
 		rm adapters.fa
 		#
 	elif [[ $TRIMMING_TYPE == "FP" ]]; then
-		echo -e "\033[1;34m[NCRS]\033[0m Trimming with FASTP";
+		echo -e "\033[1;34m[RFSC]\033[0m Trimming with FASTP";
 		#
 		# Running with synthetic data
 		if [[ $GEN_SYNTHETIC == "1" ]]; then
@@ -101,10 +101,10 @@ TRIMMING_SEQUENCE() {
 		mv fastp.html Outputs/
 		mv fastp.json Outputs/
 	else
-		echo -e "\033[1;34m[NCRS] \033[1;31m Invalid Argument - $TRIMMING_TYPE! \033[0m";
-		echo -e "\033[1;34m[NCRS]\033[0m Use one of the follow:";
-		echo -e "\033[1;34m[NCRS] \033[0;33m TT \033[0m : To use the Trimmomatic Tool";
-		echo -e "\033[1;34m[NCRS] \033[0;33m FP \033[0m : To use the FASTP Tool";
+		echo -e "\033[1;34m[RFSC] \033[1;31m Invalid Argument - $TRIMMING_TYPE! \033[0m";
+		echo -e "\033[1;34m[RFSC]\033[0m Use one of the follow:";
+		echo -e "\033[1;34m[RFSC] \033[0;33m TT \033[0m : To use the Trimmomatic Tool";
+		echo -e "\033[1;34m[RFSC] \033[0;33m FP \033[0m : To use the FASTP Tool";
 		exit 0;
 	fi
 }
@@ -126,7 +126,7 @@ SPADES_ASSEMBLY() {
 #
 FALCON_SO_MODE(){
 	FALCON -n $THREADS_AVAILABLE -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
-        echo -e "\033[1;34m[NCRS]\033[0m Outputs/falcon_SO_results.txt file was successfully been generated!"
+        echo -e "\033[1;34m[RFSC]\033[0m Outputs/falcon_SO_results.txt file was successfully been generated!"
 	#
 	readarray -t results <Outputs/falcon_SO_results.txt
 	#
@@ -147,7 +147,7 @@ FALCON_SO_MODE(){
 # FALCON ANALYSIS - EACH READS
 #
 FALCON_RM_MODE(){
-	echo -e "\033[1;34m[NCRS]\033[0m Start Breaking File into Reads"
+	echo -e "\033[1;34m[RFSC]\033[0m Start Breaking File into Reads"
         mkdir GeneratedFiles/out_spades_/Reads
         awk '/>/{filename="GeneratedFiles/out_spades_/Reads/"NR".fasta"}; {print >filename}' GeneratedFiles/out_spades_/scaffolds.fasta
         # 
@@ -166,12 +166,12 @@ FALCON_RM_MODE(){
 			if [[ $(( ($len - $i) % 2)) == 0 ]]; then
 				R1=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
 				R2=`echo "${array[i+1]}"|awk 'NF>1{print $NF}'`
-				echo -e "\033[1;34m[NCRS]\033[0m Analysing Read $R1 & $R2 with $(($THREADS_AVAILABLE/2)) threads each!"
+				echo -e "\033[1;34m[RFSC]\033[0m Analysing Read $R1 & $R2 with $(($THREADS_AVAILABLE/2)) threads each!"
 				FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Reads/$R1 References/NCBI-Virus/VDB.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Reads/$R2 References/NCBI-Virus/VDB.fa
 				(( i+=2 ))
 			else
 				R=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
-				echo -e "\033[1;34m[NCRS]\033[0m Analysing Read $R1 with $(($THREADS_AVAILABLE)) threads!"
+				echo -e "\033[1;34m[RFSC]\033[0m Analysing Read $R1 with $(($THREADS_AVAILABLE)) threads!"
 				FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconReads/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Reads/$R References/NCBI-Virus/VDB.fa
 				(( i++ ))
 			fi 
@@ -188,10 +188,10 @@ FALCON_ANALYSIS() {
 		FALCON_SO_MODE;
 		FALCON_RM_MODE;
 	else
-		echo -e "\033[1;34m[NCRS] \033[1;31m Invalid Argument - $FALCON_MODE! \033[0m";
-		echo -e "\033[1;34m[NCRS]\033[0m Use one of the follow:";
-		echo -e "\033[1;34m[NCRS] \033[0;33m SO \033[0m : To analyse only the scaffold";
-		echo -e "\033[1;34m[NCRS] \033[0;33m RM \033[0m : To use redundancy in the analyse (Run each Read)";
+		echo -e "\033[1;34m[RFSC] \033[1;31m Invalid Argument - $FALCON_MODE! \033[0m";
+		echo -e "\033[1;34m[RFSC]\033[0m Use one of the follow:";
+		echo -e "\033[1;34m[RFSC] \033[0;33m SO \033[0m : To analyse only the scaffold";
+		echo -e "\033[1;34m[RFSC] \033[0;33m RM \033[0m : To use redundancy in the analyse (Run each Read)";
 		exit 0;
 	fi
 
@@ -201,18 +201,18 @@ FALCON_ANALYSIS() {
 # ENCRYPTION
 #
 ENCRYPT_DATA() {
-	echo -e "\033[1;34m[NCRS]\033[0;32m Please insert the password to encrypt the files contained in /Data_Security/Encrypt_Input: \033[0m";
+	echo -e "\033[1;34m[RFSC]\033[0;32m Please insert the password to encrypt the files contained in /Data_Security/Encrypt_Input: \033[0m";
 	read -s password
 	echo "$password" > key.txt
 	#
 	for file in Data_Security/Encrypt_Input/*
 	do
-		echo -e "\033[1;34m[NCRS]\033[0;32m Encrypting $file ... \033[0m";
+		echo -e "\033[1;34m[RFSC]\033[0;32m Encrypting $file ... \033[0m";
 		out_file=$(basename $file);
 		cryfa -k key.txt $file > Data_Security/Encrypted_Data/$out_file.enc
 	done
 	rm -f key.txt
-	echo -e "\033[1;34m[NCRS]\033[0;32m $file has been encrypted! \033[0m";
+	echo -e "\033[1;34m[RFSC]\033[0;32m $file has been encrypted! \033[0m";
 }
 #
 # ==================================================================
@@ -221,13 +221,13 @@ ENCRYPT_DATA() {
 DECRYPT_DATA() {
 	for file in Data_Security/Encrypted_Data/*
 	do
-		echo -e "\033[1;34m[NCRS]\033[0;32m Decrypting $file ... \033[0m";
+		echo -e "\033[1;34m[RFSC]\033[0;32m Decrypting $file ... \033[0m";
 		out_file=$(basename $file);
-		echo -e "\033[1;34m[NCRS]\033[0;32m Please insert the password to decrypt the file $file: \033[0m";
+		echo -e "\033[1;34m[RFSC]\033[0;32m Please insert the password to decrypt the file $file: \033[0m";
 		read -s password
 		echo "$password" > key.txt
 		cryfa -k key.txt -d $file > Data_Security/Decrypted_Data/$out_file.dec;
-		echo -e "\033[1;34m[NCRS]\033[0;32m $file has been decrypted! \033[0m";
+		echo -e "\033[1;34m[RFSC]\033[0;32m $file has been decrypted! \033[0m";
 		rm -f key.txt;
 	done
 }
@@ -303,8 +303,8 @@ do
 			shift
 		;;
 		-*) # Unknown option
-		echo -e "\033[1;34m[NCRS] \033[1;31m Invalid arg ($1)! \033[0m";
-		echo -e "\033[1;34m[NCRS]\033[0m For more help, try: \033[0;33m./NRSC.sh -h \033[0m"
+		echo -e "\033[1;34m[RFSC] \033[1;31m Invalid arg ($1)! \033[0m";
+		echo -e "\033[1;34m[RFSC]\033[0m For more help, try: \033[0;33m./RFSC.sh -h \033[0m"
 		exit 1;
 		;;
 	esac
@@ -315,21 +315,21 @@ set -- "${POSITIONAL[@]}" # Restore positional parameters
 # ======================================================================
 # HELP MENU
 #
-if [ "$SHOW_HELP" -eq "1" ]; then
+if [ "$SHOW_HELP" -eq "1" ]; then                
 
 	echo "                                                                             "
-	echo -e " \033[0;36m                       _   _ ___   ____   ____                             \033[0m "
-	echo -e " \033[0;36m                      | \ | |  _ \/ ___| / ___|                            \033[0m "
-	echo -e " \033[0;36m                      |  \| | |_) \___ \| |                                \033[0m "
-	echo -e " \033[0;36m                      | |\  |  _ < ___) | |___                             \033[0m "
-	echo -e " \033[0;36m                      |_| \_|_| \_\____/ \____|                            \033[0m "
+	echo -e " \033[0;36m                       ____  _____ ____   ____                             \033[0m "
+	echo -e " \033[0;36m                      |  _ \|  ___/ ___| / ___|                            \033[0m "
+	echo -e " \033[0;36m                      | |_) | |_  \___ \| |                                \033[0m "
+	echo -e " \033[0;36m                      |  _ <|  _|  ___) | |___                             \033[0m "
+	echo -e " \033[0;36m                      |_| \_\_|   |____/ \____|                            \033[0m "
 	echo "                                                                             "
 	echo -e " \033[1;34m                           P I P E L I N E                                 \033[0m "
 	echo "                                                                             "
-	echo -e " \033[3;34m            A Non-Referencial Sequence Classification Tool                 \033[0m "
+	echo -e " \033[3;34m            A Reference-Free Sequence Classification Tool                  \033[0m "
 	echo -e " \033[3;34m              for DNA sequences in metagenomic samples.                    \033[0m "
 	echo "                                                                             "
-	echo -e " \033[1;33m                      Usage: ./NRSC.sh [options]                           \033[0m "
+	echo -e " \033[1;33m                      Usage: ./RFSC.sh [options]                           \033[0m "
 	echo "                                                                             "
 	echo "   -h,  --help            Show this help message and exit                    "
 	echo "   -v,  --version         Show the version and some information              "
@@ -369,7 +369,7 @@ fi
 if [ "$SHOW_VERSION" -eq "1" ]; then
 	
 	echo "                                                         "
-	echo "                          NRSC                           "
+	echo "                          RFSC                           "
 	echo "                                                         "
 	echo "                      Version: 1.0                       "
 	echo "                                                         "
@@ -403,42 +403,42 @@ fi
 # ===================================================================
 #
 if [[ "$GEN_SYNTHETIC" -eq "1" ]]; then
-	echo -e "\033[1;34m[NCRS]\033[0m Start Synthetic Sequence Generation!"
+	echo -e "\033[1;34m[RFSC]\033[0m Start Synthetic Sequence Generation!"
 	GENERATE_SYNTHETIC "$REF_FILE1" "$REF_FILE2" "$REF_FILE3";
 fi
 #
 # ===================================================================
 #
 if [[ "$TRIMMING_FLAG" -eq "1" ]]; then
-	echo -e "\033[1;34m[NCRS]\033[0m Start Trimming the Sequence!"
+	echo -e "\033[1;34m[RFSC]\033[0m Start Trimming the Sequence!"
 	TRIMMING_SEQUENCE "$TRIMMING_TYPE";
 fi
 #
 # ===================================================================
 #
 if [[ "$ASSEMBLY_FLAG" -eq "1" ]]; then
-	echo -e "\033[1;34m[NCRS]\033[0m Start De-Novo Assembly!"
+	echo -e "\033[1;34m[RFSC]\033[0m Start De-Novo Assembly!"
 	SPADES_ASSEMBLY;
 fi
 #
 # ===================================================================
 #
 if [[ "$FALCON_FLAG" -eq "1" ]]; then
-	echo -e "\033[1;34m[NCRS]\033[0m Starting Data Analysis!"
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Data Analysis!"
 	FALCON_ANALYSIS "$FALCON_MODE";
 fi
 #
 # ===================================================================
 #
 if [[ "$RUN_ENCRYPT" -eq "1" ]]; then
-	echo -e "\033[1;34m[NCRS]\033[0m Starting Encryption!"
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Encryption!"
 	ENCRYPT_DATA;
 fi
 #
 # ===================================================================
 #
 if [[ "$RUN_DECRYPT" -eq "1" ]]; then
-	echo -e "\033[1;34m[NCRS]\033[0m Starting Decryption!"
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Decryption!"
 	DECRYPT_DATA;
 fi
 #
