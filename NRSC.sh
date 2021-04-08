@@ -17,6 +17,8 @@ INSTALL=0;
 #
 BUILD_DB_VIRUS=0;
 #
+GEN_ADAPTERS=0;
+#
 THREADS_AVAILABLE=`cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l`;
 #
 GEN_SYNTHETIC=0;
@@ -47,6 +49,15 @@ RUN_ENCRYPT=0;
 declare -a VIRUSES=("B19" "HBV");
 #
 # ==================================================================
+# VERIFICATION FUNCTIONS
+#
+CHECK_ADAPTERS() {
+	if [ ! -f Input_Data/adapters.fa ]; then
+	echo -e "\033[1;33m[NRSC] ERROR: adapter sequences (adapter.fa) not found! \033[0m"
+	echo -e "\033[1;34m[NCRS] \033[0;33m ./NRSC.sh --gen-adapters \033[0m : To generate the adapter sequences ...";
+}
+#
+# ==================================================================
 # GENERATE SYNTHETIC SEQUENCE
 #
 GENERATE_SYNTHETIC () { 
@@ -64,6 +75,7 @@ TRIMMING_SEQUENCE() {
 		TRIMMING_THREADS=$THREADS_AVAILABLE;
 		echo -e "\033[1;34m[NCRS]\033[0m Currently using $TRIMMING_THREADS available threads!";
 		#
+		CHECK_ADAPTERS;
 		cp Input_Data/adapters.fa adapters.fa
 		#
 		# Running with synthetic data
@@ -147,7 +159,7 @@ FALCON_RM_MODE(){
         #
         mkdir Outputs/FalconReads
         len=${#array[@]}
-        i=0
+        i=1
 		while [[ $i != $len ]]
 		do
 			if [[ $(( ($len - $i) % 2)) == 0 ]]; then
@@ -248,6 +260,10 @@ do
 			BUILD_DB_VIRUS=1;
 			shift
 		;;
+		-gad|--gen-adapters)
+			GEN_ADAPTERS=1;
+			shift
+		;;
 		-synt|--synthetic)
 			GEN_SYNTHETIC=1;
 			REF_FILE1="$2";
@@ -321,6 +337,8 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -bref, --build-ref-virus                                                  "
 	echo "                          Build reference database of virus from NCBI        "
 	echo "                                                                             "
+	echo "   -gad,  --gen-adapters  Generate FASTA file with adapters                  "
+	echo "                                                                             "
 	echo "   -synt, --synthetic [FILE1] : [FILE3]                                      "
 	echo "                          Generate a synthetical sequence using 3            "
 	echo "                          reference files for testing purposes               "
@@ -372,6 +390,13 @@ fi
 #
 if [ "$BUILD_DB_VIRUS" -eq "1" ]; then
 	./src/build_ref_db_virus.sh
+fi	
+#
+# ======================================================================
+# GENERATE FASTA ADAPTERS
+#
+if [ "$GEN_ADAPTERS" -eq "1" ]; then
+	./src/gen_adapters.sh
 fi	
 #
 # ===================================================================
