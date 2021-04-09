@@ -20,6 +20,8 @@ BUILD_DB_VIRUS=0;
 GEN_ADAPTERS=0;
 #
 THREADS_AVAILABLE=`cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l`;
+THREADS=0;
+GET_THREADS="";
 #
 GEN_SYNTHETIC=0;
 REF_FILE1="";
@@ -33,6 +35,7 @@ CRYFA_FLAG=0;
 TRIMMING_FLAG=0;
 TRIMMING_TYPE="";
 TRIMMING_THREADS=0;
+TRIMMING_MODE=""; # SE or PE
 #
 ASSEMBLY_FLAG=0;
 #
@@ -71,6 +74,15 @@ GENERATE_SYNTHETIC () {
 # TRIMMING/FILTERING SEQUENCES
 #
 TRIMMING_SEQUENCE() {
+	#
+	# Fetch the input files
+	i=0;
+	for file in Input_Data/*.fq.gz
+	do
+		input_file[i]="$file"
+		(( i++ ))
+	done
+	#
 	if [[ $TRIMMING_TYPE == "TT" ]]; then
 		echo -e "\033[1;34m[RFSC]\033[0m Trimming using Trimmomatic";
 		TRIMMING_THREADS=$THREADS_AVAILABLE;
@@ -79,25 +91,35 @@ TRIMMING_SEQUENCE() {
 		CHECK_ADAPTERS;
 		cp Input_Data/adapters.fa adapters.fa
 		#
-		# Running with synthetic data
-		if [[ $GEN_SYNTHETIC == "1" ]]; then
-			trimmomatic PE -threads $TRIMMING_THREADS -phred33 Input_Data/sample1.fq.gz Input_Data/sample2.fq.gz GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
-		# Running with real data
+		if [[ $TRIMMING_MODE == "PE" ]]; then
+			trimmomatic $TRIMMING_MODE -threads $TRIMMING_THREADS -phred33 ${input_file[0]} ${input_file[1]} GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
+		elif [[ $TRIMMING_MODE == "SE" ]]; then
+			trimmomatic $TRIMMING_MODE -threads $TRIMMING_THREADS -phred33 ${input_file[0]} GeneratedFiles/out.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
 		else
-			echo "Real Data Mode Activated";
+			echo -e "\033[1;34m[RFSC] \033[1;31m Invalid Argument - $TRIMMING_MODE! \033[0m";
+			echo -e "\033[1;34m[RFSC]\033[0m Use one of the follow:";
+			echo -e "\033[1;34m[RFSC] \033[0;33m PE \033[0m : To use paired end reads";
+			echo -e "\033[1;34m[RFSC] \033[0;33m SE \033[0m : To use single end reads";
+			exit 0;
 		fi
+		#
 		rm adapters.fa
 		#
 	elif [[ $TRIMMING_TYPE == "FP" ]]; then
 		echo -e "\033[1;34m[RFSC]\033[0m Trimming with FASTP";
 		#
-		# Running with synthetic data
-		if [[ $GEN_SYNTHETIC == "1" ]]; then
-			fastp -i Input_Data/sample1.fq.gz -I Input_Data/sample2.fq.gz -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
-		# Running with real data
+		if [[ $TRIMMING_MODE == "PE" ]]; then
+			fastp -i ${input_file[0]} -I ${input_file[1]} -o GeneratedFiles/out1.fq.gz -O GeneratedFiles/out2.fq.gz
+		elif [[ $TRIMMING_MODE == "SE" ]]; then
+			fastp -i ${input_file[0]} -o GeneratedFiles/out.fq.gz
 		else
-			echo "Real Data Mode Activated";
+			echo -e "\033[1;34m[RFSC] \033[1;31m Invalid Argument - $TRIMMING_MODE! \033[0m";
+			echo -e "\033[1;34m[RFSC]\033[0m Use one of the follow:";
+			echo -e "\033[1;34m[RFSC] \033[0;33m PE \033[0m : To use paired end reads";
+			echo -e "\033[1;34m[RFSC] \033[0;33m SE \033[0m : To use single end reads";
+			exit 0;
 		fi
+		#
 		mv fastp.html Outputs/
 		mv fastp.json Outputs/
 	else
@@ -114,9 +136,17 @@ TRIMMING_SEQUENCE() {
 #
 SPADES_ASSEMBLY() {
 	if [[ $TRIMMING_TYPE == "TT" ]]; then
-		spades.py -t 16 --careful -o GeneratedFiles/out_spades_$1 -1 GeneratedFiles/o_fw_pr.fq -2 GeneratedFiles/o_rv_pr.fq -s GeneratedFiles/o_fw_unpr.fq -s GeneratedFiles/o_rv_unpr.fq
+		if [[ $TRIMMING_MODE == "PE" ]]; then
+			spades.py -t 16 --careful -o GeneratedFiles/out_spades_$1 -1 GeneratedFiles/o_fw_pr.fq -2 GeneratedFiles/o_rv_pr.fq -s GeneratedFiles/o_fw_unpr.fq -s GeneratedFiles/o_rv_unpr.fq
+		else
+			spades.py -t 16 --careful -o GeneratedFiles/out_spades_$1 -s GeneratedFiles/out.fq
+		fi
 	else
-		spades.py -t 16 --careful -o GeneratedFiles/out_spades_$1 -1 GeneratedFiles/out1.fq.gz -2 GeneratedFiles/out2.fq.gz 
+		if [[ $TRIMMING_MODE == "PE" ]]; then
+			spades.py -t 16 --careful -o GeneratedFiles/out_spades_$1 -1 GeneratedFiles/out1.fq.gz -2 GeneratedFiles/out2.fq.gz
+		else
+			spades.py -t 16 --careful -o GeneratedFiles/out_spades_$1 -s GeneratedFiles/out.fq.gz
+		fi
 	fi
 
 }
@@ -257,6 +287,11 @@ do
 			INSTALL=1;
 			shift
 		;;
+		-t|--threads)
+			THREADS=1;
+			GET_THREADS="$2";
+			shift 2
+		;;
 		-bref|--build-ref-virus)
 			BUILD_DB_VIRUS=1;
 			shift
@@ -275,7 +310,8 @@ do
 		-trim|--filter)
 			TRIMMING_FLAG=1;
 			TRIMMING_TYPE="$2";
-			shift 2
+			TRIMMING_MODE="$3";
+			shift 3
 		;;
 		-rda|--run-de-novo)
 			ASSEMBLY_FLAG=1;
@@ -335,22 +371,27 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -v,  --version         Show the version and some information              "
 	echo "   -i,  --install         Installation of all the needed tools               "
 	echo "                                                                             "
+	echo -e "   -t,  --threads \033[0;34m<THREADS>\033[0m                                                  "
+	echo "                          Number of threads to be used                       "
+	echo "                                                                             "
 	echo "   -bref, --build-ref-virus                                                  "
 	echo "                          Build reference database of virus from NCBI        "
 	echo "                                                                             "
 	echo "   -gad,  --gen-adapters  Generate FASTA file with adapters                  "
 	echo "                                                                             "
-	echo "   -synt, --synthetic [FILE1] : [FILE3]                                      "
+	echo -e "   -synt, --synthetic \033[0;34m[FILE1] : [FILE3]\033[0m                                      "
 	echo "                          Generate a synthetical sequence using 3            "
 	echo "                          reference files for testing purposes               "
 	echo "                                                                             "
-	echo "   -trim, --filter <MODE>                                                    "
-	echo "                          Filter Reads using Trimmomatic (TT)                "
-	echo "                          or using FASTP (FP)                                "
+	echo -e "   -trim, --filter \033[0;34m<TOOL> <MODE>\033[0m                                             "
+	echo "                          TOOL: Filter Reads using Trimmomatic (TT)          "
+	echo "                                or using FASTP (FP)                          "
+	echo "                          MODE: Paired End Reads (PE)                        "
+	echo "                                or Single End Reads (SE)                     "
 	echo "                                                                             "
 	echo "   -rda, --run-de-novo    De-Novo Sequence Assembly                          "
 	echo "                                                                             "
-	echo "   -rfa, --run-falcon <MODE>                                                 "
+	echo -e "   -rfa, --run-falcon \033[0;34m<MODE>\033[0m                                                 "
 	echo "                          Run Data Analysis with FALCON using only the       "
 	echo "                          scaffolds (SO) or analysing by each                "
 	echo "                          Read (RM)                                          "
@@ -367,7 +408,7 @@ fi
 # VERSION
 #
 if [ "$SHOW_VERSION" -eq "1" ]; then
-	
+
 	echo "                                                         "
 	echo "                          RFSC                           "
 	echo "                                                         "
@@ -384,6 +425,14 @@ fi
 #
 if [ "$INSTALL" -eq "1" ]; then
 	./src/install_tools.sh
+fi
+#
+# ======================================================================
+# THREADS
+#
+if [ "$THREADS" -eq "1" ]; then
+	THREADS_AVAILABLE=$GET_THREADS;
+	echo -e "\033[1;34m[RFSC]\033[0m The system is now set to use $THREADS_AVAILABLE threads!"
 fi
 #
 # ======================================================================
