@@ -152,11 +152,37 @@ SPADES_ASSEMBLY() {
 }
 #
 # ==================================================================
+# PARSE SCAFFOLDS INTO NODES (MINOR SCAFFOLDS)
+#
+PARSE_SCAFFOLDS() {
+	echo -e "\033[1;34m[RFSC]\033[0m Start parsing scaffolds.fasta ..."
+	mkdir GeneratedFiles/out_spades_/Nodes
+	awk '/>/{filename="GeneratedFiles/out_spades_/Nodes/"NR".fasta"}; {print >filename}' GeneratedFiles/out_spades_/scaffolds.fasta
+	echo -e "\033[1;34m[RFSC]\033[0m Parse finnished! The result can be find in GeneratedFiles/out_spades_/Nodes/"
+
+	echo -e "\033[1;34m[RFSC]\033[0m Start filtering nodes based on Lenght & Coverage!"
+	for file in GeneratedFiles/out_spades_/Nodes/*
+	do
+		REF=`grep ">" < $file`
+		NODE_LEN=$(awk -F_ '{print $4}' <<< ${REF})
+		NODE_COV=$(awk -F_ '{print $6}' <<< ${REF})
+		COV_TO_INT=(${NODE_COV//./ })
+
+		if [[ "$NODE_LEN" -gt "100" ]] && [[ "${COV_TO_INT[0]}" -ge "3" ]]; then
+			continue
+		else
+			rm $file
+			echo -e "\033[1;34m[RFSC]\033[0m $file Node has been removed in the filtering process!"
+		fi
+	done
+}
+#
+# ==================================================================
 # FALCON ANALYSIS - SCAFFOLDS
 #
-FALCON_SO_MODE(){
+FALCON_SO_MODE() {
 	FALCON -n $THREADS_AVAILABLE -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
-        echo -e "\033[1;34m[RFSC]\033[0m Outputs/falcon_SO_results.txt file was successfully been generated!"
+    echo -e "\033[1;34m[RFSC]\033[0m Outputs/falcon_SO_results.txt file was successfully been generated!"
 	#
 	readarray -t results <Outputs/falcon_SO_results.txt
 	#
@@ -168,7 +194,7 @@ FALCON_SO_MODE(){
 		BOOL=`echo "$PER > 70.000" | bc`
 		#
 		if [[ $BOOL -eq "1" ]]; then
-				printf "$VIRUS\n" >> Results/ref_result.txt
+			printf "$VIRUS\n" >> Results/ref_result.txt
 		fi
 	done
 }
@@ -177,35 +203,33 @@ FALCON_SO_MODE(){
 # FALCON ANALYSIS - EACH READS
 #
 FALCON_RM_MODE(){
-	echo -e "\033[1;34m[RFSC]\033[0m Start Breaking File into Reads"
-        mkdir GeneratedFiles/out_spades_/Reads
-        awk '/>/{filename="GeneratedFiles/out_spades_/Reads/"NR".fasta"}; {print >filename}' GeneratedFiles/out_spades_/scaffolds.fasta
-        # 
-        reads=0
-        while read line # Get all the Read Files Names
-        do
-        	array[ $reads ]="$line"
-                (( reads++ ))
-        done < <(ls -ls GeneratedFiles/out_spades_/Reads)
-        #
-        mkdir Outputs/FalconReads
-        len=${#array[@]}
-        i=1
-		while [[ $i != $len ]]
-		do
-			if [[ $(( ($len - $i) % 2)) == 0 ]]; then
-				R1=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
-				R2=`echo "${array[i+1]}"|awk 'NF>1{print $NF}'`
-				echo -e "\033[1;34m[RFSC]\033[0m Analysing Read $R1 & $R2 with $(($THREADS_AVAILABLE/2)) threads each!"
-				FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Reads/$R1 References/NCBI-Virus/VDB.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Reads/$R2 References/NCBI-Virus/VDB.fa
-				(( i+=2 ))
-			else
-				R=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
-				echo -e "\033[1;34m[RFSC]\033[0m Analysing Read $R1 with $(($THREADS_AVAILABLE)) threads!"
-				FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconReads/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Reads/$R References/NCBI-Virus/VDB.fa
-				(( i++ ))
-			fi 
-		done
+	PARSE_SCAFFOLDS;
+	# 
+	reads=0
+	while read line
+	do
+		array[ $reads ]="$line"
+		(( reads++ ))
+	done < <(ls -ls GeneratedFiles/out_spades_/Nodes)
+	#
+	mkdir Outputs/FalconReads
+	len=${#array[@]}
+	i=1
+	while [[ $i != $len ]]
+	do
+		if [[ $(( ($len - $i) % 2)) == 0 ]]; then
+			R1=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
+			R2=`echo "${array[i+1]}"|awk 'NF>1{print $NF}'`
+			echo -e "\033[1;34m[RFSC]\033[0m Analysing Nodes $R1 & $R2 with $(($THREADS_AVAILABLE/2)) threads each!"
+			FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Nodes/$R1 References/NCBI-Virus/VDB.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Nodes/$R2 References/NCBI-Virus/VDB.fa
+			(( i+=2 ))
+		else
+			R=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
+			echo -e "\033[1;34m[RFSC]\033[0m Analysing Node $R with $(($THREADS_AVAILABLE)) threads!"
+			FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconReads/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Nodes/$R References/NCBI-Virus/VDB.fa
+			(( i++ ))
+		fi 
+	done
 }
 #
 # ==================================================================
