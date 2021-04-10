@@ -34,4 +34,4 @@ NUM_FILES=$( ls src/SyntheticGenerator/Inputs/ | wc -l )
 NUM_FILES=$((NUM_FILES+1))
 
 zcat $1 $2 $3 $4 $5 $6 $7 $8 $9 > "src/SyntheticGenerator/Inputs/mix${NUM_FILES}.fa"
-echo -e "\033[1;34m[RFSC] \033[0;32m Success! File mix${NUM_FILES}.fa has been created. \033[0m"
+echo -e "\033[1;34m[RFSC]\033[0;32m Success! mix${NUM_FILES}.fa has been created. \033[0m"
