@@ -39,6 +39,10 @@ TRIMMING_MODE=""; # SE or PE
 #
 ASSEMBLY_FLAG=0;
 #
+SET_LEN_COV=0;
+SET_NODE_LENGTH="";
+SET_NODE_COVERAGE="";
+#
 FALCON_FLAG=0;
 FALCON_MODE="";
 BLASTN_FLAG=0;
@@ -160,6 +164,14 @@ PARSE_SCAFFOLDS() {
 	awk '/>/{filename="GeneratedFiles/out_spades_/Nodes/"NR".fasta"}; {print >filename}' GeneratedFiles/out_spades_/scaffolds.fasta
 	echo -e "\033[1;34m[RFSC]\033[0m Parse finnished! The result can be find in GeneratedFiles/out_spades_/Nodes/"
 
+	if [[ $SET_LEN_COV -eq "1" ]]; then
+		NODE_LENGTH=$SET_NODE_LENGTH;
+		NODE_COVERAGE=$SET_NODE_COVERAGE;
+	else
+		NODE_LENGTH=100;
+		NODE_COVERAGE=3;
+	fi
+
 	echo -e "\033[1;34m[RFSC]\033[0m Start filtering nodes based on Lenght & Coverage!"
 	for file in GeneratedFiles/out_spades_/Nodes/*
 	do
@@ -168,7 +180,7 @@ PARSE_SCAFFOLDS() {
 		NODE_COV=$(awk -F_ '{print $6}' <<< ${REF})
 		COV_TO_INT=(${NODE_COV//./ })
 
-		if [[ "$NODE_LEN" -gt "100" ]] && [[ "${COV_TO_INT[0]}" -ge "3" ]]; then
+		if [[ "$NODE_LEN" -gt "$NODE_LENGTH" ]] && [[ "${COV_TO_INT[0]}" -ge "$NODE_COVERAGE" ]]; then
 			continue
 		else
 			rm $file
@@ -206,25 +218,31 @@ FALCON_RM_MODE(){
 	PARSE_SCAFFOLDS;
 	# 
 	reads=0
-	while read line
+	for file in GeneratedFiles/out_spades_/Nodes/*
 	do
-		array[ $reads ]="$line"
+		array[ $reads ]=$file
 		(( reads++ ))
-	done < <(ls -ls GeneratedFiles/out_spades_/Nodes)
+	done
 	#
 	mkdir Outputs/FalconReads
 	len=${#array[@]}
-	i=1
+	i=0
 	while [[ $i != $len ]]
 	do
 		if [[ $(( ($len - $i) % 2)) == 0 ]]; then
-			R1=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
-			R2=`echo "${array[i+1]}"|awk 'NF>1{print $NF}'`
+			path1=${array[i]}
+			path2=${array[i+1]}
+			path_to_file1=(${path1//// })
+			path_to_file2=(${path2//// })
+			R1=${path_to_file1[3]}
+			R2=${path_to_file2[3]}
 			echo -e "\033[1;34m[RFSC]\033[0m Analysing Nodes $R1 & $R2 with $(($THREADS_AVAILABLE/2)) threads each!"
 			FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Nodes/$R1 References/NCBI-Virus/VDB.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Nodes/$R2 References/NCBI-Virus/VDB.fa
 			(( i+=2 ))
 		else
-			R=`echo "${array[i]}"|awk 'NF>1{print $NF}'`
+			path=${array[i]}
+			path_to_file=(${path//// })
+			R=${path_to_file[3]}
 			echo -e "\033[1;34m[RFSC]\033[0m Analysing Node $R with $(($THREADS_AVAILABLE)) threads!"
 			FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconReads/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Nodes/$R References/NCBI-Virus/VDB.fa
 			(( i++ ))
@@ -316,6 +334,12 @@ do
 			GET_THREADS="$2";
 			shift 2
 		;;
+		-dlc|--set-len-cov)
+			SET_LEN_COV=1;
+			SET_NODE_LENGTH="$2";
+			SET_NODE_COVERAGE="$3";
+			shift 3
+		;;
 		-bref|--build-ref-virus)
 			BUILD_DB_VIRUS=1;
 			shift
@@ -398,12 +422,16 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo -e "   -t,  --threads \033[0;34m<THREADS>\033[0m                                                  "
 	echo "                          Number of threads to be used                       "
 	echo "                                                                             "
+	echo -e "   -dlc,  --set-len-cov \033[0;34m<LEN> <COV>\033[0m                                          "
+	echo "                          Define the Length and Coverage values              "
+	echo "                          for the scaffolds filtering process                "
+	echo "                                                                             "
 	echo "   -bref, --build-ref-virus                                                  "
 	echo "                          Build reference database of virus from NCBI        "
 	echo "                                                                             "
 	echo "   -gad,  --gen-adapters  Generate FASTA file with adapters                  "
 	echo "                                                                             "
-	echo -e "   -synt, --synthetic \033[0;34m[FILE1] : [FILE3]\033[0m                                      "
+	echo -e "   -synt, --synthetic \033[0;34m[FILE1]:[FILE3]\033[0m                                        "
 	echo "                          Generate a synthetical sequence using 3            "
 	echo "                          reference files for testing purposes               "
 	echo "                                                                             "
@@ -457,6 +485,13 @@ fi
 if [ "$THREADS" -eq "1" ]; then
 	THREADS_AVAILABLE=$GET_THREADS;
 	echo -e "\033[1;34m[RFSC]\033[0m The system is now set to use $THREADS_AVAILABLE threads!"
+fi
+#
+# ======================================================================
+# SET LENGTH & COVERAGE VALUES FOR SCAFFOLDS FILTERING
+#
+if [ "$SET_LEN_COV" -eq "1" ]; then
+	echo -e "\033[1;34m[RFSC]\033[0m The Coverage value for each node is now set to $SET_NODE_COVERAGE & length to $SET_NODE_LENGTH!"
 fi
 #
 # ======================================================================
