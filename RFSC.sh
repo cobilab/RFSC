@@ -45,7 +45,7 @@ SET_NODE_COVERAGE="";
 #
 FALCON_FLAG=0;
 FALCON_MODE="";
-BLASTN_FLAG=0;
+BLASTN_REMOTE_FLAG=0;
 #
 RUN_DECRYPT=0;
 RUN_ENCRYPT=0;
@@ -159,7 +159,7 @@ SPADES_ASSEMBLY() {
 # PARSE SCAFFOLDS INTO NODES (MINOR SCAFFOLDS)
 #
 PARSE_SCAFFOLDS() {
-	echo -e "\033[1;34m[RFSC]\033[0m Start parsing scaffolds.fasta ..."
+	echo -e "\033[1;34m[RFSC]\033[0m Start parsing scaffolds.fasta"
 	mkdir GeneratedFiles/out_spades_/Nodes
 	awk '/>/{filename="GeneratedFiles/out_spades_/Nodes/"NR".fasta"}; {print >filename}' GeneratedFiles/out_spades_/scaffolds.fasta
 	echo -e "\033[1;34m[RFSC]\033[0m Parse finnished! The result can be find in GeneratedFiles/out_spades_/Nodes/"
@@ -215,8 +215,6 @@ FALCON_SO_MODE() {
 # FALCON ANALYSIS - EACH READS
 #
 FALCON_RM_MODE(){
-	PARSE_SCAFFOLDS;
-	# 
 	reads=0
 	for file in GeneratedFiles/out_spades_/Nodes/*
 	do
@@ -224,7 +222,7 @@ FALCON_RM_MODE(){
 		(( reads++ ))
 	done
 	#
-	mkdir Outputs/FalconReads
+	mkdir Outputs/FalconNodes
 	len=${#array[@]}
 	i=0
 	while [[ $i != $len ]]
@@ -237,14 +235,14 @@ FALCON_RM_MODE(){
 			R1=${path_to_file1[3]}
 			R2=${path_to_file2[3]}
 			echo -e "\033[1;34m[RFSC]\033[0m Analysing Nodes $R1 & $R2 with $(($THREADS_AVAILABLE/2)) threads each!"
-			FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Nodes/$R1 References/NCBI-Virus/VDB.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconReads/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Nodes/$R2 References/NCBI-Virus/VDB.fa
+			FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Nodes/$R1 References/NCBI-Virus/VDB.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Nodes/$R2 References/NCBI-Virus/VDB.fa
 			(( i+=2 ))
 		else
 			path=${array[i]}
 			path_to_file=(${path//// })
 			R=${path_to_file[3]}
 			echo -e "\033[1;34m[RFSC]\033[0m Analysing Node $R with $(($THREADS_AVAILABLE)) threads!"
-			FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconReads/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Nodes/$R References/NCBI-Virus/VDB.fa
+			FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Nodes/$R References/NCBI-Virus/VDB.fa
 			(( i++ ))
 		fi 
 	done
@@ -258,6 +256,7 @@ FALCON_ANALYSIS() {
 		FALCON_SO_MODE;
 	elif [[ $FALCON_MODE == "RM" ]]; then
 		FALCON_SO_MODE;
+		PARSE_SCAFFOLDS;
 		FALCON_RM_MODE;
 	else
 		echo -e "\033[1;34m[RFSC] \033[1;31m Invalid Argument - $FALCON_MODE! \033[0m";
@@ -267,6 +266,20 @@ FALCON_ANALYSIS() {
 		exit 0;
 	fi
 
+}
+#
+# ==================================================================
+# BLASTN ANALYSIS
+#
+BLASTN_ANALYSIS() {
+	PARSE_SCAFFOLDS;
+	mkdir Outputs/BlastnNodes
+	for file in GeneratedFiles/out_spades_/Nodes/*
+	do
+		file_name=(${file//// })
+		echo -e "\033[1;34m[RFSC]\033[0m Blast+ is now processing $file"
+		blastn -db nt -task blastn-short -query $file -remote > Outputs/BlastnNodes/${file_name[3]}.txt
+	done
 }
 #
 # ==================================================================
@@ -370,6 +383,10 @@ do
 			FALCON_MODE="$2";
 			shift 2
 		;;
+		-rbr|--run-blastn-remote)
+			BLASTN_REMOTE_FLAG=1;
+			shift
+		;;
 		-enc|--encrypt)
 			RUN_ENCRYPT=1;
 			shift
@@ -447,6 +464,10 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          Run Data Analysis with FALCON using only the       "
 	echo "                          scaffolds (SO) or analysing by each                "
 	echo "                          Read (RM)                                          "
+	echo "                                                                             "
+	echo "   -rbr, --run-blastn-remote                                                 "
+	echo "                          Run Data Analysus with Blast+ using remote         "
+	echo "                          access to NCBI databases                           "
 	echo "                                                                             "
 	echo "   -dec, --decrypt        Decrypt all files in /Data_Security/Decrypted_Data "
 	echo "   -enc, --encrypt        Encrypt all files in /Data_Security/Encrypted_data "
@@ -532,8 +553,15 @@ fi
 # ===================================================================
 #
 if [[ "$FALCON_FLAG" -eq "1" ]]; then
-	echo -e "\033[1;34m[RFSC]\033[0m Starting Data Analysis!"
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Data Analysis with FALCON!"
 	FALCON_ANALYSIS "$FALCON_MODE";
+fi
+#
+# ===================================================================
+#
+if [[ "$BLASTN_REMOTE_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Data Analysis with Remote Blast+!"
+	BLASTN_ANALYSIS;
 fi
 #
 # ===================================================================
