@@ -13,7 +13,8 @@ echo "Start Installation..."
 
 conda install -c cobilab falcon --yes
 conda install -c cobilab gto --yes
-conda install -y -c bioconda geco2
+conda install -y -c bioconda geco3
+conda install -c bioconda ac --yes
 conda install -c bioconda -y cryfa
 conda install -c bioconda trimmomatic --yes
 conda install -c bioconda fastp --yes
@@ -27,7 +28,8 @@ conda install -c bioconda art --yes
 #
 Check_Installation "FALCON";
 Check_Installation "gto";
-Check_Installation "GeCo2";
+Check_Installation "GeCo3";
+Check_Installation "AC";
 Check_Installation "cryfa";
 Check_Installation "trimmomatic";
 Check_Installation "fastp";
