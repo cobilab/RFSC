@@ -26,6 +26,8 @@ conda install -c bioconda blast --yes
 conda install -c bioconda mummer4 --yes
 conda install -c bioconda art --yes
 #
+./src/install_orf.sh
+#
 Check_Installation "FALCON";
 Check_Installation "gto";
 Check_Installation "GeCo3";
@@ -39,3 +41,4 @@ Check_Installation "efetch";
 Check_Installation "blastn";
 Check_Installation "dnadiff";
 Check_Installation "art_illumina";
+Check_Installation "./ORFs/ORFfinder";
