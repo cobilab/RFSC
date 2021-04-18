@@ -420,7 +420,8 @@ do
 			TRIMMING_TYPE="TT";
 			ASSEMBLY_FLAG=1;
 			FALCON_FLAG=1;
-			FALCON_MODE="SO";
+			FALCON_MODE="RM";
+			ORFFINDER_FLAG=1;
 			shift
 		;;
 		-*) # Unknown option
@@ -488,6 +489,10 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -rbr, --run-blastn-remote                                                 "
 	echo "                          Run Data Analysus with Blast+ using remote         "
 	echo "                          access to NCBI databases                           "
+	echo "                                                                             "
+	echo "   -orf, --orf-finder     Perform DNA sequence translation for amino acids,  "
+	echo "                          finds all open reading frames (ORF) and remove     "
+	echo "                          stop codons                                        "
 	echo "                                                                             "
 	echo "   -dec, --decrypt        Decrypt all files in /Data_Security/Decrypted_Data "
 	echo "   -enc, --encrypt        Encrypt all files in /Data_Security/Encrypted_data "
