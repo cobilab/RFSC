@@ -50,6 +50,9 @@ BLASTN_REMOTE_FLAG=0;
 RUN_DECRYPT=0;
 RUN_ENCRYPT=0;
 #
+ORFFINDER_FLAG=0;
+#
+#
 # ==================================================================
 # CURRENT VIRUSES OR VIRUSES GROUPS ACCEPTED TO BE SEARCHED
 #
@@ -276,9 +279,22 @@ BLASTN_ANALYSIS() {
 	mkdir Outputs/BlastnNodes
 	for file in GeneratedFiles/out_spades_/Nodes/*
 	do
-		file_name=(${file//// })
-		echo -e "\033[1;34m[RFSC]\033[0m Blast+ is now processing $file"
-		blastn -db nt -task blastn-short -query $file -remote > Outputs/BlastnNodes/${file_name[3]}.txt
+		file_name=$(basename $file);
+		echo -e "\033[1;34m[RFSC]\033[0m Blastn is now processing $file"
+		blastn -db nt -task blastn-short -query $file -remote > Outputs/BlastnNodes/$file_name.txt
+	done
+}
+#
+# ==================================================================
+# ORF FINDER SEARCH (ORFfinder)
+#
+ORF_SEARCH() {
+	mkdir ORFs/NodesProteins
+	for file in GeneratedFiles/out_spades_/Nodes/*
+	do
+		node_file=$(basename $file);
+		echo -e "\033[1;34m[RFSC]\033[0m ORFfinder is now processing $node_file"
+		./ORFs/ORFfinder -s 1 -in GeneratedFiles/out_spades_/Nodes/$node_file -outfmt 0 -out ORFs/NodesProteins/$node_file.protein.fasta
 	done
 }
 #
@@ -385,6 +401,10 @@ do
 		;;
 		-rbr|--run-blastn-remote)
 			BLASTN_REMOTE_FLAG=1;
+			shift
+		;;
+		-orf|--orf-finder)
+			ORFFINDER_FLAG=1;
 			shift
 		;;
 		-enc|--encrypt)
@@ -560,8 +580,15 @@ fi
 # ===================================================================
 #
 if [[ "$BLASTN_REMOTE_FLAG" -eq "1" ]]; then
-	echo -e "\033[1;34m[RFSC]\033[0m Starting Data Analysis with Remote Blast+!"
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Data Analysis with Remote Blastn!"
 	BLASTN_ANALYSIS;
+fi
+#
+# ===================================================================
+#
+if [[ "$ORFFINDER_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Open Reading Frames (ORFs) Search!"
+	ORF_SEARCH;
 fi
 #
 # ===================================================================
