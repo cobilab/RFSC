@@ -613,6 +613,7 @@ if [ "$BUILD_DB_VIRUS" -eq "1" ]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Building viral database at References/NCBI-Virus/";
 	gto_build_dbs.sh --build-viral
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	gunzip VDB.fa.gz
 	cd ../..
 fi
 #
@@ -624,6 +625,7 @@ if [ "$BUILD_DB_BACTERIA" -eq "1" ]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Building bacteria database at References/NCBI-Bacteria/";
 	gto_build_dbs.sh --build-bacteria
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	gunzip BDB.fa.gz
 	cd ../..
 fi
 #
@@ -635,6 +637,7 @@ if [ "$BUILD_DB_ARCHAEA" -eq "1" ]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Building archaeas database at References/NCBI-Archaea/";
 	gto_build_dbs.sh --build-archaea
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	gunzip ADB.fa.gz
 	cd ../..
 fi
 #
@@ -646,6 +649,7 @@ if [ "$BUILD_DB_PROTOZOA" -eq "1" ]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Building protozoa database at References/NCBI-Protozoa/";
 	gto_build_dbs.sh --build-protozoa
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	gunzip PDB.fa.gz
 	cd ../..
 fi
 #
@@ -657,6 +661,7 @@ if [ "$BUILD_DB_FUNGI" -eq "1" ]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Building fungi database at References/NCBI-Fungi/";
 	gto_build_dbs.sh --build-fungi
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	gunzip FDB.fa.gz
 	cd ../..
 fi
 #
@@ -668,6 +673,7 @@ if [ "$BUILD_DB_PLANT" -eq "1" ]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Building plant database at References/NCBI-Plant/";
 	gto_build_dbs.sh --build-plant
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	gunzip TDB.fa.gz
 	cd ../..
 fi
 #
@@ -679,6 +685,7 @@ if [ "$BUILD_DB_MITOCHONDRIAL" -eq "1" ]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Building mitochondrial database at References/NCBI-Mitochondrial/";
 	gto_build_dbs.sh --build-mito
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	gunzip MTDB.fa.gz
 	cd ../..
 fi
 #
@@ -690,6 +697,7 @@ if [ "$BUILD_DB_PLASTID" -eq "1" ]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Building plastid database at References/NCBI-Plastid/";
 	gto_build_dbs.sh --build-plast
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	gunzip PLDB.fa.gz
 	cd ../..
 fi
 #
