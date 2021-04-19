@@ -16,6 +16,16 @@ SHOW_VERSION=0;
 INSTALL=0;
 #
 BUILD_DB_VIRUS=0;
+BUILD_DB_BACTERIA=0;
+BUILD_DB_ARCHAEA=0;
+BUILD_DB_PROTOZOA=0;
+BUILD_DB_FUNGI=0;
+BUILD_DB_PLANT=0;
+BUILD_DB_INVERTEBRATE=0;
+BUILD_DB_VERTEBRATE_MAMMALIAN=0;
+BUILD_DB_VERTEBRATE_OTHER=0;
+BUILD_DB_MITOCHONDRIAL=0;
+BUILD_DB_PLASTID=0;
 #
 GEN_ADAPTERS=0;
 #
@@ -369,8 +379,36 @@ do
 			SET_NODE_COVERAGE="$3";
 			shift 3
 		;;
-		-bref|--build-ref-virus)
+		-bviral|--build-ref-virus)
 			BUILD_DB_VIRUS=1;
+			shift
+		;;
+		-bbact|--build-ref-bacteria)
+			BUILD_DB_BACTERIA=1;
+			shift
+		;;
+		-barch|--build-ref-archaea)
+			BUILD_DB_ARCHAEA=1;
+			shift
+		;;
+		-bprot|--build-ref-protozoa)
+			BUILD_DB_PROTOZOA=1;
+			shift
+		;;
+		-bfung|--build-ref-fungi)
+			BUILD_DB_FUNGI=1;
+			shift
+		;;
+		-bplan|--build-ref-plant)
+			BUILD_DB_PLANT=1;
+			shift
+		;;
+		-bmito|--build-ref-mitochondrial)
+			BUILD_DB_MITOCHONDRIAL=1;
+			shift
+		;;
+		-bplas|--build-ref-plastid)
+			BUILD_DB_PLASTID=1;
 			shift
 		;;
 		-gad|--gen-adapters)
@@ -414,6 +452,19 @@ do
 		-dec|--decrypt)
 			RUN_DECRYPT=1;
 			shift
+		;;
+		-ball|--build-ref-all)
+			BUILD_DB_VIRUS=1;
+			BUILD_DB_BACTERIA=1;
+			BUILD_DB_ARCHAEA=1;
+			BUILD_DB_PROTOZOA=1;
+			BUILD_DB_FUNGI=1;
+			BUILD_DB_PLANT=1;
+			BUILD_DB_INVERTEBRATE=1;
+			BUILD_DB_VERTEBRATE_MAMMALIAN=1;
+			BUILD_DB_VERTEBRATE_OTHER=1;
+			BUILD_DB_MITOCHONDRIAL=1;
+			BUILD_DB_PLASTID=1;
 		;;
 		-all|--run-all)
 			TRIMMING_FLAG=1;
@@ -464,8 +515,22 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          Define the Length and Coverage values              "
 	echo "                          for the scaffolds filtering process                "
 	echo "                                                                             "
-	echo "   -bref, --build-ref-virus                                                  "
-	echo "                          Build reference database of virus from NCBI        "
+	echo "   -bviral, --build-ref-virus                                                "
+	echo -e "                          Build reference database for \033[1;36mvirus\033[0m from NCBI       "
+	echo "   -bbact,  --build-ref-bacteria                                             "
+	echo -e "                          Build reference database for \033[1;36mbacterias\033[0m from NCBI   "
+	echo "   -barch,  --build-ref-archaea                                              "
+	echo -e "                          Build reference database for \033[1;36marchaeas\033[0m from NCBI    "
+	echo "   -bprot,  --build-ref-protozoa                                             "
+	echo -e "                          Build reference database for \033[1;36mprotozoa\033[0m from NCBI    "
+	echo "   -bfung,  --build-ref-fungi                                                "
+	echo -e "                          Build reference database for \033[1;36mfungi\033[0m from NCBI       "
+	echo "   -bplan,  --build-ref-plant                                                "
+	echo -e "                          Build reference database for \033[1;36mplant\033[0m from NCBI       "
+	echo "   -bmito,  --build-ref-mitochondrial                                        "
+	echo -e "                          Build reference database for \033[1;36mmitochondrial\033[0m from NCBI"
+	echo "   -bplas,  --build-ref-plastid                                              "
+	echo -e "                          Build reference database for \033[1;36mplastid\033[0m from NCBI     "
 	echo "                                                                             "
 	echo "   -gad,  --gen-adapters  Generate FASTA file with adapters                  "
 	echo "                                                                             "
@@ -541,11 +606,92 @@ if [ "$SET_LEN_COV" -eq "1" ]; then
 fi
 #
 # ======================================================================
-# BUILD REFERENCE VIRUS DATABASE
+# BUILD REFERENCE VIRAL DATABASE
 #
 if [ "$BUILD_DB_VIRUS" -eq "1" ]; then
-	./src/build_ref_db_virus.sh
-fi	
+	cd References/NCBI-Virus/
+	echo -e "\033[1;34m[RFSC]\033[0m Building viral database at References/NCBI-Virus/";
+	gto_build_dbs.sh --build-viral
+	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	cd ../..
+fi
+#
+# ======================================================================
+# BUILD REFERENCE BACTERIAL DATABASE
+#
+if [ "$BUILD_DB_BACTERIA" -eq "1" ]; then
+	cd References/NCBI-Bacteria/
+	echo -e "\033[1;34m[RFSC]\033[0m Building bacteria database at References/NCBI-Bacteria/";
+	gto_build_dbs.sh --build-bacteria
+	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	cd ../..
+fi
+#
+# ======================================================================
+# BUILD REFERENCE ARCHAEAS DATABASE
+#
+if [ "$BUILD_DB_ARCHAEA" -eq "1" ]; then
+	cd References/NCBI-Archaea/
+	echo -e "\033[1;34m[RFSC]\033[0m Building archaeas database at References/NCBI-Archaea/";
+	gto_build_dbs.sh --build-archaea
+	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	cd ../..
+fi
+#
+# ======================================================================
+# BUILD REFERENCE PROTOZOA DATABASE
+#
+if [ "$BUILD_DB_PROTOZOA" -eq "1" ]; then
+	cd References/NCBI-Protozoa/
+	echo -e "\033[1;34m[RFSC]\033[0m Building protozoa database at References/NCBI-Protozoa/";
+	gto_build_dbs.sh --build-protozoa
+	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	cd ../..
+fi
+#
+# ======================================================================
+# BUILD REFERENCE FUNGI DATABASE
+#
+if [ "$BUILD_DB_FUNGI" -eq "1" ]; then
+	cd References/NCBI-Fungi/
+	echo -e "\033[1;34m[RFSC]\033[0m Building fungi database at References/NCBI-Fungi/";
+	gto_build_dbs.sh --build-fungi
+	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	cd ../..
+fi
+#
+# ======================================================================
+# BUILD REFERENCE PLANT DATABASE
+#
+if [ "$BUILD_DB_PLANT" -eq "1" ]; then
+	cd References/NCBI-Plant/
+	echo -e "\033[1;34m[RFSC]\033[0m Building plant database at References/NCBI-Plant/";
+	gto_build_dbs.sh --build-plant
+	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	cd ../..
+fi
+#
+# ======================================================================
+# BUILD REFERENCE MITOCHONDRIAL DATABASE
+#
+if [ "$BUILD_DB_MITOCHONDRIAL" -eq "1" ]; then
+	cd References/NCBI-Mitochondrial/
+	echo -e "\033[1;34m[RFSC]\033[0m Building mitochondrial database at References/NCBI-Mitochondrial/";
+	gto_build_dbs.sh --build-mito
+	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	cd ../..
+fi
+#
+# ======================================================================
+# BUILD REFERENCE PLASTID DATABASE
+#
+if [ "$BUILD_DB_PLASTID" -eq "1" ]; then
+	cd References/NCBI-Plastid/
+	echo -e "\033[1;34m[RFSC]\033[0m Building plastid database at References/NCBI-Plastid/";
+	gto_build_dbs.sh --build-plast
+	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	cd ../..
+fi
 #
 # ======================================================================
 # GENERATE FASTA ADAPTERS
