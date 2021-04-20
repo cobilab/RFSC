@@ -33,6 +33,12 @@ THREADS_AVAILABLE=`cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l`;
 THREADS=0;
 GET_THREADS="";
 #
+SET_THRESHOLD_REF_BASED=0;
+MAX_THRESHOLD_REF_BASED=70;
+MIN_THRESHOLD_REF_BASED=1;
+GET_MAX_THRESHOLD_REF_BASED="";
+GET_MIN_THRESHOLD_REF_BASED="";
+#
 GEN_SYNTHETIC=0;
 REF_FILE1="";
 REF_FILE2="";
@@ -50,6 +56,8 @@ TRIMMING_MODE=""; # SE or PE
 ASSEMBLY_FLAG=0;
 #
 SET_LEN_COV=0;
+NODE_LENGTH=100;
+NODE_COVERAGE=3;
 SET_NODE_LENGTH="";
 SET_NODE_COVERAGE="";
 #
@@ -72,7 +80,7 @@ declare -a VIRUSES=("B19" "HBV");
 # VERIFICATION FUNCTIONS
 #
 CHECK_ADAPTERS() {
-	if [ ! -f Input_Data/adapters.fa ]; then
+	if [ ! -f Input_Data/ReferenceBased/adapters.fa ]; then
 		echo -e "\033[1;33m[RFSC] ERROR: adapter sequences (adapter.fa) not found! \033[0m"
 		echo -e "\033[1;34m[RFSC] \033[0;33m ./RFSC.sh --gen-adapters \033[0m : To generate the adapter sequences ...";
 	fi
@@ -94,7 +102,7 @@ TRIMMING_SEQUENCE() {
 	#
 	# Fetch the input files
 	i=0;
-	for file in Input_Data/*.fq.gz
+	for file in Input_Data/ReferenceBased/*.fq.gz
 	do
 		input_file[i]="$file"
 		(( i++ ))
@@ -106,7 +114,7 @@ TRIMMING_SEQUENCE() {
 		echo -e "\033[1;34m[RFSC]\033[0m Currently using $TRIMMING_THREADS available threads!";
 		#
 		CHECK_ADAPTERS;
-		cp Input_Data/adapters.fa adapters.fa
+		cp Input_Data/ReferenceBased/adapters.fa adapters.fa
 		#
 		if [[ $TRIMMING_MODE == "PE" ]]; then
 			trimmomatic $TRIMMING_MODE -threads $TRIMMING_THREADS -phred33 ${input_file[0]} ${input_file[1]} GeneratedFiles/o_fw_pr.fq GeneratedFiles/o_fw_unpr.fq GeneratedFiles/o_rv_pr.fq GeneratedFiles/o_rv_unpr.fq ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:25
@@ -176,14 +184,6 @@ PARSE_SCAFFOLDS() {
 	mkdir GeneratedFiles/out_spades_/Nodes
 	awk '/>/{filename="GeneratedFiles/out_spades_/Nodes/"NR".fasta"}; {print >filename}' GeneratedFiles/out_spades_/scaffolds.fasta
 	echo -e "\033[1;34m[RFSC]\033[0m Parse finnished! The result can be find in GeneratedFiles/out_spades_/Nodes/"
-
-	if [[ $SET_LEN_COV -eq "1" ]]; then
-		NODE_LENGTH=$SET_NODE_LENGTH;
-		NODE_COVERAGE=$SET_NODE_COVERAGE;
-	else
-		NODE_LENGTH=100;
-		NODE_COVERAGE=3;
-	fi
 
 	echo -e "\033[1;34m[RFSC]\033[0m Start filtering nodes based on Lenght & Coverage!"
 	for file in GeneratedFiles/out_spades_/Nodes/*
@@ -262,6 +262,55 @@ FALCON_RM_MODE(){
 }
 #
 # ==================================================================
+# SELECT RESULTS (AFTER FALCON)
+#
+SELECT_RESULTS() {
+echo -e "\033[1;34m[RFSC]\033[0m Starting selection procedure"
+mkdir Results/falcon_seq
+for file in Outputs/FalconNodes/*
+do
+    readarray -t fasta_node <$file
+
+    NLINES=${#fasta_node[@]}
+
+    for (( i=0; i<$NLINES; i++ ));
+    do
+        PER=`echo "${fasta_node[i]}"|awk '{print $3}'`
+        FIND_MATCH=`echo "$PER > $MAX_THRESHOLD_REF_BASED" | bc`
+        SECOND_PHASE=`echo "$PER > $MIN_THRESHOLD_REF_BASED && $PER < $MAX_THRESHOLD_REF_BASED" | bc`
+
+        file=${file#"Outputs/FalconNodes/falcon_RM_"}
+        file=${file%"_results.txt"}
+
+        if [[ $FIND_MATCH -eq "1" ]]; then
+            GENOME=`echo "${fasta_node[i]}"|awk '{print $4}'`
+
+			echo -e "\033[1;34m[RFSC]\033[0m Moving $file to Results/falcon_seq"
+            mv GeneratedFiles/out_spades_/Nodes/$file Results/falcon_seq
+
+            ALREADY_FOUND=`grep -x $GENOME Results/ref_result.txt`
+            if [[ $ALREADY_FOUND != "" ]]; then
+                echo -e "\033[1;34m[RFSC]\033[0m Sequence already stated in Results/ref_result.txt"
+            else
+                printf "$GENOME\n" >> Results/ref_result.txt
+            fi
+
+            break
+        elif [[ $SECOND_PHASE -eq "1" ]]; then
+			echo -e "\033[1;34m[RFSC]\033[0m Moving $file to Input_Data/ReferenceFree"
+            mv GeneratedFiles/out_spades_/Nodes/$file Input_Data/ReferenceFree
+            break
+        else
+			echo -e "\033[1;34m[RFSC]\033[0m Deleting $file"
+            rm GeneratedFiles/out_spades_/Nodes/$file
+            break
+        fi
+
+    done
+done
+}
+#
+# ==================================================================
 # FALCON ANALYSIS
 #
 FALCON_ANALYSIS() {
@@ -271,6 +320,7 @@ FALCON_ANALYSIS() {
 		FALCON_SO_MODE;
 		PARSE_SCAFFOLDS;
 		FALCON_RM_MODE;
+		SELECT_RESULTS;
 	else
 		echo -e "\033[1;34m[RFSC] \033[1;31m Invalid Argument - $FALCON_MODE! \033[0m";
 		echo -e "\033[1;34m[RFSC]\033[0m Use one of the follow:";
@@ -300,11 +350,12 @@ BLASTN_ANALYSIS() {
 #
 ORF_SEARCH() {
 	mkdir ORFs/NodesProteins
-	for file in GeneratedFiles/out_spades_/Nodes/*
+	for file in Input_Data/ReferenceFree/*
 	do
 		node_file=$(basename $file);
 		echo -e "\033[1;34m[RFSC]\033[0m ORFfinder is now processing $node_file"
-		./ORFs/ORFfinder -s 1 -in GeneratedFiles/out_spades_/Nodes/$node_file -outfmt 0 -out ORFs/NodesProteins/$node_file.protein.fasta
+		node_file=${node_file%".fasta"}
+		./ORFs/ORFfinder -s 1 -in Input_Data/ReferenceFree/$node_file.fasta -outfmt 0 -out ORFs/NodesProteins/$node_file.protein.fasta
 	done
 }
 #
@@ -372,6 +423,12 @@ do
 			THREADS=1;
 			GET_THREADS="$2";
 			shift 2
+		;;
+		-tmm|--set-threshold-max-min)
+			SET_THRESHOLD_REF_BASED=1;
+			GET_MAX_THRESHOLD_REF_BASED="$2";
+			GET_MIN_THRESHOLD_REF_BASED="$3";
+			shift 3
 		;;
 		-dlc|--set-len-cov)
 			SET_LEN_COV=1;
@@ -511,6 +568,10 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo -e "   -t,  --threads \033[0;34m<THREADS>\033[0m                                                  "
 	echo "                          Number of threads to be used                       "
 	echo "                                                                             "
+	echo -e "   -tmm,  --set-threshold-max-min \033[0;34m<MAX> <MIN>\033[0m                                "
+	echo "                          Set Max & Min thresholds for percentage            "
+	echo "                          similarity in reference based analysis             "
+	echo "                                                                             "
 	echo -e "   -dlc,  --set-len-cov \033[0;34m<LEN> <COV>\033[0m                                          "
 	echo "                          Define the Length and Coverage values              "
 	echo "                          for the scaffolds filtering process                "
@@ -599,9 +660,21 @@ if [ "$THREADS" -eq "1" ]; then
 fi
 #
 # ======================================================================
+# REFERENCE BASED PERCENTAGE (MAX MIN) THRESHOLDS
+#
+if [ "$SET_THRESHOLD_REF_BASED" -eq "1" ]; then
+	THREADS_AVAILABLE=$GET_THREADS;
+	MAX_THRESHOLD_REF_BASED=$GET_MAX_THRESHOLD_REF_BASED;
+	MIN_THRESHOLD_REF_BASED=$GET_MIN_THRESHOLD_REF_BASED;
+	echo -e "\033[1;34m[RFSC]\033[0m The system is now set to use $MAX_THRESHOLD_REF_BASED & $MIN_THRESHOLD_REF_BASED as thresholds for reference based analysis!"
+fi
+#
+# ======================================================================
 # SET LENGTH & COVERAGE VALUES FOR SCAFFOLDS FILTERING
 #
 if [ "$SET_LEN_COV" -eq "1" ]; then
+	NODE_LENGTH=$SET_NODE_LENGTH;
+	NODE_COVERAGE=$SET_NODE_COVERAGE;
 	echo -e "\033[1;34m[RFSC]\033[0m The Coverage value for each node is now set to $SET_NODE_COVERAGE & length to $SET_NODE_LENGTH!"
 fi
 #
