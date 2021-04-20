@@ -18,7 +18,7 @@ ART_LEN=150;						# -l
 ART_FOLD=40;						# -f
 ART_SIZE=200;						# -m
 ART_DSV=10;							# -s
-ART_OUTPUT="Input_Data/sample";	# -o
+ART_OUTPUT="Input_Data/ReferenceBased/sample";	# -o
 
 # GTO GENERATOR VALUES
 GTO_NUM_SYMBOLS=5000;				# -n
@@ -45,4 +45,4 @@ mv tmp.fa $ART_INPUT
 art_illumina -rs $RAND_SEED -ss $SEQ_SYSTEM -sam -i $ART_INPUT -p -l $ART_LEN -f $ART_FOLD -m $ART_SIZE -s $ART_DSV -o $ART_OUTPUT
 
 # GZIP FASTQ FILES
-gzip Input_Data/sample*.fq
+gzip Input_Data/ReferenceBased/sample*.fq
