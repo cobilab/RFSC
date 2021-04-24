@@ -21,9 +21,9 @@ BUILD_DB_ARCHAEA=0;
 BUILD_DB_PROTOZOA=0;
 BUILD_DB_FUNGI=0;
 BUILD_DB_PLANT=0;
-BUILD_DB_INVERTEBRATE=0;
-BUILD_DB_VERTEBRATE_MAMMALIAN=0;
-BUILD_DB_VERTEBRATE_OTHER=0;
+#BUILD_DB_INVERTEBRATE=0;
+#BUILD_DB_VERTEBRATE_MAMMALIAN=0;
+#BUILD_DB_VERTEBRATE_OTHER=0;
 BUILD_DB_MITOCHONDRIAL=0;
 BUILD_DB_PLASTID=0;
 #
@@ -227,7 +227,7 @@ FALCON_SO_MODE() {
 # ==================================================================
 # FALCON ANALYSIS - EACH READS
 #
-FALCON_RM_MODE(){
+FALCON_RM_MODE() {
 	reads=0
 	for file in GeneratedFiles/out_spades_/Nodes/*
 	do
@@ -265,49 +265,49 @@ FALCON_RM_MODE(){
 # SELECT RESULTS (AFTER FALCON)
 #
 SELECT_RESULTS() {
-echo -e "\033[1;34m[RFSC]\033[0m Starting selection procedure"
-mkdir Results/falcon_seq
-for file in Outputs/FalconNodes/*
-do
-    readarray -t fasta_node <$file
+	echo -e "\033[1;34m[RFSC]\033[0m Starting selection procedure"
+	mkdir Results/falcon_seq
+	for file in Outputs/FalconNodes/*
+	do
+		readarray -t fasta_node <$file
 
-    NLINES=${#fasta_node[@]}
+		NLINES=${#fasta_node[@]}
 
-    for (( i=0; i<$NLINES; i++ ));
-    do
-        PER=`echo "${fasta_node[i]}"|awk '{print $3}'`
-        FIND_MATCH=`echo "$PER > $MAX_THRESHOLD_REF_BASED" | bc`
-        SECOND_PHASE=`echo "$PER > $MIN_THRESHOLD_REF_BASED && $PER < $MAX_THRESHOLD_REF_BASED" | bc`
+		for (( i=0; i<$NLINES; i++ ));
+		do
+			PER=`echo "${fasta_node[i]}"|awk '{print $3}'`
+			FIND_MATCH=`echo "$PER > $MAX_THRESHOLD_REF_BASED" | bc`
+			SECOND_PHASE=`echo "$PER > $MIN_THRESHOLD_REF_BASED && $PER < $MAX_THRESHOLD_REF_BASED" | bc`
 
-        file=${file#"Outputs/FalconNodes/falcon_RM_"}
-        file=${file%"_results.txt"}
+			file=${file#"Outputs/FalconNodes/falcon_RM_"}
+			file=${file%"_results.txt"}
 
-        if [[ $FIND_MATCH -eq "1" ]]; then
-            GENOME=`echo "${fasta_node[i]}"|awk '{print $4}'`
+			if [[ $FIND_MATCH -eq "1" ]]; then
+				GENOME=`echo "${fasta_node[i]}"|awk '{print $4}'`
 
-			echo -e "\033[1;34m[RFSC]\033[0m Moving $file to Results/falcon_seq"
-            mv GeneratedFiles/out_spades_/Nodes/$file Results/falcon_seq
+				echo -e "\033[1;34m[RFSC]\033[0m Moving $file to Results/falcon_seq"
+				mv GeneratedFiles/out_spades_/Nodes/$file Results/falcon_seq
 
-            ALREADY_FOUND=`grep -x $GENOME Results/ref_result.txt`
-            if [[ $ALREADY_FOUND != "" ]]; then
-                echo -e "\033[1;34m[RFSC]\033[0m Sequence already stated in Results/ref_result.txt"
-            else
-                printf "$GENOME\n" >> Results/ref_result.txt
-            fi
+				ALREADY_FOUND=`grep -x $GENOME Results/ref_result.txt`
+				if [[ $ALREADY_FOUND != "" ]]; then
+					echo -e "\033[1;34m[RFSC]\033[0m Sequence already stated in Results/ref_result.txt"
+				else
+					printf "$GENOME\n" >> Results/ref_result.txt
+				fi
 
-            break
-        elif [[ $SECOND_PHASE -eq "1" ]]; then
-			echo -e "\033[1;34m[RFSC]\033[0m Moving $file to Input_Data/ReferenceFree"
-            mv GeneratedFiles/out_spades_/Nodes/$file Input_Data/ReferenceFree
-            break
-        else
-			echo -e "\033[1;34m[RFSC]\033[0m Deleting $file"
-            rm GeneratedFiles/out_spades_/Nodes/$file
-            break
-        fi
+				break
+			elif [[ $SECOND_PHASE -eq "1" ]]; then
+				echo -e "\033[1;34m[RFSC]\033[0m Moving $file to Input_Data/ReferenceFree"
+				mv GeneratedFiles/out_spades_/Nodes/$file Input_Data/ReferenceFree
+				break
+			else
+				echo -e "\033[1;34m[RFSC]\033[0m Deleting $file"
+				rm GeneratedFiles/out_spades_/Nodes/$file
+				break
+			fi
 
-    done
-done
+		done
+	done
 }
 #
 # ==================================================================
@@ -681,36 +681,71 @@ fi
 # BUILD REFERENCE VIRAL DATABASE
 #
 if [ "$BUILD_DB_VIRUS" -eq "1" ]; then
+	#cd References/NCBI-Virus/
+	#echo -e "\033[1;34m[RFSC]\033[0m Building viral database at References/NCBI-Virus/";
+	#gto_build_dbs.sh --build-viral
+	#echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	#gunzip VDB.fa.gz
+	#cd ../..
+
+	#mkdir /media/alexloure/'LACIE SHARE'/NCBI-Virus/
+	#cd /media/alexloure/'LACIE SHARE'/NCBI-Virus/
+
 	cd References/NCBI-Virus/
 	echo -e "\033[1;34m[RFSC]\033[0m Building viral database at References/NCBI-Virus/";
-	gto_build_dbs.sh --build-viral
+	curl 'ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/viral/assembly_summary.txt' | \
+	awk '{FS="\t"} !/^#/ {print $20} ' | \
+	sed -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/.+/)(GCF_.+)|\1\2/\2_genomic.fna.gz|' > viral_url_donwload.txt
+	cat viral_url_donwload.txt | xargs -n 1 -P $THREADS_AVAILABLE wget -q
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	gunzip VDB.fa.gz
-	cd ../..
+
 fi
 #
 # ======================================================================
 # BUILD REFERENCE BACTERIAL DATABASE
 #
 if [ "$BUILD_DB_BACTERIA" -eq "1" ]; then
+	#cd References/NCBI-Bacteria/
+	#echo -e "\033[1;34m[RFSC]\033[0m Building bacteria database at References/NCBI-Bacteria/";
+	#gto_build_dbs.sh --build-bacteria
+	#echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	#gunzip BDB.fa.gz
+	#cd ../..
+	
+	#mkdir /media/alexloure/'LACIE SHARE'/NCBI-Bacteria/
+	#cd /media/alexloure/'LACIE SHARE'/NCBI-Bacteria/
+
 	cd References/NCBI-Bacteria/
 	echo -e "\033[1;34m[RFSC]\033[0m Building bacteria database at References/NCBI-Bacteria/";
-	gto_build_dbs.sh --build-bacteria
+	curl 'ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/assembly_summary.txt' | \
+	awk '{FS="\t"} !/^#/ {print $20} ' | \
+	sed -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/.+/)(GCF_.+)|\1\2/\2_genomic.fna.gz|' > bacteria_url_donwload.txt
+	cat bacteria_url_donwload.txt | xargs -n 1 -P $THREADS_AVAILABLE wget -q
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	gunzip BDB.fa.gz
-	cd ../..
+
 fi
 #
 # ======================================================================
 # BUILD REFERENCE ARCHAEAS DATABASE
 #
 if [ "$BUILD_DB_ARCHAEA" -eq "1" ]; then
+	#cd References/NCBI-Archaea/
+	#echo -e "\033[1;34m[RFSC]\033[0m Building archaeas database at References/NCBI-Archaea/";
+	#gto_build_dbs.sh --build-archaea
+	#echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	#gunzip ADB.fa.gz
+	#cd ../..
+
+	#mkdir /media/alexloure/'LACIE SHARE'/NCBI-Archaea/
+	#cd /media/alexloure/'LACIE SHARE'/NCBI-Archaea/
+
 	cd References/NCBI-Archaea/
 	echo -e "\033[1;34m[RFSC]\033[0m Building archaeas database at References/NCBI-Archaea/";
-	gto_build_dbs.sh --build-archaea
+	curl 'ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/archaea/assembly_summary.txt' | \
+	awk '{FS="\t"} !/^#/ {print $20} ' | \
+	sed -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/.+/)(GCF_.+)|\1\2/\2_genomic.fna.gz|' > archaea_url_donwload.txt
+	cat archaea_url_donwload.txt | xargs -n 1 -P $THREADS_AVAILABLE wget -q
 	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	gunzip ADB.fa.gz
-	cd ../..
 fi
 #
 # ======================================================================
