@@ -206,7 +206,7 @@ PARSE_SCAFFOLDS() {
 # FALCON ANALYSIS - SCAFFOLDS
 #
 FALCON_SO_MODE() {
-	FALCON -n $THREADS_AVAILABLE -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/VDB.fa
+	FALCON -n $THREADS_AVAILABLE -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/DB-viral.fa
     echo -e "\033[1;34m[RFSC]\033[0m Outputs/falcon_SO_results.txt file was successfully been generated!"
 	#
 	readarray -t results <Outputs/falcon_SO_results.txt
@@ -248,14 +248,14 @@ FALCON_RM_MODE() {
 			R1=${path_to_file1[3]}
 			R2=${path_to_file2[3]}
 			echo -e "\033[1;34m[RFSC]\033[0m Analysing Nodes $R1 & $R2 with $(($THREADS_AVAILABLE/2)) threads each!"
-			FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Nodes/$R1 References/NCBI-Virus/VDB.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Nodes/$R2 References/NCBI-Virus/VDB.fa
+			FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Nodes/$R1 References/NCBI-Virus/DB-viral.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Nodes/$R2 References/NCBI-Virus/DB-viral.fa
 			(( i+=2 ))
 		else
 			path=${array[i]}
 			path_to_file=(${path//// })
 			R=${path_to_file[3]}
 			echo -e "\033[1;34m[RFSC]\033[0m Analysing Node $R with $(($THREADS_AVAILABLE)) threads!"
-			FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Nodes/$R References/NCBI-Virus/VDB.fa
+			FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Nodes/$R References/NCBI-Virus/DB-viral.fa
 			(( i++ ))
 		fi 
 	done
@@ -681,71 +681,40 @@ fi
 # BUILD REFERENCE VIRAL DATABASE
 #
 if [ "$BUILD_DB_VIRUS" -eq "1" ]; then
-	#cd References/NCBI-Virus/
-	#echo -e "\033[1;34m[RFSC]\033[0m Building viral database at References/NCBI-Virus/";
-	#gto_build_dbs.sh --build-viral
-	#echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	#gunzip VDB.fa.gz
-	#cd ../..
-
-	#mkdir /media/alexloure/'LACIE SHARE'/NCBI-Virus/
-	#cd /media/alexloure/'LACIE SHARE'/NCBI-Virus/
-
 	cd References/NCBI-Virus/
 	echo -e "\033[1;34m[RFSC]\033[0m Building viral database at References/NCBI-Virus/";
-	curl 'ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/viral/assembly_summary.txt' | \
-	awk '{FS="\t"} !/^#/ {print $20} ' | \
-	sed -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/.+/)(GCF_.+)|\1\2/\2_genomic.fna.gz|' > viral_url_donwload.txt
-	cat viral_url_donwload.txt | xargs -n 1 -P $THREADS_AVAILABLE wget -q
-	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-
+	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --viral
+	gunzip DB-viral.fa.gz
+	cd ../..
 fi
 #
 # ======================================================================
 # BUILD REFERENCE BACTERIAL DATABASE
 #
 if [ "$BUILD_DB_BACTERIA" -eq "1" ]; then
+	# External Disk Code
+	mkdir /media/alexloure/T7Touch/NCBI-Bacteria/
+	cp src/BUILD_DB.sh /media/alexloure/T7Touch/NCBI-Bacteria/
+	cd /media/alexloure/T7Touch/NCBI-Bacteria/
+
+	./BUILD_DB.sh --threads $THREADS_AVAILABLE --bacteria
+	rm BUILD_DB.sh
+
+	# Final Script
 	#cd References/NCBI-Bacteria/
-	#echo -e "\033[1;34m[RFSC]\033[0m Building bacteria database at References/NCBI-Bacteria/";
-	#gto_build_dbs.sh --build-bacteria
-	#echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	#gunzip BDB.fa.gz
+	#./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --bacteria
 	#cd ../..
-	
-	#mkdir /media/alexloure/'LACIE SHARE'/NCBI-Bacteria/
-	#cd /media/alexloure/'LACIE SHARE'/NCBI-Bacteria/
-
-	cd References/NCBI-Bacteria/
-	echo -e "\033[1;34m[RFSC]\033[0m Building bacteria database at References/NCBI-Bacteria/";
-	curl 'ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/bacteria/assembly_summary.txt' | \
-	awk '{FS="\t"} !/^#/ {print $20} ' | \
-	sed -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/.+/)(GCF_.+)|\1\2/\2_genomic.fna.gz|' > bacteria_url_donwload.txt
-	cat bacteria_url_donwload.txt | xargs -n 1 -P $THREADS_AVAILABLE wget -q
-	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-
 fi
 #
 # ======================================================================
 # BUILD REFERENCE ARCHAEAS DATABASE
 #
 if [ "$BUILD_DB_ARCHAEA" -eq "1" ]; then
-	#cd References/NCBI-Archaea/
-	#echo -e "\033[1;34m[RFSC]\033[0m Building archaeas database at References/NCBI-Archaea/";
-	#gto_build_dbs.sh --build-archaea
-	#echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	#gunzip ADB.fa.gz
-	#cd ../..
-
-	#mkdir /media/alexloure/'LACIE SHARE'/NCBI-Archaea/
-	#cd /media/alexloure/'LACIE SHARE'/NCBI-Archaea/
-
 	cd References/NCBI-Archaea/
 	echo -e "\033[1;34m[RFSC]\033[0m Building archaeas database at References/NCBI-Archaea/";
-	curl 'ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/archaea/assembly_summary.txt' | \
-	awk '{FS="\t"} !/^#/ {print $20} ' | \
-	sed -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/.+/)(GCF_.+)|\1\2/\2_genomic.fna.gz|' > archaea_url_donwload.txt
-	cat archaea_url_donwload.txt | xargs -n 1 -P $THREADS_AVAILABLE wget -q
-	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
+	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --archaea
+	gunzip DB-archaea.fa.gz
+	cd ../..
 fi
 #
 # ======================================================================
@@ -754,9 +723,8 @@ fi
 if [ "$BUILD_DB_PROTOZOA" -eq "1" ]; then
 	cd References/NCBI-Protozoa/
 	echo -e "\033[1;34m[RFSC]\033[0m Building protozoa database at References/NCBI-Protozoa/";
-	gto_build_dbs.sh --build-protozoa
-	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	gunzip PDB.fa.gz
+	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --protozoa
+	gunzip DB-protozoa.fa.gz
 	cd ../..
 fi
 #
@@ -766,9 +734,8 @@ fi
 if [ "$BUILD_DB_FUNGI" -eq "1" ]; then
 	cd References/NCBI-Fungi/
 	echo -e "\033[1;34m[RFSC]\033[0m Building fungi database at References/NCBI-Fungi/";
-	gto_build_dbs.sh --build-fungi
-	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	gunzip FDB.fa.gz
+	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --fungi
+	gunzip DB-fungi.fa.gz
 	cd ../..
 fi
 #
@@ -778,9 +745,8 @@ fi
 if [ "$BUILD_DB_PLANT" -eq "1" ]; then
 	cd References/NCBI-Plant/
 	echo -e "\033[1;34m[RFSC]\033[0m Building plant database at References/NCBI-Plant/";
-	gto_build_dbs.sh --build-plant
-	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	gunzip TDB.fa.gz
+	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --plant
+	gunzip DB-plant.fa.gz
 	cd ../..
 fi
 #
@@ -790,9 +756,8 @@ fi
 if [ "$BUILD_DB_MITOCHONDRIAL" -eq "1" ]; then
 	cd References/NCBI-Mitochondrial/
 	echo -e "\033[1;34m[RFSC]\033[0m Building mitochondrial database at References/NCBI-Mitochondrial/";
-	gto_build_dbs.sh --build-mito
-	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	gunzip MTDB.fa.gz
+	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --mitochondrion
+	gunzip DB-mitochondrion.fa.gz
 	cd ../..
 fi
 #
@@ -802,9 +767,8 @@ fi
 if [ "$BUILD_DB_PLASTID" -eq "1" ]; then
 	cd References/NCBI-Plastid/
 	echo -e "\033[1;34m[RFSC]\033[0m Building plastid database at References/NCBI-Plastid/";
-	gto_build_dbs.sh --build-plast
-	echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
-	gunzip PLDB.fa.gz
+	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --plastid
+	gunzip DB-plastid.fa.gz
 	cd ../..
 fi
 #
