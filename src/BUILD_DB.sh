@@ -106,19 +106,26 @@ echo -e "\033[1;34m[RFSC] \033[1;32m Downloading $1 DB using $2 threads ... \033
 rm -f $1-url_download.txt;
 mkdir -p NM-$1;
 #
-curl 'ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/'$1'/assembly_summary.txt' | \
-awk '{FS="\t"} !/^#/ {print $20} ' | \
-sed -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/.+/)(GCF_.+)|\1\2/\2_genomic.fna.gz|' > $1-url_download.txt
-### awk -F '\t' '{if($12=="Complete Genome"||$12=="Chromosome") print $20}' assembly_summary.txt
+if [[ "$BACTERIA" -eq "1" ]]; then
+  curl 'ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/'$1'/assembly_summary.txt' | \
+  awk -F '\t' '{if($12=="Complete Genome") print $20}' | \
+  sed -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/.+/)(GCF_.+)|\1\2/\2_genomic.fna.gz|' > $1-url_download.txt
+  ### awk -F '\t' '{if($12=="Complete Genome"||$12=="Chromosome") print $20}' assembly_summary.txt
+else
+  curl 'ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/'$1'/assembly_summary.txt' | \
+  awk '{FS="\t"} !/^#/ {print $20} ' | \
+  sed -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/.+/)(GCF_.+)|\1\2/\2_genomic.fna.gz|' > $1-url_download.txt
+  ### awk -F '\t' '{if($12=="Complete Genome"||$12=="Chromosome") print $20}' assembly_summary.txt
+fi
 #
 cat $1-url_download.txt | xargs -n 1 -P $2 wget --directory-prefix=NM-$1 -q
 #
 rm -f DB-$1.fa $1-url_download.txt;
 #XXX: VERIFY ERRORS (> in the middle of the DNA and Gzip errors...)
-for f in NM-$1/*.fna.gz; do zcat "$f" >> DB-$1.fa; done
+#for f in NM-$1/*.fna.gz; do zcat "$f" >> DB-$1.fa; done  #Uncoment for VIRUS
 #rm -fr NM-$1;
 #
-gzip -f DB-$1.fa;
+#gzip -f DB-$1.fa;
 #
 echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
 #
@@ -128,6 +135,7 @@ echo -e "\033[1;34m[RFSC] \033[1;32m Building has been successful! \033[0m";
 #
 if [[ "$VIRAL" -eq "1" ]];
   then
+  BACTERIA=0;
   BUILD_DB "viral" "$THREADS";
   fi
 #
@@ -138,36 +146,43 @@ if [[ "$BACTERIA" -eq "1" ]];
 #
 if [[ "$ARCHAEA" -eq "1" ]];
   then
+  BACTERIA=0;
   BUILD_DB "archaea" "$THREADS";
   fi
 #
 if [[ "$PROTOZOA" -eq "1" ]];
   then
+  BACTERIA=0;
   BUILD_DB "protozoa" "$THREADS";
   fi
 #
 if [[ "$FUNGI" -eq "1" ]];
   then
+  BACTERIA=0;
   BUILD_DB "fungi" "$THREADS";
   fi
 #
 if [[ "$PLANT" -eq "1" ]];
   then
+  BACTERIA=0;
   BUILD_DB "plant" "$THREADS";
   fi
 #
 if [[ "$INVERTEBRATE" -eq "1" ]];
   then
+  BACTERIA=0;
   BUILD_DB "invertebrate" "$THREADS";
   fi
 #
 if [[ "$VERTEBRATE_MAMMALIAN" -eq "1" ]];
   then
+  BACTERIA=0;
   BUILD_DB "vertebrate_mammalian" "$THREADS";
   fi
 #
 if [[ "$VERTEBRATE_OTHER" -eq "1" ]];
   then
+  BACTERIA=0;
   BUILD_DB "vertebrate_other" "$THREADS";
   fi
 #
