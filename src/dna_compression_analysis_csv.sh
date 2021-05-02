@@ -2,6 +2,10 @@
 
 # run: ./src/dna_compression_analysis_csv.sh Virus VIRAL geco3_Viral.csv
 #      ./src/dna_compression_analysis_csv.sh Fungi FUNGI geco3_Fungi.csv
+#      ./src/dna_compression_analysis_csv.sh Archaea ARCHAEA geco3_Archaea.csv
+#      ./src/dna_compression_analysis_csv.sh Plant PLANT geco3_Plant.csv
+#      ./src/dna_compression_analysis_csv.sh Protozoa PROTOZOA geco3_Protozoa.csv
+#      ./src/dna_compression_analysis_csv.sh Plastid PLASTID geco3_Plastid.csv
 
 
 declare -a array_identifier
