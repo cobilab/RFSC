@@ -710,18 +710,11 @@ fi
 # BUILD REFERENCE ARCHAEAS DATABASE
 #
 if [ "$BUILD_DB_ARCHAEA" -eq "1" ]; then
-	mkdir /media/alexloure/T7Touch/NCBI-Archaea/
-	cp src/BUILD_DB.sh /media/alexloure/T7Touch/NCBI-Archaea/
-	cd /media/alexloure/T7Touch/NCBI-Archaea/
-
-	./BUILD_DB.sh --threads $THREADS_AVAILABLE --archaea
-	rm BUILD_DB.sh
-
-	#cd References/NCBI-Archaea/
-	#echo -e "\033[1;34m[RFSC]\033[0m Building archaeas database at References/NCBI-Archaea/";
-	#./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --archaea
-	#gunzip DB-archaea.fa.gz
-	#cd ../..
+	cd References/NCBI-Archaea/
+	echo -e "\033[1;34m[RFSC]\033[0m Building archaeas database at References/NCBI-Archaea/";
+	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --archaea
+	gunzip DB-archaea.fa.gz
+	cd ../..
 fi
 #
 # ======================================================================
