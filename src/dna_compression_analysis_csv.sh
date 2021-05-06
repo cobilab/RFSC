@@ -6,6 +6,7 @@
 #      ./src/dna_compression_analysis_csv.sh Plant PLANT geco3_Plant.csv
 #      ./src/dna_compression_analysis_csv.sh Protozoa PROTOZOA geco3_Protozoa.csv
 #      ./src/dna_compression_analysis_csv.sh Plastid PLASTID geco3_Plastid.csv
+#      ./src/dna_compression_analysis_csv.sh Mitochondrial MITOCHONDRIAL geco3_Mitochondrial.csv
 
 
 declare -a array_identifier
