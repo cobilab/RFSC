@@ -74,16 +74,29 @@ if [[ "$HELP" -eq "1" ]]
 function VIRUS_GENOME_COMPRESSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Virus Genomes"
 
-    mkdir GeCo3_Output/Virus
+    if [[ ! -d "GeCo3_Output/Virus" ]]; then
+        mkdir GeCo3_Output/Virus
+    fi
+
+    if [[ -f "GeCo3_Output/Bacteria/VIRAL_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Virus/VIRAL_ID.txt
+    fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Virus/NM-viral/*
     for file in References/NCBI-Virus/NM-viral/*
     do
+
+        out_file=$(basename $file);
+        out_file="${out_file%".fna.gz"}"
+
         if [[ "$file" == "viral_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
+
+        elif [[ " ${already_processed[@]} " =~ " ${out_file} " ]]; then
+            echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
+
         else
-            out_file=$(basename $file);
-            out_file="${out_file%".fna.gz"}"
+            
             printf "$out_file\n" >> GeCo3_Output/Virus/VIRAL_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -101,16 +114,28 @@ function VIRUS_GENOME_COMPRESSION () {
 function BACTERIA_GENOME_COMPRESSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Bacteria Genomes"
 
-    mkdir GeCo3_Output/Bacteria
+    if [[ ! -d "GeCo3_Output/Bacteria" ]]; then
+        mkdir GeCo3_Output/Bacteria
+    fi
+
+    if [[ -f "GeCo3_Output/Bacteria/BACTERIA_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Bacteria/BACTERIA_ID.txt
+    fi
 
     for file in /media/alexloure/T7Touch/NCBI-Bacteria/NM-bacteria/*
     # for file in References/NCBI-Bacteria/NM-bacteria/*
     do
+
+        out_file=$(basename $file);
+        out_file="${out_file%".fna.gz"}"
+
         if [[ "$file" == "bacteria_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
+
+        elif [[ " ${already_processed[@]} " =~ " ${out_file} " ]]; then
+            echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
+
         else
-            out_file=$(basename $file);
-            out_file="${out_file%".fna.gz"}"
             printf "$out_file\n" >> GeCo3_Output/Bacteria/BACTERIA_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -128,16 +153,28 @@ function BACTERIA_GENOME_COMPRESSION () {
 function ARCHAEA_GENOME_COMPRESSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Archaea Genomes"
 
-    mkdir GeCo3_Output/Archaea
+    if [[ ! -d "GeCo3_Output/Archaea" ]]; then
+        mkdir GeCo3_Output/Archaea
+    fi
+
+    if [[ -f "GeCo3_Output/Archaea/ARCHAEA_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Archaea/ARCHAEA_ID.txt
+    fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Archaea/NM-archaea/*
     for file in References/NCBI-Archaea/NM-archaea/*
     do
+
+        out_file=$(basename $file);
+        out_file="${out_file%".fna.gz"}"
+
         if [[ "$file" == "archaea_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
+        
+        elif [[ " ${already_processed[@]} " =~ " ${out_file} " ]]; then
+            echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
+        
         else
-            out_file=$(basename $file);
-            out_file="${out_file%".fna.gz"}"
             printf "$out_file\n" >> GeCo3_Output/Archaea/ARCHAEA_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -155,16 +192,28 @@ function ARCHAEA_GENOME_COMPRESSION () {
 function FUNGI_GENOME_COMPRESSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Fungi Genomes"
 
-    mkdir GeCo3_Output/Fungi
+    if [[ ! -d "GeCo3_Output/Fungi" ]]; then
+        mkdir GeCo3_Output/Fungi
+    fi
+
+    if [[ -f "GeCo3_Output/Fungi/FUNGI_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Fungi/FUNGI_ID.txt
+    fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Fungi/NM-fungi/*
     for file in References/NCBI-Fungi/NM-fungi/*
     do
+
+        out_file=$(basename $file);
+        out_file="${out_file%".fna.gz"}"
+
         if [[ "$file" == "fungi_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
+
+        elif [[ " ${already_processed[@]} " =~ " ${out_file} " ]]; then
+            echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
+
         else
-            out_file=$(basename $file);
-            out_file="${out_file%".fna.gz"}"
             printf "$out_file\n" >> GeCo3_Output/Fungi/FUNGI_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -182,16 +231,28 @@ function FUNGI_GENOME_COMPRESSION () {
 function PLANT_GENOME_COMPRESSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Plant Genomes"
 
-    mkdir GeCo3_Output/Plant
+    if [[ ! -d "GeCo3_Output/Plant" ]]; then
+        mkdir GeCo3_Output/Plant
+    fi
+
+    if [[ -f "GeCo3_Output/Plant/PLANT_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Plant/PLANT_ID.txt
+    fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Plant/NM-plant/*
     for file in References/NCBI-Plant/NM-plant/*
     do
+
+        out_file=$(basename $file);
+        out_file="${out_file%".fna.gz"}"
+
         if [[ "$file" == "plant_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
+
+        elif [[ " ${already_processed[@]} " =~ " ${out_file} " ]]; then
+            echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
+
         else
-            out_file=$(basename $file);
-            out_file="${out_file%".fna.gz"}"
             printf "$out_file\n" >> GeCo3_Output/Plant/PLANT_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -209,16 +270,28 @@ function PLANT_GENOME_COMPRESSION () {
 function PROTOZOA_GENOME_COMPRESSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Protozoa Genomes"
 
-    mkdir GeCo3_Output/Protozoa
+    if [[ ! -d "GeCo3_Output/Protozoa" ]]; then
+        mkdir GeCo3_Output/Protozoa
+    fi
+
+    if [[ -f "GeCo3_Output/Protozoa/PROTOZOA_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Protozoa/PROTOZOA_ID.txt
+    fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*
     for file in References/NCBI-Protozoa/NM-protozoa/*
     do
+
+        out_file=$(basename $file);
+        out_file="${out_file%".fna.gz"}"
+
         if [[ "$file" == "protozoa_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
+
+        elif [[ " ${already_processed[@]} " =~ " ${out_file} " ]]; then
+            echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
+
         else
-            out_file=$(basename $file);
-            out_file="${out_file%".fna.gz"}"
             printf "$out_file\n" >> GeCo3_Output/Protozoa/PROTOZOA_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -243,16 +316,28 @@ function PLASTID_GENOME_COMPRESSION () {
 
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Plastid Genomes"
 
-    mkdir GeCo3_Output/Plastid
+    if [[ ! -d "GeCo3_Output/Plastid" ]]; then
+        mkdir GeCo3_Output/Plastid
+    fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Plastid/NM-plastid/*
-    # for file in References/NCBI-Plastid/NM-plastid/*
+    if [[ -f "GeCo3_Output/Plastid/PLASTID_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Plastid/PLASTID_ID.txt
+    fi
+
+    # for file in /media/alexloure/T7Touch/NCBI-Plastid/NM-plastid/*
+    for file in References/NCBI-Plastid/NM-plastid/*
     do
+
+        out_file=$(basename $file);
+        out_file="${out_file%".fna"}"
+
         if [[ "$file" == "plastid_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
+
+        elif [[ " ${already_processed[@]} " =~ " ${out_file} " ]]; then
+            echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
+
         else
-            out_file=$(basename $file);
-            out_file="${out_file%".fna"}"
             printf "$out_file\n" >> GeCo3_Output/Plastid/PLASTID_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -263,7 +348,7 @@ function PLASTID_GENOME_COMPRESSION () {
             done
         fi
     done
-    #rm DB-plastid.*
+    rm References/NCBI-Plastid/DB-plastid.fa
 }
 #
 # ################## MITOCHONDRIAL ##################
@@ -278,16 +363,28 @@ function MITOCHONDRIAL_GENOME_COMPRESSION () {
 
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Mitochondrial Genomes"
 
-    mkdir GeCo3_Output/Mitochondrial
+    if [[ ! -d "GeCo3_Output/Mitochondrial" ]]; then
+        mkdir GeCo3_Output/Mitochondrial
+    fi
 
-    # for file in References/NCBI-Mitochondrial/NM-mitochondrion/*
-    for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/NM-mitochondrion/*
+    if [[ -f "GeCo3_Output/Mitochondrial/MITOCHONDRIAL_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Mitochondrial/MITOCHONDRIAL_ID.txt
+    fi
+
+    # for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/NM-mitochondrion/*
+    for file in References/NCBI-Mitochondrial/NM-mitochondrion/*
     do
+
+        out_file=$(basename $file);
+        out_file="${out_file%".fna"}"
+
         if [[ "$file" == "mitochondrion_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
+
+        elif [[ " ${already_processed[@]} " =~ " ${out_file} " ]]; then
+            echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
+
         else
-            out_file=$(basename $file);
-            out_file="${out_file%".fna"}"
             printf "$out_file\n" >> GeCo3_Output/Mitochondrial/MITOCHONDRIAL_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -298,7 +395,7 @@ function MITOCHONDRIAL_GENOME_COMPRESSION () {
             done
         fi
     done
-    #rm DB-mitochondrion.*
+    rm References/NCBI-Mitochondrial/DB-mitochondrion.fa
 }
 #
 # ==============================================================================
