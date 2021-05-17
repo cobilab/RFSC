@@ -9,7 +9,11 @@ FUNGI=0;
 PLANT=0;
 MITOCHONDRION=0;
 PLASTID=0;
+
 HELP=0;
+
+ORFFINDER=0;
+ORFM=1;
 #
 # ==============================================================================
 #
@@ -25,6 +29,8 @@ while [[ $# -gt 0 ]]
   i="$1";
   case $i in
     -h|--help)                                          HELP=1; shift  ;;
+    -orffinder)                 ORFFINDER=1; ORFM=0;    HELP=0; shift  ;;
+    -orfm)                      ORFM=1;                 HELP=0; shift  ;;
     -vi|--viral)                VIRAL=1;                HELP=0; shift  ;;
     -ba|--bacteria)             BACTERIA=1;             HELP=0; shift  ;;
     -ar|--archaea)              ARCHAEA=1;              HELP=0; shift  ;;
@@ -50,6 +56,9 @@ if [[ "$HELP" -eq "1" ]]
   echo "Converts nucleotide sequences into protein sequences                            "
   echo "                                                                                "
   echo "   -h,   --help                   Show this help message,                       "
+  echo "                                                                                "
+  echo "   -orffinder                     Converion using ORFfinder                     "
+  echo "   -orfm                          Convert using orfM (default)                  "
   echo "                                                                                "
   echo "   -vi,  --viral                  Convert viral DB,                             "
   echo "   -ba,  --bacteria               Convert bacteria DB,                          "
@@ -82,10 +91,17 @@ function VIRUS_PROTEIN_COVERSION () {
             out_file=$(basename $file);
             out_file="${out_file%".fna.gz"}"
 
-            zcat $file | grep -v ">" | tr -d -c "ACGT" > References/NCBI-Virus/TO_PROTEIN
-            ./ORFs/ORFfinder -s 1 -in References/NCBI-Virus/TO_PROTEIN -outfmt 0 -out References/NCBI-Virus/PROTEIN.fasta
-            cat References/NCBI-Virus/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > References/NCBI-Virus/PT-Virus/$out_file.fna
-            rm References/NCBI-Virus/TO_PROTEIN References/NCBI-Virus/PROTEIN.fasta
+            if [[ "$ORFFINDER" -eq "1" ]]; then
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > References/NCBI-Virus/TO_PROTEIN
+                ./ORFs/ORFfinder -s 1 -in References/NCBI-Virus/TO_PROTEIN -outfmt 0 -out References/NCBI-Virus/PROTEIN.fasta
+                cat References/NCBI-Virus/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > References/NCBI-Virus/PT-Virus/$out_file.fna
+                rm References/NCBI-Virus/TO_PROTEIN References/NCBI-Virus/PROTEIN.fasta
+            else
+                ./ORFs/orfm/orfm $file > References/NCBI-Virus/PROTEIN.fasta
+                cat References/NCBI-Virus/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > References/NCBI-Virus/PT-Virus/$out_file.fna
+                rm References/NCBI-Virus/PROTEIN.fasta
+            fi
+            echo "Processed $out_file.fna"
         fi
     done
 }
@@ -106,10 +122,17 @@ function BACTERIA_PROTEIN_COVERSION () {
             out_file=$(basename $file);
             out_file="${out_file%".fna.gz"}"
 
-            zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Bacteria/TO_PROTEIN
-            ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Bacteria/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Bacteria/PROTEIN.fasta
-            cat /media/alexloure/T7Touch/NCBI-Bacteria/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Bacteria/PT-Bacteria/$out_file.fna
-            rm /media/alexloure/T7Touch/NCBI-Bacteria/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Bacteria/PROTEIN.fasta
+            if [[ "$ORFFINDER" -eq "1" ]]; then
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Bacteria/TO_PROTEIN
+                ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Bacteria/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Bacteria/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Bacteria/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Bacteria/PT-Bacteria/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Bacteria/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Bacteria/PROTEIN.fasta
+            else
+                ./ORFs/orfm/orfm $file > /media/alexloure/T7Touch/NCBI-Bacteria/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Bacteria/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Bacteria/PT-Bacteria/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Bacteria/PROTEIN.fasta
+            fi
+            echo "Processed $out_file.fna"
         fi
     done   
 }
@@ -118,8 +141,8 @@ function BACTERIA_PROTEIN_COVERSION () {
 #
 function ARCHAEA_PROTEIN_COVERSION () {
     
-    already_converted=197;
-    stop_condition=1;
+    #already_converted=399;
+    #stop_condition=1;
 
     echo -e "\033[1;34m[RFSC]\033[0m Start Archaea Protein Synthesizing"
     mkdir /media/alexloure/T7Touch/NCBI-Archaea/PT-Archaea
@@ -130,21 +153,21 @@ function ARCHAEA_PROTEIN_COVERSION () {
     do
         if [[ "$file" == "archaea_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
-        
-        elif [[ "$stop_condition" -le "$already_converted" ]]; then
-            echo -e "\033[1;34m[RFSC]\033[0m Jumping file: Already converted to protein [$stop_condition]";
-            (( stop_condition++ ))
-
         else
             out_file=$(basename $file);
             out_file="${out_file%".fna.gz"}"
             
-            echo -e "\033[1;34m[RFSC]\033[0m Processing file: [$out_file]";
-
-            zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Archaea/TO_PROTEIN
-            ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Archaea/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Archaea/PROTEIN.fasta
-            cat /media/alexloure/T7Touch/NCBI-Archaea/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Archaea/PT-Archaea/$out_file.fna
-            rm /media/alexloure/T7Touch/NCBI-Archaea/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Archaea/PROTEIN.fasta
+            if [[ "$ORFFINDER" -eq "1" ]]; then
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Archaea/TO_PROTEIN
+                ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Archaea/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Archaea/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Archaea/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Archaea/PT-Archaea/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Archaea/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Archaea/PROTEIN.fasta
+            else
+                ./ORFs/orfm/orfm $file > /media/alexloure/T7Touch/NCBI-Archaea/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Archaea/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Archaea/PT-Archaea/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Archaea/PROTEIN.fasta
+            fi
+            echo "Processed $out_file.fna"
         fi
     done
 
@@ -166,10 +189,17 @@ function FUNGI_PROTEIN_COVERSION () {
             out_file=$(basename $file);
             out_file="${out_file%".fna.gz"}"
             
-            zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Fungi/TO_PROTEIN
-            ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Fungi/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Fungi/PROTEIN.fasta
-            cat /media/alexloure/T7Touch/NCBI-Fungi/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Fungi/PT-Fungi/$out_file.fna
-            rm /media/alexloure/T7Touch/NCBI-Fungi/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Fungi/PROTEIN.fasta
+            if [[ "$ORFFINDER" -eq "1" ]]; then
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Fungi/TO_PROTEIN
+                ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Fungi/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Fungi/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Fungi/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Fungi/PT-Fungi/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Fungi/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Fungi/PROTEIN.fasta            
+            else
+                ./ORFs/orfm/orfm $file > /media/alexloure/T7Touch/NCBI-Fungi/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Fungi/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Fungi/PT-Fungi/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Fungi/PROTEIN.fasta
+            fi
+            echo "Processed $out_file.fna"
         fi
     done
 }
@@ -190,10 +220,17 @@ function PLANT_PROTEIN_COVERSION () {
             out_file=$(basename $file);
             out_file="${out_file%".fna.gz"}"
 
-            zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Plant/TO_PROTEIN
-            ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Plant/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Plant/PROTEIN.fasta
-            cat /media/alexloure/T7Touch/NCBI-Plant/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Plant/PT-Plant/$out_file.fna
-            rm /media/alexloure/T7Touch/NCBI-Plant/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Plant/PROTEIN.fasta
+            if [[ "$ORFFINDER" -eq "1" ]]; then
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Plant/TO_PROTEIN
+                ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Plant/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Plant/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Plant/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Plant/PT-Plant/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Plant/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Plant/PROTEIN.fasta
+            else
+                ./ORFs/orfm/orfm $file > /media/alexloure/T7Touch/NCBI-Plant/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Plant/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Plant/PT-Plant/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Plant/PROTEIN.fasta
+            fi
+            echo "Processed $out_file.fna"
         fi
     done
 }
@@ -214,10 +251,17 @@ function PROTOZOA_PROTEIN_COVERSION () {
             out_file=$(basename $file);
             out_file="${out_file%".fna.gz"}"
             
-            zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Protozoa/TO_PROTEIN
-            ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Protozoa/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Protozoa/PROTEIN.fasta
-            cat /media/alexloure/T7Touch/NCBI-Protozoa/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa/$out_file.fna
-            rm /media/alexloure/T7Touch/NCBI-Protozoa/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Protozoa/PROTEIN.fasta
+            if [[ "$ORFFINDER" -eq "1" ]]; then
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Protozoa/TO_PROTEIN
+                ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Protozoa/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Protozoa/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Protozoa/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Protozoa/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Protozoa/PROTEIN.fasta
+            else
+                ./ORFs/orfm/orfm $file > /media/alexloure/T7Touch/NCBI-Protozoa/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Protozoa/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Protozoa/PROTEIN.fasta
+            fi
+            echo "Processed $out_file.fna"
         fi
     done
 }
@@ -238,10 +282,17 @@ function PLASTID_PROTEIN_COVERSION () {
             out_file=$(basename $file);
             out_file="${out_file%".fna"}"
             
-            zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Plastid/TO_PROTEIN
-            ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Plastid/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Plastid/PROTEIN.fasta
-            cat /media/alexloure/T7Touch/NCBI-Plastid/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Plastid/PT-Plastid/$out_file.fna
-            rm /media/alexloure/T7Touch/NCBI-Plastid/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Plastid/PROTEIN.fasta
+            if [[ "$ORFFINDER" -eq "1" ]]; then
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Plastid/TO_PROTEIN
+                ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Plastid/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Plastid/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Plastid/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Plastid/PT-Plastid/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Plastid/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Plastid/PROTEIN.fasta
+            else
+                ./ORFs/orfm/orfm $file > /media/alexloure/T7Touch/NCBI-Plastid/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Plastid/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Plastid/PT-Plastid/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Plastid/PROTEIN.fasta
+            fi
+            echo "Processed $out_file.fna"
         fi
     done
 }
@@ -262,10 +313,17 @@ function MITOCHONDRIAL_PROTEIN_COVERSION () {
             out_file=$(basename $file);
             out_file="${out_file%".fna"}"
             
-            zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Mitochondrial/TO_PROTEIN
-            ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Mitochondrial/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Mitochondrial/PROTEIN.fasta
-            cat /media/alexloure/T7Touch/NCBI-Mitochondrial/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Mitochondrial/PT-Mitochondrial/$out_file.fna
-            rm /media/alexloure/T7Touch/NCBI-Mitochondrial/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Mitochondrial/PROTEIN.fasta
+            if [[ "$ORFFINDER" -eq "1" ]]; then
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > /media/alexloure/T7Touch/NCBI-Mitochondrial/TO_PROTEIN
+                ./ORFs/ORFfinder -s 1 -in /media/alexloure/T7Touch/NCBI-Mitochondrial/TO_PROTEIN -outfmt 0 -out /media/alexloure/T7Touch/NCBI-Mitochondrial/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Mitochondrial/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Mitochondrial/PT-Mitochondrial/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Mitochondrial/TO_PROTEIN /media/alexloure/T7Touch/NCBI-Mitochondrial/PROTEIN.fasta
+            else
+                ./ORFs/orfm/orfm $file > /media/alexloure/T7Touch/NCBI-Mitochondrial/PROTEIN.fasta
+                cat /media/alexloure/T7Touch/NCBI-Mitochondrial/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > /media/alexloure/T7Touch/NCBI-Mitochondrial/PT-Mitochondrial/$out_file.fna
+                rm /media/alexloure/T7Touch/NCBI-Mitochondrial/PROTEIN.fasta
+            fi
+            echo "Processed $out_file.fna"
         fi
     done
 }
