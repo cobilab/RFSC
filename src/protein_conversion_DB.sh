@@ -113,8 +113,8 @@ function BACTERIA_PROTEIN_COVERSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start Bacteria Protein Synthesizing"
     mkdir /media/alexloure/T7Touch/NCBI-Bacteria/PT-Bacteria
 
-    #for file in /media/alexloure/T7Touch/NCBI-Bacteria/NM-bacteria/*
-    for file in References/NCBI-Bacteria/NM-bacteria/*
+    for file in /media/alexloure/T7Touch/NCBI-Bacteria/NM-bacteria/*
+    #for file in References/NCBI-Bacteria/NM-bacteria/*
     do
         if [[ "$file" == "bacteria_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
