@@ -113,8 +113,8 @@ function BACTERIA_PROTEIN_COVERSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start Bacteria Protein Synthesizing"
     mkdir /media/alexloure/T7Touch/NCBI-Bacteria/PT-Bacteria
 
-    for file in /media/alexloure/T7Touch/NCBI-Bacteria/NM-bacteria/*
-    # for file in References/NCBI-Bacteria/NM-bacteria/*
+    #for file in /media/alexloure/T7Touch/NCBI-Bacteria/NM-bacteria/*
+    for file in References/NCBI-Bacteria/NM-bacteria/*
     do
         if [[ "$file" == "bacteria_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
@@ -148,8 +148,8 @@ function ARCHAEA_PROTEIN_COVERSION () {
     mkdir /media/alexloure/T7Touch/NCBI-Archaea/PT-Archaea
 
 
-    for file in /media/alexloure/T7Touch/NCBI-Archaea/NM-archaea/*
-    #for file in References/NCBI-Archaea/NM-archaea/*
+    #for file in /media/alexloure/T7Touch/NCBI-Archaea/NM-archaea/*
+    for file in References/NCBI-Archaea/NM-archaea/*
     do
         if [[ "$file" == "archaea_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
@@ -180,8 +180,8 @@ function FUNGI_PROTEIN_COVERSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start Fungi Protein Synthesizing"
     mkdir /media/alexloure/T7Touch/NCBI-Fungi/PT-Fungi
 
-    for file in /media/alexloure/T7Touch/NCBI-Fungi/NM-fungi/*
-    #for file in References/NCBI-Fungi/NM-fungi/*
+    #for file in /media/alexloure/T7Touch/NCBI-Fungi/NM-fungi/*
+    for file in References/NCBI-Fungi/NM-fungi/*
     do
         if [[ "$file" == "fungi_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
@@ -211,8 +211,8 @@ function PLANT_PROTEIN_COVERSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start Plant Protein Synthesizing"
     mkdir /media/alexloure/T7Touch/NCBI-Plant/PT-Plant
 
-    for file in /media/alexloure/T7Touch/NCBI-Plant/NM-plant/*
-    #for file in References/NCBI-Plant/NM-plant/*
+    #for file in /media/alexloure/T7Touch/NCBI-Plant/NM-plant/*
+    for file in References/NCBI-Plant/NM-plant/*
     do
         if [[ "$file" == "plant_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
@@ -242,8 +242,8 @@ function PROTOZOA_PROTEIN_COVERSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start Protozoa Protein Synthesizing"
     mkdir /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa
 
-    for file in /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*
-    #for file in References/NCBI-Protozoa/NM-protozoa/*
+    #for file in /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*
+    for file in References/NCBI-Protozoa/NM-protozoa/*
     do
         if [[ "$file" == "protozoa_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
@@ -273,8 +273,8 @@ function PLASTID_PROTEIN_COVERSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start Plastid Protein Synthesizing"
     mkdir /media/alexloure/T7Touch/NCBI-Plastid/PT-Plastid
 
-    for file in /media/alexloure/T7Touch/NCBI-Plastid/NM-plastid/*
-    # for file in References/NCBI-Plastid/NM-plastid/*
+    #for file in /media/alexloure/T7Touch/NCBI-Plastid/NM-plastid/*
+    for file in References/NCBI-Plastid/NM-plastid/*
     do
         if [[ "$file" == "plastid_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
@@ -304,8 +304,9 @@ function MITOCHONDRIAL_PROTEIN_COVERSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start Mitochondrial Protein Synthesizing"
     mkdir /media/alexloure/T7Touch/NCBI-Mitochondrial/PT-Mitochondrial
 
-    # for file in References/NCBI-Mitochondrial/NM-mitochondrion/*
-    for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/NM-mitochondrion/*
+    
+    #for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/NM-mitochondrion/*
+    for file in References/NCBI-Mitochondrial/NM-mitochondrion/*
     do
         if [[ "$file" == "mitochondrion_url_donwload.txt" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Jumping index file ($file)";
