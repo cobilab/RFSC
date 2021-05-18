@@ -78,8 +78,12 @@ function VIRUS_GENOME_COMPRESSION () {
         mkdir GeCo3_Output/Virus
     fi
 
-    if [[ -f "GeCo3_Output/Bacteria/VIRAL_ID.txt" ]]; then
-        readarray -t already_processed < GeCo3_Output/Virus/VIRAL_ID.txt
+    if [[ ! -d "GeCo3_Output/Virus/NM" ]]; then
+        mkdir GeCo3_Output/Virus/NM
+    fi
+
+    if [[ -f "GeCo3_Output/Virus/NM/VIRAL_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Virus/NM/VIRAL_ID.txt
     fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Virus/NM-viral/*
@@ -97,13 +101,13 @@ function VIRUS_GENOME_COMPRESSION () {
 
         else
             
-            printf "$out_file\n" >> GeCo3_Output/Virus/VIRAL_ID.txt
+            printf "$out_file\n" >> GeCo3_Output/Virus/NM/VIRAL_ID.txt
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Virus/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Virus/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Virus/geco_VIRAL.txt
-                rm GeCo3_Output/Virus/TO_COMPRESS*
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Virus/NM/TO_COMPRESS
+                GeCo3 -v -l $l GeCo3_Output/Virus/NM/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Virus/NM/geco_VIRAL.txt
+                rm GeCo3_Output/Virus/NM/TO_COMPRESS*
             done
         fi
     done
@@ -118,8 +122,12 @@ function BACTERIA_GENOME_COMPRESSION () {
         mkdir GeCo3_Output/Bacteria
     fi
 
-    if [[ -f "GeCo3_Output/Bacteria/BACTERIA_ID.txt" ]]; then
-        readarray -t already_processed < GeCo3_Output/Bacteria/BACTERIA_ID.txt
+    if [[ ! -d "GeCo3_Output/Bacteria/NM" ]]; then
+        mkdir GeCo3_Output/Bacteria/NM
+    fi
+
+    if [[ -f "GeCo3_Output/Bacteria/NM/BACTERIA_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Bacteria/NM/BACTERIA_ID.txt
     fi
 
     for file in /media/alexloure/T7Touch/NCBI-Bacteria/NM-bacteria/*
@@ -136,13 +144,13 @@ function BACTERIA_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            printf "$out_file\n" >> GeCo3_Output/Bacteria/BACTERIA_ID.txt
+            printf "$out_file\n" >> GeCo3_Output/Bacteria/NM/BACTERIA_ID.txt
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Bacteria/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Bacteria/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Bacteria/geco_BACTERIA.txt
-                rm GeCo3_Output/Bacteria/TO_COMPRESS*
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Bacteria/NM/TO_COMPRESS
+                GeCo3 -v -l $l GeCo3_Output/Bacteria/NM/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Bacteria/NM/geco_BACTERIA.txt
+                rm GeCo3_Output/Bacteria/NM/TO_COMPRESS*
             done
         fi
     done   
@@ -157,8 +165,12 @@ function ARCHAEA_GENOME_COMPRESSION () {
         mkdir GeCo3_Output/Archaea
     fi
 
-    if [[ -f "GeCo3_Output/Archaea/ARCHAEA_ID.txt" ]]; then
-        readarray -t already_processed < GeCo3_Output/Archaea/ARCHAEA_ID.txt
+    if [[ ! -d "GeCo3_Output/Archaea/NM" ]]; then
+        mkdir GeCo3_Output/Archaea/NM
+    fi
+
+    if [[ -f "GeCo3_Output/Archaea/NM/ARCHAEA_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Archaea/NM/ARCHAEA_ID.txt
     fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Archaea/NM-archaea/*
@@ -175,13 +187,13 @@ function ARCHAEA_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
         
         else
-            printf "$out_file\n" >> GeCo3_Output/Archaea/ARCHAEA_ID.txt
+            printf "$out_file\n" >> GeCo3_Output/Archaea/NM/ARCHAEA_ID.txt
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Archaea/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Archaea/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Archaea/geco_ARCHAEA.txt
-                rm GeCo3_Output/Archaea/TO_COMPRESS*
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Archaea/NM/TO_COMPRESS
+                GeCo3 -v -l $l GeCo3_Output/Archaea/NM/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Archaea/NM/geco_ARCHAEA.txt
+                rm GeCo3_Output/Archaea/NM/TO_COMPRESS*
             done
         fi
     done
@@ -196,8 +208,12 @@ function FUNGI_GENOME_COMPRESSION () {
         mkdir GeCo3_Output/Fungi
     fi
 
-    if [[ -f "GeCo3_Output/Fungi/FUNGI_ID.txt" ]]; then
-        readarray -t already_processed < GeCo3_Output/Fungi/FUNGI_ID.txt
+    if [[ ! -d "GeCo3_Output/Fungi/NM" ]]; then
+        mkdir GeCo3_Output/Fungi/NM
+    fi
+
+    if [[ -f "GeCo3_Output/Fungi/NM/FUNGI_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Fungi/NM/FUNGI_ID.txt
     fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Fungi/NM-fungi/*
@@ -214,13 +230,13 @@ function FUNGI_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            printf "$out_file\n" >> GeCo3_Output/Fungi/FUNGI_ID.txt
+            printf "$out_file\n" >> GeCo3_Output/Fungi/NM/FUNGI_ID.txt
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Fungi/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Fungi/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Fungi/geco_FUNGI.txt
-                rm GeCo3_Output/Fungi/TO_COMPRESS*
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Fungi/NM/TO_COMPRESS
+                GeCo3 -v -l $l GeCo3_Output/Fungi/NM/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Fungi/NM/geco_FUNGI.txt
+                rm GeCo3_Output/Fungi/NM/TO_COMPRESS*
             done
         fi
     done
@@ -235,8 +251,12 @@ function PLANT_GENOME_COMPRESSION () {
         mkdir GeCo3_Output/Plant
     fi
 
-    if [[ -f "GeCo3_Output/Plant/PLANT_ID.txt" ]]; then
-        readarray -t already_processed < GeCo3_Output/Plant/PLANT_ID.txt
+    if [[ ! -d "GeCo3_Output/Plant/NM" ]]; then
+        mkdir GeCo3_Output/Plant/NM
+    fi
+
+    if [[ -f "GeCo3_Output/Plant/NM/PLANT_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Plant/NM/PLANT_ID.txt
     fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Plant/NM-plant/*
@@ -253,13 +273,13 @@ function PLANT_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            printf "$out_file\n" >> GeCo3_Output/Plant/PLANT_ID.txt
+            printf "$out_file\n" >> GeCo3_Output/Plant/NM/PLANT_ID.txt
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Plant/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Plant/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Plant/geco_PLANT.txt
-                rm GeCo3_Output/Plant/TO_COMPRESS*
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Plant/NM/TO_COMPRESS
+                GeCo3 -v -l $l GeCo3_Output/Plant/NM/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Plant/NM/geco_PLANT.txt
+                rm GeCo3_Output/Plant/NM/TO_COMPRESS*
             done
         fi
     done
@@ -274,12 +294,16 @@ function PROTOZOA_GENOME_COMPRESSION () {
         mkdir GeCo3_Output/Protozoa
     fi
 
-    if [[ -f "GeCo3_Output/Protozoa/PROTOZOA_ID.txt" ]]; then
-        readarray -t already_processed < GeCo3_Output/Protozoa/PROTOZOA_ID.txt
+    if [[ ! -d "GeCo3_Output/Protozoa/NM" ]]; then
+        mkdir GeCo3_Output/Protozoa/NM
     fi
 
-    # for file in /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*
-    for file in References/NCBI-Protozoa/NM-protozoa/*
+    if [[ -f "GeCo3_Output/Protozoa/NM/PROTOZOA_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Protozoa/NM/PROTOZOA_ID.txt
+    fi
+
+    for file in /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*
+    #for file in References/NCBI-Protozoa/NM-protozoa/*
     do
 
         out_file=$(basename $file);
@@ -292,13 +316,13 @@ function PROTOZOA_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            printf "$out_file\n" >> GeCo3_Output/Protozoa/PROTOZOA_ID.txt
+            printf "$out_file\n" >> GeCo3_Output/Protozoa/NM/PROTOZOA_ID.txt
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Protozoa/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Protozoa/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Protozoa/geco_PROTOZOA.txt
-                rm GeCo3_Output/Protozoa/TO_COMPRESS*
+                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Protozoa/NM/TO_COMPRESS
+                GeCo3 -v -l $l GeCo3_Output/Protozoa/NM/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Protozoa/NM/geco_PROTOZOA.txt
+                rm GeCo3_Output/Protozoa/NM/TO_COMPRESS*
             done
         fi
     done
@@ -320,8 +344,12 @@ function PLASTID_GENOME_COMPRESSION () {
         mkdir GeCo3_Output/Plastid
     fi
 
-    if [[ -f "GeCo3_Output/Plastid/PLASTID_ID.txt" ]]; then
-        readarray -t already_processed < GeCo3_Output/Plastid/PLASTID_ID.txt
+    if [[ ! -d "GeCo3_Output/Plastid/NM" ]]; then
+        mkdir GeCo3_Output/Plastid/NM
+    fi
+
+    if [[ -f "GeCo3_Output/Plastid/NM/PLASTID_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Plastid/NM/PLASTID_ID.txt
     fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Plastid/NM-plastid/*
@@ -338,13 +366,13 @@ function PLASTID_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            printf "$out_file\n" >> GeCo3_Output/Plastid/PLASTID_ID.txt
+            printf "$out_file\n" >> GeCo3_Output/Plastid/NM/PLASTID_ID.txt
 
             for l in ${testing_levels[@]}; 
             do
-                cat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Plastid/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Plastid/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Plastid/geco_PLASTID.txt
-                rm GeCo3_Output/Plastid/TO_COMPRESS*
+                cat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Plastid/NM/TO_COMPRESS
+                GeCo3 -v -l $l GeCo3_Output/Plastid/NM/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Plastid/NM/geco_PLASTID.txt
+                rm GeCo3_Output/Plastid/NM/TO_COMPRESS*
             done
         fi
     done
@@ -367,8 +395,12 @@ function MITOCHONDRIAL_GENOME_COMPRESSION () {
         mkdir GeCo3_Output/Mitochondrial
     fi
 
-    if [[ -f "GeCo3_Output/Mitochondrial/MITOCHONDRIAL_ID.txt" ]]; then
-        readarray -t already_processed < GeCo3_Output/Mitochondrial/MITOCHONDRIAL_ID.txt
+    if [[ ! -d "GeCo3_Output/Mitochondrial/NM" ]]; then
+        mkdir GeCo3_Output/Mitochondrial/NM
+    fi
+
+    if [[ -f "GeCo3_Output/Mitochondrial/NM/MITOCHONDRIAL_ID.txt" ]]; then
+        readarray -t already_processed < GeCo3_Output/Mitochondrial/NM/MITOCHONDRIAL_ID.txt
     fi
 
     # for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/NM-mitochondrion/*
@@ -385,13 +417,13 @@ function MITOCHONDRIAL_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            printf "$out_file\n" >> GeCo3_Output/Mitochondrial/MITOCHONDRIAL_ID.txt
+            printf "$out_file\n" >> GeCo3_Output/Mitochondrial/NM/MITOCHONDRIAL_ID.txt
 
             for l in ${testing_levels[@]}; 
             do
-                cat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Mitochondrial/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Mitochondrial/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Mitochondrial/geco_MITOCHONDRIAL.txt
-                rm GeCo3_Output/Mitochondrial/TO_COMPRESS*
+                cat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Mitochondrial/NM/TO_COMPRESS
+                GeCo3 -v -l $l GeCo3_Output/Mitochondrial/NM/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Mitochondrial/NM/geco_MITOCHONDRIAL.txt
+                rm GeCo3_Output/Mitochondrial/NM/TO_COMPRESS*
             done
         fi
     done
@@ -404,56 +436,56 @@ if [[ "$VIRAL" -eq "1" ]];
   then
   VIRUS_GENOME_COMPRESSION;
   echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Viral DB"
-  ./src/dna_compression_analysis_csv.sh Virus VIRAL geco3_Viral.csv
+  ./src/compression_analysis_csv.sh Virus VIRAL geco3_Viral.csv NM
   fi
 #
 if [[ "$BACTERIA" -eq "1" ]];
   then
   BACTERIA_GENOME_COMPRESSION;
     echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Bacteria DB"
-  ./src/dna_compression_analysis_csv.sh Bacteria BACTERIA geco3_Bacteria.csv
+  ./src/compression_analysis_csv.sh Bacteria BACTERIA geco3_Bacteria.csv NM
   fi
 #
 if [[ "$ARCHAEA" -eq "1" ]];
   then
   ARCHAEA_GENOME_COMPRESSION;
   echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Archeae DB"
-  ./src/dna_compression_analysis_csv.sh Archaea ARCHAEA geco3_Archaea.csv
+  ./src/compression_analysis_csv.sh Archaea ARCHAEA geco3_Archaea.csv NM
   fi
 #
 if [[ "$PROTOZOA" -eq "1" ]];
   then
   PROTOZOA_GENOME_COMPRESSION;
   echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Protozoa DB"
-  ./src/dna_compression_analysis_csv.sh Protozoa PROTOZOA geco3_Protozoa.csv
+  ./src/compression_analysis_csv.sh Protozoa PROTOZOA geco3_Protozoa.csv NM
   fi
 #
 if [[ "$FUNGI" -eq "1" ]];
   then
   FUNGI_GENOME_COMPRESSION;
   echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Fungi DB"
-  ./src/dna_compression_analysis_csv.sh Fungi FUNGI geco3_Fungi.csv
+  ./src/compression_analysis_csv.sh Fungi FUNGI geco3_Fungi.csv NM
   fi
 #
 if [[ "$PLANT" -eq "1" ]];
   then
   PLANT_GENOME_COMPRESSION;
   echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Plant DB"
-  ./src/dna_compression_analysis_csv.sh Plant PLANT geco3_Plant.csv
+  ./src/compression_analysis_csv.sh Plant PLANT geco3_Plant.csv NM
   fi
 #
 if [[ "$MITOCHONDRION" -eq "1" ]];
   then
   MITOCHONDRIAL_GENOME_COMPRESSION;
   echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Mitochondrial DB"
-  ./src/dna_compression_analysis_csv.sh Mitochondrial MITOCHONDRIAL geco3_Mitochondrial.csv
+  ./src/compression_analysis_csv.sh Mitochondrial MITOCHONDRIAL geco3_Mitochondrial.csv NM
   fi
 #
 if [[ "$PLASTID" -eq "1" ]];
   then
   PLASTID_GENOME_COMPRESSION;
   echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Plastid DB"
-  ./src/dna_compression_analysis_csv.sh Plastid PLASTID geco3_Plastid.csv
+  ./src/compression_analysis_csv.sh Plastid PLASTID geco3_Plastid.csv NM
   fi
 #
 # ==============================================================================
