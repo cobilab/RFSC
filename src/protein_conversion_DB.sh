@@ -304,7 +304,6 @@ function MITOCHONDRIAL_PROTEIN_COVERSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start Mitochondrial Protein Synthesizing"
     mkdir /media/alexloure/T7Touch/NCBI-Mitochondrial/PT-Mitochondrial
 
-    
     #for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/NM-mitochondrion/*
     for file in References/NCBI-Mitochondrial/NM-mitochondrion/*
     do
