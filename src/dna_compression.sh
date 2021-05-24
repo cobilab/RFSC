@@ -89,7 +89,6 @@ function VIRUS_GENOME_COMPRESSION () {
     # for file in /media/alexloure/T7Touch/NCBI-Virus/NM-viral/*
     for file in References/NCBI-Virus/NM-viral/*
     do
-
         out_file=$(basename $file);
         out_file="${out_file%".fna.gz"}"
 
@@ -98,9 +97,8 @@ function VIRUS_GENOME_COMPRESSION () {
 
         elif [[ " ${already_processed[@]} " =~ " ${out_file} " ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
-
+        
         else
-            
             printf "$out_file\n" >> GeCo3_Output/Virus/NM/VIRAL_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -302,8 +300,8 @@ function PROTOZOA_GENOME_COMPRESSION () {
         readarray -t already_processed < GeCo3_Output/Protozoa/NM/PROTOZOA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*
-    #for file in References/NCBI-Protozoa/NM-protozoa/*
+    #for file in /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*
+    for file in References/NCBI-Protozoa/NM-protozoa/*
     do
 
         out_file=$(basename $file);
