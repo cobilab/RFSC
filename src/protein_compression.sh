@@ -105,9 +105,8 @@ function VIRUS_GENOME_COMPRESSION () {
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Virus/PT/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Virus/PT/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Virus/PT/geco_VIRAL.txt
-                rm GeCo3_Output/Virus/PT/TO_COMPRESS*
+                GeCo3 -v -l $l $file | sed '1,6d' | sed '2d' >> GeCo3_Output/Virus/PT/geco_VIRAL.txt
+                rm $file.co
             done
         fi
     done
@@ -148,9 +147,8 @@ function BACTERIA_GENOME_COMPRESSION () {
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Bacteria/PT/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Bacteria/PT/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Bacteria/PT/geco_BACTERIA.txt
-                rm GeCo3_Output/Bacteria/PT/TO_COMPRESS*
+                GeCo3 -v -l $l $file | sed '1,6d' | sed '2d' >> GeCo3_Output/Bacteria/PT/geco_BACTERIA.txt
+                rm $file.co
             done
         fi
     done   
@@ -173,8 +171,8 @@ function ARCHAEA_GENOME_COMPRESSION () {
         readarray -t already_processed < GeCo3_Output/Archaea/PT/ARCHAEA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Archaea/PT-Archaea/*
-    #for file in References/NCBI-Archaea/PT-Archaea/*
+    #for file in /media/alexloure/T7Touch/NCBI-Archaea/PT-Archaea/*
+    for file in References/NCBI-Archaea/PT-Archaea/*
     do
 
         out_file=$(basename $file);
@@ -191,9 +189,8 @@ function ARCHAEA_GENOME_COMPRESSION () {
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Archaea/PT/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Archaea/PT/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Archaea/PT/geco_ARCHAEA.txt
-                rm GeCo3_Output/Archaea/PT/TO_COMPRESS*
+                GeCo3 -v -l $l $file | sed '1,6d' | sed '2d' >> GeCo3_Output/Archaea/PT/geco_ARCHAEA.txt
+                rm $file.co
             done
         fi
     done
@@ -234,9 +231,8 @@ function FUNGI_GENOME_COMPRESSION () {
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Fungi/PT/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Fungi/PT/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Fungi/PT/geco_FUNGI.txt
-                rm GeCo3_Output/Fungi/PT/TO_COMPRESS*
+                GeCo3 -v -l $l $file | sed '1,6d' | sed '2d' >> GeCo3_Output/Fungi/PT/geco_FUNGI.txt
+                rm $file.co
             done
         fi
     done
@@ -277,9 +273,8 @@ function PLANT_GENOME_COMPRESSION () {
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Plant/PT/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Plant/PT/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Plant/PT/geco_PLANT.txt
-                rm GeCo3_Output/Plant/PT/TO_COMPRESS*
+                GeCo3 -v -l $l $file | sed '1,6d' | sed '2d' >> GeCo3_Output/Plant/PT/geco_PLANT.txt
+                rm $file.co
             done
         fi
     done
@@ -302,8 +297,8 @@ function PROTOZOA_GENOME_COMPRESSION () {
         readarray -t already_processed < GeCo3_Output/Protozoa/PT/PROTOZOA_ID.txt
     fi
 
-    #for file in /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa/*
-    for file in References/NCBI-Protozoa/PT-Protozoa/*
+    for file in /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa/*
+    #for file in References/NCBI-Protozoa/PT-Protozoa/*
     do
 
         out_file=$(basename $file);
@@ -320,9 +315,8 @@ function PROTOZOA_GENOME_COMPRESSION () {
 
             for l in ${testing_levels[@]}; 
             do
-                zcat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Protozoa/PT/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Protozoa/PT/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Protozoa/PT/geco_PROTOZOA.txt
-                rm GeCo3_Output/Protozoa/PT/TO_COMPRESS*
+                GeCo3 -v -l $l $file | sed '1,6d' | sed '2d' >> GeCo3_Output/Protozoa/PT/geco_PROTOZOA.txt
+                rm $file.co
             done
         fi
     done
@@ -331,13 +325,6 @@ function PROTOZOA_GENOME_COMPRESSION () {
 ################## PLASTID ##################
 #
 function PLASTID_GENOME_COMPRESSION () {
-    echo -e "\033[1;34m[RFSC]\033[0m Start parsing Plastid Genomes"
-    ulimit -n 1000000
-    path="/media/alexloure/T7Touch/NCBI-Plastid"
-    gunzip -k $path/DB-plastid.fa.gz
-    mkdir $path/PT-plastid
-    awk '/>/ {filename="/media/alexloure/T7Touch/NCBI-Plastid/PT-plastid/"NR".fna"} {print > filename}' $path/DB-plastid.fa
-
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Plastid Genomes"
 
     if [[ ! -d "GeCo3_Output/Plastid" ]]; then
@@ -370,24 +357,16 @@ function PLASTID_GENOME_COMPRESSION () {
 
             for l in ${testing_levels[@]}; 
             do
-                cat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Plastid/PT/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Plastid/PT/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Plastid/PT/geco_PLASTID.txt
-                rm GeCo3_Output/Plastid/PT/TO_COMPRESS*
+                GeCo3 -v -l $l $file | sed '1,6d' | sed '2d' >> GeCo3_Output/Plastid/PT/geco_PLASTID.txt
+                rm $file.co
             done
         fi
     done
-    rm References/NCBI-Plastid/DB-plastid.fa
 }
 #
 # ################## MITOCHONDRIAL ##################
 #
 function MITOCHONDRIAL_GENOME_COMPRESSION () {
-    echo -e "\033[1;34m[RFSC]\033[0m Start parsing Mitochondrial Genomes"
-    ulimit -n 1000000
-    path="/media/alexloure/T7Touch/NCBI-Mitochondrial"
-    gunzip -k $path/DB-mitochondrion.fa.gz
-    mkdir $path/PT-mitochondrion
-    awk '/>/ {filename="/media/alexloure/T7Touch/NCBI-Mitochondrial/PT-mitochondrion/"NR".fna"} {print > filename}' $path/DB-mitochondrion.fa
 
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Mitochondrial Genomes"
 
@@ -421,13 +400,11 @@ function MITOCHONDRIAL_GENOME_COMPRESSION () {
 
             for l in ${testing_levels[@]}; 
             do
-                cat $file | grep -v ">" | tr -d -c "ACGT" > GeCo3_Output/Mitochondrial/PT/TO_COMPRESS
-                GeCo3 -v -l $l GeCo3_Output/Mitochondrial/PT/TO_COMPRESS | sed '1,6d' | sed '2d' >> GeCo3_Output/Mitochondrial/PT/geco_MITOCHONDRIAL.txt
-                rm GeCo3_Output/Mitochondrial/PT/TO_COMPRESS*
+                GeCo3 -v -l $l $file | sed '1,6d' | sed '2d' >> GeCo3_Output/Mitochondrial/PT/geco_MITOCHONDRIAL.txt
+                rm $file.co
             done
         fi
     done
-    rm References/NCBI-Mitochondrial/DB-mitochondrion.fa
 }
 #
 # ==============================================================================
