@@ -6,6 +6,9 @@ from statistics import NormalDist
 
 # ( https://www.youtube.com/watch?v=rzFX5NWojp0 ) 
 
+# Number of types (Domains)
+N = 8
+
 ## Virus Values
 virus_nm_result7, virus_pt_result7 = [], []
 
@@ -144,24 +147,46 @@ mito_pt_result7 = np.array(mito_pt_result7[1:], dtype=float)
 plastid_nm_result7 = np.array(plastid_nm_result7[1:], dtype=float)
 plastid_pt_result7 = np.array(plastid_pt_result7[1:], dtype=float)
 
-# Fit a normal distribution to the data:
-mu, std = norm.fit(virus_nm_result7)
+# Fit a normal distribution to the data
+mu_virus_nm, std_virus_nm = norm.fit(virus_nm_result7)
+mu_virus_pt, std_virus_pt = norm.fit(virus_pt_result7)
 
-# Plot the histogram.
-plt.hist(virus_nm_result7, bins=25, density=True, alpha=0.6, color='g')
+mu_bacteria_nm, std_bacteria_nm = norm.fit(bacteria_nm_result7)
+mu_bacteria_pt, std_bacteria_pt = norm.fit(bacteria_pt_result7)
 
-# Plot the PDF.
-xmin, xmax = plt.xlim()
-x = np.linspace(xmin, xmax, 100)
-p = norm.pdf(x, mu, std)
-plt.plot(x, p, 'k', linewidth=2)
-title = "Fit results: mu = %.2f,  std = %.2f" % (mu, std)
-plt.title(title)
+mu_archaea_nm, std_archaea_nm = norm.fit(archaea_nm_result7)
+mu_archaea_pt, std_archaea_pt = norm.fit(archaea_pt_result7)
 
-plt.show()
+mu_fungi_nm, std_fungi_nm = norm.fit(fungi_nm_result7)
+mu_fungi_pt, std_fungi_pt = norm.fit(fungi_pt_result7)
 
-#print(x)
-#print("-----")
-#print(p)
-#print("-----")
-print(NormalDist(mu,std).pdf(0.91))
+mu_plant_nm, std_plant_nm = norm.fit(plant_nm_result7)
+mu_plant_pt, std_plant_pt = norm.fit(plant_pt_result7)
+
+mu_protozoa_nm, std_protozoa_nm = norm.fit(protozoa_nm_result7)
+mu_protozoa_pt, std_protozoa_pt = norm.fit(protozoa_pt_result7)
+
+mu_mito_nm, std_mito_nm = norm.fit(mito_nm_result7)
+mu_mito_pt, std_mito_pt = norm.fit(mito_pt_result7)
+
+mu_plastid_nm, std_plastid_nm = norm.fit(plastid_nm_result7)
+mu_plastid_pt, std_plastid_pt = norm.fit(plastid_pt_result7)
+
+# # Plot the histogram.
+# plt.hist(virus_nm_result7, bins=25, density=True, alpha=0.6, color='g')
+
+# # Plot the PDF.
+# xmin, xmax = plt.xlim()
+# x = np.linspace(xmin, xmax, 100)
+# p_virus_nm = norm.pdf(x, mu_virus_nm, std_virus_nm)
+
+# plt.plot(x, p_virus_nm, 'k', linewidth=2)
+# title = "Viral Nucleotides: \u03BC=%.2f,  \u03C3=%.2f" % (mu_virus_nm, std_virus_nm)
+# plt.title(title)
+# plt.ylabel("Frequency (%)")
+# plt.xlabel("Normalized Dissimilarity Rate")
+
+# plt.show()
+
+print(NormalDist(mu_virus_nm,std_virus_nm).pdf(0.91))
+print(NormalDist(mu_virus_pt,std_virus_pt).pdf(0.91))
