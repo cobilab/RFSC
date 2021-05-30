@@ -372,41 +372,57 @@ function MITOCHONDRIAL_GENOME_COMPRESSION () {
 if [[ "$VIRAL" -eq "1" ]];
   then
   VIRUS_GENOME_COMPRESSION;
+  echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Viral GC-Content DB"
+  ./src/gc_content_csv.sh Virus VIRAL gc_content_Viral.csv
   fi
 #
 if [[ "$BACTERIA" -eq "1" ]];
   then
   BACTERIA_GENOME_COMPRESSION;
+  echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Bacteria GC-Content DB"
+  ./src/gc_content_csv.sh Bacteria BACTERIA gc_content_Bacteria.csv
   fi
 #
 if [[ "$ARCHAEA" -eq "1" ]];
   then
   ARCHAEA_GENOME_COMPRESSION;
+  echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Archaea GC-Content DB"
+  ./src/gc_content_csv.sh Archaea ARCHAEA gc_content_Archaea.csv
   fi
 #
 if [[ "$PROTOZOA" -eq "1" ]];
   then
   PROTOZOA_GENOME_COMPRESSION;
+  echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Protozoa GC-Content DB"
+  ./src/gc_content_csv.sh Protozoa PROTOZOA gc_content_Protozoa.csv
   fi
 #
 if [[ "$FUNGI" -eq "1" ]];
   then
   FUNGI_GENOME_COMPRESSION;
+  echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Fungi GC-Content DB"
+  ./src/gc_content_csv.sh Fungi FUNGI gc_content_Fungi.csv
   fi
 #
 if [[ "$PLANT" -eq "1" ]];
   then
   PLANT_GENOME_COMPRESSION;
+  echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Plant GC-Content DB"
+  ./src/gc_content_csv.sh Plant PLANT gc_content_Plant.csv
   fi
 #
 if [[ "$MITOCHONDRION" -eq "1" ]];
   then
   MITOCHONDRIAL_GENOME_COMPRESSION;
+  echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Mitochondrial GC-Content DB"
+  ./src/gc_content_csv.sh Mitochondrial MITOCHONDRIAL gc_content_Mitochondrial.csv
   fi
 #
 if [[ "$PLASTID" -eq "1" ]];
   then
   PLASTID_GENOME_COMPRESSION;
+  echo -e "\033[1;34m[RFSC]\033[0m Start CSV generation for Plastid GC-Content DB"
+  ./src/gc_content_csv.sh Plastid PLASTID gc_content_Plastid.csv
   fi
 #
 # ==============================================================================
