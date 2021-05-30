@@ -1,13 +1,15 @@
+import sys, csv, math
 import numpy as np
 from scipy.stats import norm
 import matplotlib.pyplot as plt
-import csv
 from statistics import NormalDist
 
 # ( https://www.youtube.com/watch?v=rzFX5NWojp0 ) 
 
-# Number of types (Domains)
-N = 8
+N = 8                               # Number of types (Domains)
+sample_DNA = float(sys.argv[1])     # Normalize Compression Rate of the DNA for the Input Sequence
+sample_AA = float(sys.argv[2])      # Normalize Compression Rate of the AA for the Input Sequence
+gc_percent = float(sys.argv[3])     # GC-Content Percentage ([0..1]) of the Input Sequence
 
 ## Virus Values
 virus_nm_result7, virus_pt_result7, virus_gc_content = [], [], []
@@ -33,6 +35,30 @@ mito_nm_result7, mito_pt_result7, mito_gc_content = [], [], []
 ## Platids Values
 plastid_nm_result7, plastid_pt_result7, plastid_gc_content = [], [], []
 
+'''
+    Generate Histogram Function
+    Example: generateHist(virus_nm_result7, mu_virus_nm, std_virus_nm)
+'''
+def generateHist(data, mu, std):
+    # Plot the histogram.
+    plt.hist(data, bins=25, density=True, alpha=0.6, color='g')
+
+    # Plot the PDF.
+    xmin, xmax = plt.xlim()
+    x = np.linspace(xmin, xmax, 100)
+    p_virus_nm = norm.pdf(x, mu, std)
+
+    plt.plot(x, p_virus_nm, 'k', linewidth=2)
+    title = "Viral Nucleotides: \u03BC=%.2f,  \u03C3=%.2f" % (mu, std)
+    plt.title(title)
+    plt.ylabel("Frequency (%)")
+    plt.xlabel("Normalized Dissimilarity Rate")
+
+    plt.show()
+
+def domainAnalysis(probabilities):
+    domains=["Virus", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
+    return domains[probabilities.index(max(probabilities))]
 
 # Viral CSV files
 with open('GeCo3_Output/Virus/NM/geco3_Viral.csv', 'r') as file:
@@ -51,7 +77,6 @@ with open('Analysis/GCcontent/Virus/gc_content_Viral.csv', 'r') as file:
         virus_gc_content.append("0"+row[0].split("\t")[3])
 
 '''
-
 # Bacterias CSV files
 with open('GeCo3_Output/Bacteria/NM/geco3_Bacteria.csv', 'r') as file:
     reader = csv.reader(file)
@@ -67,7 +92,6 @@ with open('Analysis/GCcontent/Bacteria/gc_content_Bacteria.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         bacteria_gc_content.append("0"+row[0].split("\t")[3])
-
 '''
 
 # Archaeas CSV files
@@ -176,9 +200,13 @@ virus_nm_result7 = np.array(virus_nm_result7[1:], dtype=float)
 virus_pt_result7 = np.array(virus_pt_result7[1:], dtype=float)
 virus_gc_content = np.array(virus_gc_content[1:], dtype=float)
 
-bacteria_nm_result7 = np.array(bacteria_nm_result7[1:], dtype=float)
-bacteria_pt_result7 = np.array(bacteria_pt_result7[1:], dtype=float)
-bacteria_gc_content = np.array(bacteria_gc_content[1:], dtype=float)
+#bacteria_nm_result7 = np.array(bacteria_nm_result7[1:], dtype=float)
+#bacteria_pt_result7 = np.array(bacteria_pt_result7[1:], dtype=float)
+#bacteria_gc_content = np.array(bacteria_gc_content[1:], dtype=float)
+
+archaea_nm_result7 = np.array(archaea_nm_result7[1:], dtype=float)
+archaea_pt_result7 = np.array(archaea_pt_result7[1:], dtype=float)
+archaea_gc_content = np.array(archaea_gc_content[1:], dtype=float)
 
 fungi_nm_result7 = np.array(fungi_nm_result7[1:], dtype=float)
 fungi_pt_result7 = np.array(fungi_pt_result7[1:], dtype=float)
@@ -205,9 +233,9 @@ mu_virus_nm, std_virus_nm = norm.fit(virus_nm_result7)
 mu_virus_pt, std_virus_pt = norm.fit(virus_pt_result7)
 mu_virus_gc, std_virus_gc = norm.fit(virus_gc_content)
 
-mu_bacteria_nm, std_bacteria_nm = norm.fit(bacteria_nm_result7)
-mu_bacteria_pt, std_bacteria_pt = norm.fit(bacteria_pt_result7)
-mu_bacteria_gc, std_bacteria_gc = norm.fit(bacteria_gc_content)
+#mu_bacteria_nm, std_bacteria_nm = norm.fit(bacteria_nm_result7)
+#mu_bacteria_pt, std_bacteria_pt = norm.fit(bacteria_pt_result7)
+#mu_bacteria_gc, std_bacteria_gc = norm.fit(bacteria_gc_content)
 
 mu_archaea_nm, std_archaea_nm = norm.fit(archaea_nm_result7)
 mu_archaea_pt, std_archaea_pt = norm.fit(archaea_pt_result7)
@@ -233,21 +261,55 @@ mu_plastid_nm, std_plastid_nm = norm.fit(plastid_nm_result7)
 mu_plastid_pt, std_plastid_pt = norm.fit(plastid_pt_result7)
 mu_plastid_gc, std_plastid_gc = norm.fit(plastid_gc_content)
 
-# # Plot the histogram.
-# plt.hist(virus_nm_result7, bins=25, density=True, alpha=0.6, color='g')
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+                    Probabilities (Log base 2)
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-# # Plot the PDF.
-# xmin, xmax = plt.xlim()
-# x = np.linspace(xmin, xmax, 100)
-# p_virus_nm = norm.pdf(x, mu_virus_nm, std_virus_nm)
+p_type = math.log(1/N,2)
 
-# plt.plot(x, p_virus_nm, 'k', linewidth=2)
-# title = "Viral Nucleotides: \u03BC=%.2f,  \u03C3=%.2f" % (mu_virus_nm, std_virus_nm)
-# plt.title(title)
-# plt.ylabel("Frequency (%)")
-# plt.xlabel("Normalized Dissimilarity Rate")
+likelihood_virus_dna = math.log(NormalDist(mu_virus_nm,std_virus_nm).pdf(sample_DNA),2)
+likelihood_virus_aa = math.log(NormalDist(mu_virus_pt,std_virus_pt).pdf(sample_AA),2)
+likelihood_virus_gc = math.log(NormalDist(mu_virus_gc,std_virus_gc).pdf(gc_percent),2)
 
-# plt.show()
+#likelihood_bacteria_dna = math.log(NormalDist(mu_bacteria_nm,std_bacteria_nm).pdf(sample_DNA),2)
+#likelihood_bacteria_aa = math.log(NormalDist(mu_bacteria_pt,std_bacteria_pt).pdf(sample_AA),2)
+#likelihood_bacteria_gc = math.log(NormalDist(mu_bacteria_gc,std_bacteria_gc).pdf(gc_percent),2)
 
-print(NormalDist(mu_virus_nm,std_virus_nm).pdf(0.91))
-print(NormalDist(mu_virus_pt,std_virus_pt).pdf(0.91))
+likelihood_archaea_dna = math.log(NormalDist(mu_archaea_nm,std_archaea_nm).pdf(sample_DNA),2)
+likelihood_archaea_aa = math.log(NormalDist(mu_archaea_pt,std_archaea_pt).pdf(sample_AA),2)
+likelihood_archaea_gc = math.log(NormalDist(mu_archaea_gc,std_archaea_gc).pdf(gc_percent),2)
+
+likelihood_fungi_dna = math.log(NormalDist(mu_fungi_nm,std_fungi_nm).pdf(sample_DNA),2)
+likelihood_fungi_aa = math.log(NormalDist(mu_fungi_pt,std_fungi_pt).pdf(sample_AA),2)
+likelihood_fungi_gc = math.log(NormalDist(mu_fungi_gc,std_fungi_gc).pdf(gc_percent),2)
+
+likelihood_plant_dna = math.log(NormalDist(mu_plant_nm,std_plant_nm).pdf(sample_DNA),2)
+likelihood_plant_aa = math.log(NormalDist(mu_plant_pt,std_plant_pt).pdf(sample_AA),2)
+likelihood_plant_gc = math.log(NormalDist(mu_plant_gc,std_plant_gc).pdf(gc_percent),2)
+
+likelihood_protozoa_dna = math.log(NormalDist(mu_protozoa_nm,std_protozoa_nm).pdf(sample_DNA),2)
+likelihood_protozoa_aa = math.log(NormalDist(mu_protozoa_pt,std_protozoa_pt).pdf(sample_AA),2)
+likelihood_protozoa_gc = math.log(NormalDist(mu_protozoa_gc,std_protozoa_gc).pdf(gc_percent),2)
+
+likelihood_mito_dna = math.log(NormalDist(mu_mito_nm,std_mito_nm).pdf(sample_DNA),2)
+likelihood_mito_aa = math.log(NormalDist(mu_mito_pt,std_mito_pt).pdf(sample_AA),2)
+likelihood_mito_gc = math.log(NormalDist(mu_mito_gc,std_mito_gc).pdf(gc_percent),2)
+
+likelihood_plastid_dna = math.log(NormalDist(mu_plastid_nm,std_plastid_nm).pdf(sample_DNA),2)
+likelihood_plastid_aa = math.log(NormalDist(mu_plastid_pt,std_plastid_pt).pdf(sample_AA),2)
+likelihood_plastid_gc = math.log(NormalDist(mu_plastid_gc,std_plastid_gc).pdf(gc_percent),2)
+
+# Final Probabilities
+p_virus = p_type + likelihood_virus_dna + likelihood_virus_aa + likelihood_virus_gc
+#p_bacteria = p_type + likelihood_bacteria_dna + likelihood_bacteria_aa + likelihood_bacteria_gc
+p_archaea = p_type + likelihood_archaea_dna + likelihood_archaea_aa + likelihood_archaea_gc
+p_fungi = p_type + likelihood_fungi_dna + likelihood_fungi_aa + likelihood_fungi_gc
+p_plant = p_type + likelihood_plant_dna + likelihood_plant_aa + likelihood_plant_gc
+p_protozoa = p_type + likelihood_protozoa_dna + likelihood_protozoa_aa + likelihood_protozoa_gc
+p_mito = p_type + likelihood_mito_dna + likelihood_mito_aa + likelihood_mito_gc
+p_plastid = p_type + likelihood_plastid_dna + likelihood_plastid_aa + likelihood_plastid_gc
+
+probabilities=[p_virus, p_archaea, p_fungi, p_plant, p_protozoa, p_mito, p_plastid]
+
+print(probabilities)
+print(domainAnalysis(probabilities))
