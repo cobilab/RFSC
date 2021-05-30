@@ -357,5 +357,5 @@ p_plastid = calcProb(p_type, likelihood_plastid_dna, likelihood_plastid_aa, like
 
 probabilities=[p_virus, p_archaea, p_fungi, p_plant, p_protozoa, p_mito, p_plastid]
 
-print(probabilities)
+#print(probabilities)
 print(domainAnalysis(probabilities))
