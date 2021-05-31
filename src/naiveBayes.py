@@ -58,6 +58,68 @@ def generateHist(data, mu, std):
 
     plt.show()
 
+def generateHist_GC():
+    fig, ((ax0, ax1, ax2, ax3), (ax4, ax5, ax6, ax7)) = plt.subplots(nrows=2, ncols=4, figsize=(10,4))
+
+    ax0.hist(virus_gc_content, bins=25, density=True, alpha=0.6, color='g')
+    virus_xmin, virus_xmax = plt.xlim()
+    x_virus = np.linspace(virus_xmin, virus_xmax, 100)
+    p_virus_gc = norm.pdf(x_virus, mu_virus_gc, std_virus_gc)
+    ax0.set_title("Viral GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_virus_gc, std_virus_gc))
+    ax0.plot(x_virus, p_virus_gc, 'k', linewidth=2)
+
+    #ax1.hist(bacteria_gc_content, bins=25, density=True, alpha=0.6, color='g')
+    #bacteria_xmin, bacteria_xmax = plt.xlim()
+    #x_bacteria = np.linspace(bacteria_xmin, bacteria_xmax, 100)
+    #p_bacteria_gc = norm.pdf(x_bacteria, mu_bacteria_gc, std_bacteria_gc)
+    #ax1.set_title("Bacteria GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_bacteria_gc, std_bacteria_gc))
+    #ax1.plot(x_bacteria, p_bacteria_gc, 'k', linewidth=2)
+
+    ax2.hist(archaea_gc_content, bins=25, density=True, alpha=0.6, color='g')
+    archaea_xmin, archaea_xmax = plt.xlim()
+    x_archaea = np.linspace(archaea_xmin, archaea_xmax, 100)
+    p_archaea_gc = norm.pdf(x_archaea, mu_archaea_gc, std_archaea_gc)
+    ax2.set_title("Archaea GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_archaea_gc, std_archaea_gc))
+    ax2.plot(x_archaea, p_archaea_gc, 'k', linewidth=2)
+
+    ax3.hist(fungi_gc_content, bins=25, density=True, alpha=0.6, color='g')
+    fungi_xmin, fungi_xmax = plt.xlim()
+    x_fungi = np.linspace(fungi_xmin, fungi_xmax, 100)
+    p_fungi_gc = norm.pdf(x_fungi, mu_fungi_gc, std_fungi_gc)
+    ax3.set_title("Fungi GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_fungi_gc, std_fungi_gc))
+    ax3.plot(x_fungi, p_fungi_gc, 'k', linewidth=2)
+
+    ax4.hist(plant_gc_content, bins=25, density=True, alpha=0.6, color='g')
+    plant_xmin, plant_xmax = plt.xlim()
+    x_plant = np.linspace(plant_xmin, plant_xmax, 100)
+    p_plant_gc = norm.pdf(x_plant, mu_plant_gc, std_plant_gc)
+    ax4.set_title("Plant GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_plant_gc, std_plant_gc))
+    ax4.plot(x_plant, p_plant_gc, 'k', linewidth=2)
+
+    ax5.hist(protozoa_gc_content, bins=25, density=True, alpha=0.6, color='g')
+    protozoa_xmin, protozoa_xmax = plt.xlim()
+    x_protozoa = np.linspace(protozoa_xmin, protozoa_xmax, 100)
+    p_protozoa_gc = norm.pdf(x_protozoa, mu_protozoa_gc, std_protozoa_gc)
+    ax5.set_title("Protozoa GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_protozoa_gc, std_protozoa_gc))
+    ax5.plot(x_protozoa, p_protozoa_gc, 'k', linewidth=2)
+
+    ax6.hist(mito_gc_content, bins=25, density=True, alpha=0.6, color='g')
+    mito_xmin, mito_xmax = plt.xlim()
+    x_mito = np.linspace(mito_xmin, mito_xmax, 100)
+    p_mito_gc = norm.pdf(x_mito, mu_mito_gc, std_mito_gc)
+    ax6.set_title("Protozoa GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_mito_gc, std_mito_gc))
+    ax6.plot(x_mito, p_mito_gc, 'k', linewidth=2)
+
+    ax7.hist(plastid_gc_content, bins=25, density=True, alpha=0.6, color='g')
+    plastid_xmin, plastid_xmax = plt.xlim()
+    x_plastid = np.linspace(plastid_xmin, plastid_xmax, 100)
+    p_plastid_gc = norm.pdf(x_plastid, mu_plastid_gc, std_plastid_gc)
+    ax7.set_title("Protozoa GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_plastid_gc, std_plastid_gc))
+    ax7.plot(x_plastid, p_plastid_gc, 'k', linewidth=2)
+
+    fig.tight_layout()
+    plt.show()
+
 def virusData(virus_nm_result, virus_pt_result, virus_gc_content):
 
     # Viral CSV files
@@ -359,3 +421,5 @@ probabilities=[p_virus, p_archaea, p_fungi, p_plant, p_protozoa, p_mito, p_plast
 
 #print(probabilities)
 print(domainAnalysis(probabilities))
+
+#generateHist_GC()
