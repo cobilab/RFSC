@@ -573,7 +573,24 @@ plt.savefig('Analysis/Level_Analysis/Virus.png')
 
 plt.clf() # Clear all previous plots
 
-## Bacterias Level Analysis
+# ## Bacterias Level Analysis
+# fig_bac= plt.subplots(1,2,figsize=(6,4))
+# ax1 = plt.subplot(221)
+# ax2 = plt.subplot(222)
+
+
+# ax1.bar(X, y_bacteria_nm, align='center', color="blue")
+# ax1.set_ylim([98000000,100000000]) # Change
+# ax1.title.set_text('Bacteria Nucleotide')
+# ax1.set_ylabel('Cumulative Bytes')
+# ax1.set_xlabel('Levels')
+
+# ax2.bar(X, y_bacteria_pt, align='center', color="orange")
+# ax2.set_ylim([25000000,26000000]) # Change
+# ax2.title.set_text('Bacteria Protein')
+# ax2.set_xlabel('Levels')
+
+# plt.savefig('Analysis/Level_Analysis/Bacteria.png')
 
 # /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ 
 # \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ 
