@@ -1,3 +1,12 @@
+"""
+    Generation of a Benchmark for Level os Compression study
+
+    x: Levels of study
+    y: Cumulative Sizes of the sequences of the given domain 
+
+    Run: python3 levelsBenchmark.py
+"""
+
 from matplotlib import font_manager
 import numpy as np
 from scipy.stats import norm
@@ -37,7 +46,7 @@ plastid_nm_size1, plastid_nm_size2, plastid_nm_size3, plastid_nm_size4, plastid_
 plastid_pt_size1, plastid_pt_size2, plastid_pt_size3, plastid_pt_size4, plastid_pt_size7, plastid_pt_size12, plastid_pt_size14 = [], [], [], [], [], [], []
 
 # Virus CSV files
-with open('GeCo3_Output/Virus/NM/geco3_Viral.csv', 'r') as file:
+with open('Analysis/GeCo/Virus/geco3_Viral.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         virus_nm_size1.append(row[0].split("\t")[1])
@@ -48,7 +57,7 @@ with open('GeCo3_Output/Virus/NM/geco3_Viral.csv', 'r') as file:
         virus_nm_size12.append(row[0].split("\t")[6])
         virus_nm_size14.append(row[0].split("\t")[7])
 
-with open('GeCo3_Output/Virus/PT/geco3_Viral.csv', 'r') as file:
+with open('Analysis/AC/Virus/ac2_Viral.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         virus_pt_size1.append(row[0].split("\t")[1])
@@ -61,7 +70,7 @@ with open('GeCo3_Output/Virus/PT/geco3_Viral.csv', 'r') as file:
 
 '''
 # Bacterias CSV files
-with open('GeCo3_Output/Bacteria/NM/geco3_Bacteria.csv', 'r') as file:
+with open('Analysis/GeCo/Bacteria/geco3_Bacteria.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         bacterias_nm_size1.append(row[0].split("\t")[1])
@@ -72,7 +81,7 @@ with open('GeCo3_Output/Bacteria/NM/geco3_Bacteria.csv', 'r') as file:
         bacterias_nm_size12.append(row[0].split("\t")[6])
         bacterias_nm_size14.append(row[0].split("\t")[7])
 
-with open('GeCo3_Output/Bacteria/PT/geco3_Bacteria.csv', 'r') as file:
+with open('Analysis/AC/Bacteria/ac2_Bacteria.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         bacterias_pt_size1.append(row[0].split("\t")[1])
@@ -85,7 +94,7 @@ with open('GeCo3_Output/Bacteria/PT/geco3_Bacteria.csv', 'r') as file:
 '''
 
 # Archaeas CSV files
-with open('GeCo3_Output/Archaea/NM/geco3_Archaea.csv', 'r') as file:
+with open('Analysis/GeCo/Archaea/geco3_Archaea.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         archaeas_nm_size1.append(row[0].split("\t")[1])
@@ -96,7 +105,7 @@ with open('GeCo3_Output/Archaea/NM/geco3_Archaea.csv', 'r') as file:
         archaeas_nm_size12.append(row[0].split("\t")[6])
         archaeas_nm_size14.append(row[0].split("\t")[7])
 
-with open('GeCo3_Output/Archaea/PT/geco3_Archaea.csv', 'r') as file:
+with open('Analysis/AC/Archaea/ac2_Archaea.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         archaeas_pt_size1.append(row[0].split("\t")[1])
@@ -108,7 +117,7 @@ with open('GeCo3_Output/Archaea/PT/geco3_Archaea.csv', 'r') as file:
         archaeas_pt_size14.append(row[0].split("\t")[7])
 
 # Fungis CSV files
-with open('GeCo3_Output/Fungi/NM/geco3_Fungi.csv', 'r') as file:
+with open('Analysis/GeCo/Fungi/geco3_Fungi.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         fungi_nm_size1.append(row[0].split("\t")[1])
@@ -119,7 +128,7 @@ with open('GeCo3_Output/Fungi/NM/geco3_Fungi.csv', 'r') as file:
         fungi_nm_size12.append(row[0].split("\t")[6])
         fungi_nm_size14.append(row[0].split("\t")[7])
 
-with open('GeCo3_Output/Fungi/PT/geco3_Fungi.csv', 'r') as file:
+with open('Analysis/AC/Fungi/ac2_Fungi.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         fungi_pt_size1.append(row[0].split("\t")[1])
@@ -131,7 +140,7 @@ with open('GeCo3_Output/Fungi/PT/geco3_Fungi.csv', 'r') as file:
         fungi_pt_size14.append(row[0].split("\t")[7])
 
 # Plants CSV files
-with open('GeCo3_Output/Plant/NM/geco3_Plant.csv', 'r') as file:
+with open('Analysis/GeCo/Plant/geco3_Plant.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         plant_nm_size1.append(row[0].split("\t")[1])
@@ -142,7 +151,7 @@ with open('GeCo3_Output/Plant/NM/geco3_Plant.csv', 'r') as file:
         plant_nm_size12.append(row[0].split("\t")[6])
         plant_nm_size14.append(row[0].split("\t")[7])
 
-with open('GeCo3_Output/Plant/PT/geco3_Plant.csv', 'r') as file:
+with open('Analysis/AC/Plant/ac2_Plant.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         plant_pt_size1.append(row[0].split("\t")[1])
@@ -154,7 +163,7 @@ with open('GeCo3_Output/Plant/PT/geco3_Plant.csv', 'r') as file:
         plant_pt_size14.append(row[0].split("\t")[7])
 
 # Protozoa CSV files
-with open('GeCo3_Output/Protozoa/NM/geco3_Protozoa.csv', 'r') as file:
+with open('Analysis/GeCo/Protozoa/geco3_Protozoa.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         protozoa_nm_size1.append(row[0].split("\t")[1])
@@ -165,7 +174,7 @@ with open('GeCo3_Output/Protozoa/NM/geco3_Protozoa.csv', 'r') as file:
         protozoa_nm_size12.append(row[0].split("\t")[6])
         protozoa_nm_size14.append(row[0].split("\t")[7])
 
-with open('GeCo3_Output/Protozoa/PT/geco3_Protozoa.csv', 'r') as file:
+with open('Analysis/AC/Protozoa/ac2_Protozoa.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         protozoa_pt_size1.append(row[0].split("\t")[1])
@@ -177,7 +186,7 @@ with open('GeCo3_Output/Protozoa/PT/geco3_Protozoa.csv', 'r') as file:
         protozoa_pt_size14.append(row[0].split("\t")[7])
 
 # Mitochondrial CSV files
-with open('GeCo3_Output/Mitochondrial/NM/geco3_Mitochondrial.csv', 'r') as file:
+with open('Analysis/GeCo/Mitochondrial/geco3_Mitochondrial.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         mito_nm_size1.append(row[0].split("\t")[1])
@@ -188,7 +197,7 @@ with open('GeCo3_Output/Mitochondrial/NM/geco3_Mitochondrial.csv', 'r') as file:
         mito_nm_size12.append(row[0].split("\t")[6])
         mito_nm_size14.append(row[0].split("\t")[7])
 
-with open('GeCo3_Output/Mitochondrial/PT/geco3_Mitochondrial.csv', 'r') as file:
+with open('Analysis/AC/Mitochondrial/ac2_Mitochondrial.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         mito_pt_size1.append(row[0].split("\t")[1])
@@ -200,7 +209,7 @@ with open('GeCo3_Output/Mitochondrial/PT/geco3_Mitochondrial.csv', 'r') as file:
         mito_pt_size14.append(row[0].split("\t")[7])
 
 # Plastid CSV files
-with open('GeCo3_Output/Plastid/NM/geco3_Plastid.csv', 'r') as file:
+with open('Analysis/GeCo/Plastid/geco3_Plastid.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         plastid_nm_size1.append(row[0].split("\t")[1])
@@ -211,7 +220,7 @@ with open('GeCo3_Output/Plastid/NM/geco3_Plastid.csv', 'r') as file:
         plastid_nm_size12.append(row[0].split("\t")[6])
         plastid_nm_size14.append(row[0].split("\t")[7])
 
-with open('GeCo3_Output/Plastid/PT/geco3_Plastid.csv', 'r') as file:
+with open('Analysis/AC/Plastid/ac2_Plastid.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
         plastid_pt_size1.append(row[0].split("\t")[1])
