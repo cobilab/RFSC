@@ -1929,3 +1929,6 @@ Total bytes: 2218966 (2.1 MB), 4.0471 bps, 4.0469 bps w/ no header Normalized Di
 Total bytes: 2220297 (2.1 MB), 4.0495 bps, 4.0494 bps w/ no header Normalized Dissimilarity Rate: 0.936973
 Total bytes: 2218838 (2.1 MB), 4.0469 bps, 4.0467 bps w/ no header Normalized Dissimilarity Rate: 0.936357
 Total bytes: 2303429 (2.2 MB), 4.1157 bps, 4.1156 bps w/ no header Normalized Dissimilarity Rate: 0.952293
+Total bytes: 2267537 (2.2 MB), 4.0516 bps, 4.0515 bps w/ no header Normalized Dissimilarity Rate: 0.937454
+Total bytes: 2265050 (2.2 MB), 4.0472 bps, 4.047 bps w/ no header Normalized Dissimilarity Rate: 0.936426
+Total bytes: 2266648 (2.2 MB), 4.05 bps, 4.0499 bps w/ no header Normalized Dissimilarity Rate: 0.937086
