@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-testing_levels=(1 2 3 4 7 12 14);
+testing_levels=(1 2 3 4 7);
 #
 VIRAL=0;
 BACTERIA=0;
