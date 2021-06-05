@@ -17,3 +17,6 @@ ORFs/NodesProteins
 
 # Tests Folder
 Tests/
+
+# Training IA Files
+test.sh
