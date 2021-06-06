@@ -107,7 +107,7 @@ function VIRUS_GENOME_COMPRESSION () {
                 AC -v -l $l $file | sed '3,4d' | sed 'N;s/\n/ /' >> Analysis/AC/Virus/ac_VIRAL.txt
                 rm $file.co
 
-                echo "$out_file $l\n" >> Analysis/GeCo/Virus/check_virus.txt
+                echo "$out_file $l\n" >> Analysis/AC/Virus/check_virus.txt
             done
         fi
     done
@@ -152,7 +152,7 @@ function BACTERIA_GENOME_COMPRESSION () {
                 AC -v -l $l $file | sed '3,4d' | sed 'N;s/\n/ /' >> Analysis/AC/Bacteria/ac_BACTERIA.txt
                 rm $file.co
 
-                echo "$out_file $l\n" >> Analysis/GeCo/Bacteria/check_bacteria.txt
+                echo "$out_file $l\n" >> Analysis/AC/Bacteria/check_bacteria.txt
             done
         fi
     done   
@@ -197,7 +197,7 @@ function ARCHAEA_GENOME_COMPRESSION () {
                 AC -v -l $l $file | sed '3,4d' | sed 'N;s/\n/ /' >> Analysis/AC/Archaea/ac_ARCHAEA.txt
                 rm $file.co
 
-                echo "$out_file $l\n" >> Analysis/GeCo/Archaea/check_archaea.txt
+                echo "$out_file $l\n" >> Analysis/AC/Archaea/check_archaea.txt
             done
         fi
     done
@@ -242,7 +242,7 @@ function FUNGI_GENOME_COMPRESSION () {
                 AC -v -l $l $file | sed '3,4d' | sed 'N;s/\n/ /' >> Analysis/AC/Fungi/ac_FUNGI.txt
                 rm $file.co
 
-                echo "$out_file $l\n" >> Analysis/GeCo/Fungi/check_fungi.txt
+                echo "$out_file $l\n" >> Analysis/AC/Fungi/check_fungi.txt
             done
         fi
     done
@@ -287,7 +287,7 @@ function PLANT_GENOME_COMPRESSION () {
                 AC -v -l $l $file | sed '3,4d' | sed 'N;s/\n/ /' >> Analysis/AC/Plant/ac_PLANT.txt
                 rm $file.co
 
-                echo "$out_file $l\n" >> Analysis/GeCo/Plant/check_plant.txt
+                echo "$out_file $l\n" >> Analysis/AC/Plant/check_plant.txt
             done
         fi
     done
@@ -310,8 +310,8 @@ function PROTOZOA_GENOME_COMPRESSION () {
         readarray -t already_processed < Analysis/AC/Protozoa/PROTOZOA_ID.txt
     fi
 
-    #for file in /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa/*
-    for file in References/NCBI-Protozoa/PT-Protozoa/*
+    for file in /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa/*
+    #for file in References/NCBI-Protozoa/PT-Protozoa/*
     do
 
         out_file=$(basename $file);
@@ -324,7 +324,7 @@ function PROTOZOA_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            rm References/NCBI-Protozoa/PT-Protozoa/*.co
+            rm /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa/*.co
             printf "$out_file\n" >> Analysis/AC/Protozoa/PROTOZOA_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -332,7 +332,7 @@ function PROTOZOA_GENOME_COMPRESSION () {
                 AC -v -l $l $file | sed '3,4d' | sed 'N;s/\n/ /' >> Analysis/AC/Protozoa/ac_PROTOZOA.txt
                 rm $file.co
 
-                echo "$out_file $l\n" >> Analysis/GeCo/Protozoa/check_protozoa.txt
+                echo "$out_file $l\n" >> Analysis/AC/Protozoa/check_protozoa.txt
             done
         fi
     done
@@ -377,7 +377,7 @@ function PLASTID_GENOME_COMPRESSION () {
                 AC -v -l $l $file | sed '3,4d' | sed 'N;s/\n/ /' >> Analysis/AC/Plastid/ac_PLASTID.txt
                 rm $file.co
 
-                echo "$out_file $l\n" >> Analysis/GeCo/Plastid/check_plastid.txt
+                echo "$out_file $l\n" >> Analysis/AC/Plastid/check_plastid.txt
             done
         fi
     done
@@ -423,7 +423,7 @@ function MITOCHONDRIAL_GENOME_COMPRESSION () {
                 AC -v -l $l $file | sed '3,4d' | sed 'N;s/\n/ /' >> Analysis/AC/Mitochondrial/ac_MITOCHONDRIAL.txt
                 rm $file.co
 
-                echo "$out_file $l\n" >> Analysis/GeCo/Mitochondrial/check_mito.txt
+                echo "$out_file $l\n" >> Analysis/AC/Mitochondrial/check_mito.txt
             done
         fi
     done
