@@ -5,43 +5,46 @@ from scipy.stats import norm
 import matplotlib.pyplot as plt
 from statistics import NormalDist
 
-L3 = 8                              # Level 3 (position 10 of the csv)
-L7 = 10                             # Level 7 (position 12 of the csv)
+L3 = 8                              # Level 3 (position 8 of the csv)
+L4 = 9                              # Level 4 (position 9 of the csv)
+L7 = 10                             # Level 7 (position 10 of the csv)
 
 N = 8                               # Number of types (Domains)
 sample_DNA_3 = float(sys.argv[1])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 3)
 sample_AA_3 = float(sys.argv[2])    # Normalize Compression Rate of the AA for the Input Sequence (Level 3)
-sample_DNA_7 = float(sys.argv[3])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 7)
-sample_AA_7 = float(sys.argv[4])    # Normalize Compression Rate of the AA for the Input Sequence (Level 7)
-gc_percent = float(sys.argv[5])     # GC-Content Percentage ([0..1]) of the Input Sequence
+sample_DNA_4 = float(sys.argv[3])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 4)
+sample_AA_4 = float(sys.argv[4])    # Normalize Compression Rate of the AA for the Input Sequence (Level 5)
+sample_DNA_7 = float(sys.argv[5])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 7)
+sample_AA_7 = float(sys.argv[6])    # Normalize Compression Rate of the AA for the Input Sequence (Level 7)
+gc_percent = float(sys.argv[7])     # GC-Content Percentage ([0..1]) of the Input Sequence
 
 trainDatabase = 0.8                 # Percentage of the (current) domain database used for training the model (80%)
 
 dir_path = os.path.dirname(os.path.realpath(__file__))  # Current directory path
 
 ## Virus Values
-virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_result7, virus_gc_content = [], [], [], [], []
+virus_nm_result3, virus_pt_result3, virus_nm_result4, virus_pt_result4, virus_nm_result7, virus_pt_result7, virus_gc_content = [], [], [], [], [], [], []
 
 ## Bacterias Values
-bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content = [], [], [], [], []
+bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result4, bacteria_pt_result4, bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content = [], [], [], [], [], [], []
 
 ## Archaeas Values
-archaea_nm_result3, archaea_pt_result3, archaea_nm_result7, archaea_pt_result7, archaea_gc_content = [], [], [], [], []
+archaea_nm_result3, archaea_pt_result3, archaea_nm_result4, archaea_pt_result4, archaea_nm_result7, archaea_pt_result7, archaea_gc_content = [], [], [], [], [], [], []
 
 ## Fungis Values
-fungi_nm_result3, fungi_pt_result3, fungi_nm_result7, fungi_pt_result7, fungi_gc_content = [], [], [], [], []
+fungi_nm_result3, fungi_pt_result3, fungi_nm_result4, fungi_pt_result4, fungi_nm_result7, fungi_pt_result7, fungi_gc_content = [], [], [], [], [], [], []
 
 ## Plants Values
-plant_nm_result3, plant_pt_result3, plant_nm_result7, plant_pt_result7, plant_gc_content = [], [], [], [], []
+plant_nm_result3, plant_pt_result3, plant_nm_result4, plant_pt_result4, plant_nm_result7, plant_pt_result7, plant_gc_content = [], [], [], [], [], [], []
 
 ## Protozoas Values
-protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content = [], [], [], [], []
+protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result4, protozoa_pt_result4, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content = [], [], [], [], [], [], []
 
 ## Mitochondrials Values
-mito_nm_result3, mito_pt_result3, mito_nm_result7, mito_pt_result7, mito_gc_content = [], [], [], [], []
+mito_nm_result3, mito_pt_result3, mito_nm_result4, mito_pt_result4, mito_nm_result7, mito_pt_result7, mito_gc_content = [], [], [], [], [], [], []
 
 ## Platids Values
-plastid_nm_result3, plastid_pt_result3, plastid_nm_result7, plastid_pt_result7, plastid_gc_content = [], [], [], [], []
+plastid_nm_result3, plastid_pt_result3, plastid_nm_result4, plastid_pt_result4, plastid_nm_result7, plastid_pt_result7, plastid_gc_content = [], [], [], [], [], [], []
 
 '''
     Generate Histogram Function
@@ -126,7 +129,7 @@ def generateHist_GC():
     fig.tight_layout()
     plt.show()
 
-def virusData(virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_result7, virus_gc_content):
+def virusData(virus_nm_result3, virus_pt_result3, virus_nm_result4, virus_pt_result4, virus_nm_result7, virus_pt_result7, virus_gc_content):
 
     countNM, countPT, countGC = 0, 0, 0
 
@@ -146,6 +149,7 @@ def virusData(virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_res
                 break
             else:
                 virus_nm_result3.append("0"+row[0].split("\t")[L3])
+                virus_nm_result4.append("0"+row[0].split("\t")[L4])
                 virus_nm_result7.append("0"+row[0].split("\t")[L7])
                 countNM = countNM + 1
 
@@ -156,6 +160,7 @@ def virusData(virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_res
                 break
             else:
                 virus_pt_result3.append(row[0].split("\t")[L3])
+                virus_pt_result4.append(row[0].split("\t")[L4])
                 virus_pt_result7.append(row[0].split("\t")[L7])
                 countPT = countPT + 1
 
@@ -171,13 +176,15 @@ def virusData(virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_res
     # Data conversion and header removal
     virus_nm_result3 = np.array(virus_nm_result3[1:], dtype=float)
     virus_pt_result3 = np.array(virus_pt_result3[1:], dtype=float)
+    virus_nm_result4 = np.array(virus_nm_result4[1:], dtype=float)
+    virus_pt_result4 = np.array(virus_pt_result4[1:], dtype=float)
     virus_nm_result7 = np.array(virus_nm_result7[1:], dtype=float)
     virus_pt_result7 = np.array(virus_pt_result7[1:], dtype=float)
     virus_gc_content = np.array(virus_gc_content[1:], dtype=float)
 
-    return virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_result7, virus_gc_content
+    return virus_nm_result3, virus_pt_result3, virus_nm_result4, virus_pt_result4, virus_nm_result7, virus_pt_result7, virus_gc_content
 
-def bacteriaData(bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content):
+def bacteriaData(bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result4, bacteria_pt_result4, bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content):
     
     countNM, countPT, countGC = 0, 0, 0
 
@@ -197,6 +204,7 @@ def bacteriaData(bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result7, 
                 break
             else:
                 bacteria_nm_result3.append("0"+row[0].split("\t")[L3])
+                bacteria_nm_result4.append("0"+row[0].split("\t")[L4])
                 bacteria_nm_result7.append("0"+row[0].split("\t")[L7])
                 countNM = countNM + 1
 
@@ -207,6 +215,7 @@ def bacteriaData(bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result7, 
                 break
             else:
                 bacteria_pt_result3.append(row[0].split("\t")[L3])
+                bacteria_pt_result4.append(row[0].split("\t")[L4])
                 bacteria_pt_result7.append(row[0].split("\t")[L7])
                 countPT = countPT + 1
 
@@ -222,13 +231,15 @@ def bacteriaData(bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result7, 
     # Data conversion and header removal
     bacteria_nm_result3 = np.array(bacteria_nm_result3[1:], dtype=float)
     bacteria_pt_result3 = np.array(bacteria_pt_result3[1:], dtype=float)
+    bacteria_nm_result4 = np.array(bacteria_nm_result4[1:], dtype=float)
+    bacteria_pt_result4 = np.array(bacteria_pt_result4[1:], dtype=float)
     bacteria_nm_result7 = np.array(bacteria_nm_result7[1:], dtype=float)
     bacteria_pt_result7 = np.array(bacteria_pt_result7[1:], dtype=float)
     bacteria_gc_content = np.array(bacteria_gc_content[1:], dtype=float)
 
-    return bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content
+    return bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result4, bacteria_pt_result4,  bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content
 
-def archaeaData(archaea_nm_result3, archaea_pt_result3, archaea_nm_result7, archaea_pt_result7, archaea_gc_content):
+def archaeaData(archaea_nm_result3, archaea_pt_result3, archaea_nm_result4, archaea_pt_result4, archaea_nm_result7, archaea_pt_result7, archaea_gc_content):
 
     countNM, countPT, countGC = 0, 0, 0
 
@@ -248,6 +259,7 @@ def archaeaData(archaea_nm_result3, archaea_pt_result3, archaea_nm_result7, arch
                 break
             else:
                 archaea_nm_result3.append("0"+row[0].split("\t")[L3])
+                archaea_nm_result4.append("0"+row[0].split("\t")[L4])
                 archaea_nm_result7.append("0"+row[0].split("\t")[L7])
                 countNM = countNM + 1
 
@@ -258,6 +270,7 @@ def archaeaData(archaea_nm_result3, archaea_pt_result3, archaea_nm_result7, arch
                 break
             else:
                 archaea_pt_result3.append(row[0].split("\t")[L3])
+                archaea_pt_result4.append(row[0].split("\t")[L4])
                 archaea_pt_result7.append(row[0].split("\t")[L7])
                 countPT = countPT + 1
 
@@ -273,13 +286,15 @@ def archaeaData(archaea_nm_result3, archaea_pt_result3, archaea_nm_result7, arch
     # Data conversion and header removal
     archaea_nm_result3 = np.array(archaea_nm_result3[1:], dtype=float)
     archaea_pt_result3 = np.array(archaea_pt_result3[1:], dtype=float)
+    archaea_nm_result4 = np.array(archaea_nm_result4[1:], dtype=float)
+    archaea_pt_result4 = np.array(archaea_pt_result4[1:], dtype=float)
     archaea_nm_result7 = np.array(archaea_nm_result7[1:], dtype=float)
     archaea_pt_result7 = np.array(archaea_pt_result7[1:], dtype=float)
     archaea_gc_content = np.array(archaea_gc_content[1:], dtype=float)
 
-    return archaea_nm_result3, archaea_pt_result3, archaea_nm_result7, archaea_pt_result7, archaea_gc_content
+    return archaea_nm_result3, archaea_pt_result3, archaea_nm_result4, archaea_pt_result4, archaea_nm_result7, archaea_pt_result7, archaea_gc_content
 
-def fungiData(fungi_nm_result3, fungi_pt_result3, fungi_nm_result7, fungi_pt_result7, fungi_gc_content):
+def fungiData(fungi_nm_result3, fungi_pt_result3, fungi_nm_result4, fungi_pt_result4, fungi_nm_result7, fungi_pt_result7, fungi_gc_content):
 
     countNM, countPT, countGC = 0, 0, 0
 
@@ -299,6 +314,7 @@ def fungiData(fungi_nm_result3, fungi_pt_result3, fungi_nm_result7, fungi_pt_res
                 break
             else:
                 fungi_nm_result3.append("0"+row[0].split("\t")[L3])
+                fungi_nm_result4.append("0"+row[0].split("\t")[L4])
                 fungi_nm_result7.append("0"+row[0].split("\t")[L7])
                 countNM = countNM + 1
 
@@ -309,6 +325,7 @@ def fungiData(fungi_nm_result3, fungi_pt_result3, fungi_nm_result7, fungi_pt_res
                 break
             else:
                 fungi_pt_result3.append(row[0].split("\t")[L3])
+                fungi_pt_result4.append(row[0].split("\t")[L4])
                 fungi_pt_result7.append(row[0].split("\t")[L7])
                 countPT = countPT + 1
 
@@ -324,13 +341,15 @@ def fungiData(fungi_nm_result3, fungi_pt_result3, fungi_nm_result7, fungi_pt_res
     # Data conversion and header removal
     fungi_nm_result3 = np.array(fungi_nm_result3[1:], dtype=float)
     fungi_pt_result3 = np.array(fungi_pt_result3[1:], dtype=float)
+    fungi_nm_result4 = np.array(fungi_nm_result4[1:], dtype=float)
+    fungi_pt_result4 = np.array(fungi_pt_result4[1:], dtype=float)
     fungi_nm_result7 = np.array(fungi_nm_result7[1:], dtype=float)
     fungi_pt_result7 = np.array(fungi_pt_result7[1:], dtype=float)
     fungi_gc_content = np.array(fungi_gc_content[1:], dtype=float)
 
-    return fungi_nm_result3, fungi_pt_result3, fungi_nm_result7, fungi_pt_result7, fungi_gc_content
+    return fungi_nm_result3, fungi_pt_result3, fungi_nm_result4, fungi_pt_result4, fungi_nm_result7, fungi_pt_result7, fungi_gc_content
 
-def plantData(plant_nm_result3, plant_pt_result3, plant_nm_result7, plant_pt_result7, plant_gc_content):
+def plantData(plant_nm_result3, plant_pt_result3, plant_nm_result4, plant_pt_result4, plant_nm_result7, plant_pt_result7, plant_gc_content):
 
     countNM, countPT, countGC = 0, 0, 0
 
@@ -350,6 +369,7 @@ def plantData(plant_nm_result3, plant_pt_result3, plant_nm_result7, plant_pt_res
                 break
             else:
                 plant_nm_result3.append("0"+row[0].split("\t")[L3])
+                plant_nm_result4.append("0"+row[0].split("\t")[L4])
                 plant_nm_result7.append("0"+row[0].split("\t")[L7])
                 countNM = countNM + 1
 
@@ -360,6 +380,7 @@ def plantData(plant_nm_result3, plant_pt_result3, plant_nm_result7, plant_pt_res
                 break
             else:
                 plant_pt_result3.append(row[0].split("\t")[L3])
+                plant_pt_result4.append(row[0].split("\t")[L4])
                 plant_pt_result7.append(row[0].split("\t")[L7])
                 countPT = countPT + 1
 
@@ -375,13 +396,15 @@ def plantData(plant_nm_result3, plant_pt_result3, plant_nm_result7, plant_pt_res
     # Data conversion and header removal
     plant_nm_result3 = np.array(plant_nm_result3[1:], dtype=float)
     plant_pt_result3 = np.array(plant_pt_result3[1:], dtype=float)
+    plant_nm_result4 = np.array(plant_nm_result4[1:], dtype=float)
+    plant_pt_result4 = np.array(plant_pt_result4[1:], dtype=float)
     plant_nm_result7 = np.array(plant_nm_result7[1:], dtype=float)
     plant_pt_result7 = np.array(plant_pt_result7[1:], dtype=float)
     plant_gc_content = np.array(plant_gc_content[1:], dtype=float)
 
-    return plant_nm_result3, plant_pt_result3, plant_nm_result7, plant_pt_result7, plant_gc_content
+    return plant_nm_result3, plant_pt_result3, plant_nm_result4, plant_pt_result4, plant_nm_result7, plant_pt_result7, plant_gc_content
 
-def protozoaData(protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content):
+def protozoaData(protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result4, protozoa_pt_result4, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content):
 
     countNM, countPT, countGC = 0, 0, 0
 
@@ -401,6 +424,7 @@ def protozoaData(protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result7, 
                 break
             else:
                 protozoa_nm_result3.append("0"+row[0].split("\t")[L3])
+                protozoa_nm_result4.append("0"+row[0].split("\t")[L4])
                 protozoa_nm_result7.append("0"+row[0].split("\t")[L7])
                 countNM = countNM + 1
 
@@ -411,6 +435,7 @@ def protozoaData(protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result7, 
                 break
             else:
                 protozoa_pt_result3.append(row[0].split("\t")[L3])
+                protozoa_pt_result4.append(row[0].split("\t")[L4])
                 protozoa_pt_result7.append(row[0].split("\t")[L7])
                 countPT = countPT + 1
 
@@ -426,13 +451,15 @@ def protozoaData(protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result7, 
     # Data conversion and header removal
     protozoa_nm_result3 = np.array(protozoa_nm_result3[1:], dtype=float)
     protozoa_pt_result3 = np.array(protozoa_pt_result3[1:], dtype=float)
+    protozoa_nm_result4 = np.array(protozoa_nm_result4[1:], dtype=float)
+    protozoa_pt_result4 = np.array(protozoa_pt_result4[1:], dtype=float)
     protozoa_nm_result7 = np.array(protozoa_nm_result7[1:], dtype=float)
     protozoa_pt_result7 = np.array(protozoa_pt_result7[1:], dtype=float)
     protozoa_gc_content = np.array(protozoa_gc_content[1:], dtype=float)
 
-    return protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content
+    return protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result4, protozoa_pt_result4, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content
 
-def mitoData(mito_nm_result3, mito_pt_result3, mito_nm_result7, mito_pt_result7, mito_gc_content):
+def mitoData(mito_nm_result3, mito_pt_result3, mito_nm_result4, mito_pt_result4, mito_nm_result7, mito_pt_result7, mito_gc_content):
 
     countNM, countPT, countGC = 0, 0, 0
 
@@ -452,6 +479,7 @@ def mitoData(mito_nm_result3, mito_pt_result3, mito_nm_result7, mito_pt_result7,
                 break
             else:
                 mito_nm_result3.append("0"+row[0].split("\t")[L3])
+                mito_nm_result4.append("0"+row[0].split("\t")[L4])
                 mito_nm_result7.append("0"+row[0].split("\t")[L7])
                 countNM = countNM + 1
 
@@ -462,6 +490,7 @@ def mitoData(mito_nm_result3, mito_pt_result3, mito_nm_result7, mito_pt_result7,
                 break
             else:
                 mito_pt_result3.append(row[0].split("\t")[L3])
+                mito_pt_result4.append(row[0].split("\t")[L4])
                 mito_pt_result7.append(row[0].split("\t")[L7])
                 countPT = countPT + 1
 
@@ -477,13 +506,15 @@ def mitoData(mito_nm_result3, mito_pt_result3, mito_nm_result7, mito_pt_result7,
     # Data conversion and header removal
     mito_nm_result3 = np.array(mito_nm_result3[1:], dtype=float)
     mito_pt_result3 = np.array(mito_pt_result3[1:], dtype=float)
+    mito_nm_result4 = np.array(mito_nm_result4[1:], dtype=float)
+    mito_pt_result4 = np.array(mito_pt_result4[1:], dtype=float)
     mito_nm_result7 = np.array(mito_nm_result7[1:], dtype=float)
     mito_pt_result7 = np.array(mito_pt_result7[1:], dtype=float)
     mito_gc_content = np.array(mito_gc_content[1:], dtype=float)
 
-    return mito_nm_result3, mito_pt_result3, mito_nm_result7, mito_pt_result7, mito_gc_content
+    return mito_nm_result3, mito_pt_result3, mito_nm_result4, mito_pt_result4, mito_nm_result7, mito_pt_result7, mito_gc_content
 
-def plastidData(plastid_nm_result3, plastid_pt_result3, plastid_nm_result7, plastid_pt_result7, plastid_gc_content):
+def plastidData(plastid_nm_result3, plastid_pt_result3, plastid_nm_result4, plastid_pt_result4, plastid_nm_result7, plastid_pt_result7, plastid_gc_content):
 
     countNM, countPT, countGC = 0, 0, 0
 
@@ -503,6 +534,7 @@ def plastidData(plastid_nm_result3, plastid_pt_result3, plastid_nm_result7, plas
                 break
             else:
                 plastid_nm_result3.append("0"+row[0].split("\t")[L3])
+                plastid_nm_result4.append("0"+row[0].split("\t")[L4])
                 plastid_nm_result7.append("0"+row[0].split("\t")[L7])
                 countNM = countNM + 1
 
@@ -513,6 +545,7 @@ def plastidData(plastid_nm_result3, plastid_pt_result3, plastid_nm_result7, plas
                 break
             else:
                 plastid_pt_result3.append(row[0].split("\t")[L3])
+                plastid_pt_result4.append(row[0].split("\t")[L4])
                 plastid_pt_result7.append(row[0].split("\t")[L7])
                 countPT = countPT + 1
 
@@ -528,73 +561,91 @@ def plastidData(plastid_nm_result3, plastid_pt_result3, plastid_nm_result7, plas
     # Data conversion and header removal
     plastid_nm_result3 = np.array(plastid_nm_result3[1:], dtype=float)
     plastid_pt_result3 = np.array(plastid_pt_result3[1:], dtype=float)
+    plastid_nm_result4 = np.array(plastid_nm_result4[1:], dtype=float)
+    plastid_pt_result4 = np.array(plastid_pt_result4[1:], dtype=float)
     plastid_nm_result7 = np.array(plastid_nm_result7[1:], dtype=float)
     plastid_pt_result7 = np.array(plastid_pt_result7[1:], dtype=float)
     plastid_gc_content = np.array(plastid_gc_content[1:], dtype=float)
 
-    return plastid_nm_result3, plastid_pt_result3, plastid_nm_result7, plastid_pt_result7, plastid_gc_content
+    return plastid_nm_result3, plastid_pt_result3, plastid_nm_result4, plastid_pt_result4, plastid_nm_result7, plastid_pt_result7, plastid_gc_content
 
-def calcProb(p_type, likelihood_dna_3, likelihood_aa3, likelihood_dna_7, likelihood_aa7, likelihood_gc):
-    return p_type + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_7 + likelihood_aa7 + likelihood_gc
+def calcProb(p_type, likelihood_dna_3, likelihood_aa3, likelihood_dna_4, likelihood_aa4, likelihood_dna_7, likelihood_aa7, likelihood_gc):
+    return p_type + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_4 + likelihood_aa4 + likelihood_dna_7 + likelihood_aa7 + likelihood_gc
 
 def domainAnalysis(probabilities):
     domains=["Virus", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
     return domains[probabilities.index(max(probabilities))]
 
-virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_result7, virus_gc_content = virusData(virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_result7, virus_gc_content)
-bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content = bacteriaData(bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content)
-archaea_nm_result3, archaea_pt_result3, archaea_nm_result7, archaea_pt_result7, archaea_gc_content = archaeaData(archaea_nm_result3, archaea_pt_result3, archaea_nm_result7, archaea_pt_result7, archaea_gc_content)
-fungi_nm_result3, fungi_pt_result3, fungi_nm_result7, fungi_pt_result7, fungi_gc_content = fungiData(fungi_nm_result3, fungi_pt_result3, fungi_nm_result7, fungi_pt_result7, fungi_gc_content)
-plant_nm_result3, plant_pt_result3, plant_nm_result7, plant_pt_result7, plant_gc_content = plantData(plant_nm_result3, plant_pt_result3, plant_nm_result7, plant_pt_result7, plant_gc_content)
-protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content = protozoaData(protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content)
-mito_nm_result3, mito_pt_result3, mito_nm_result7, mito_pt_result7, mito_gc_content = mitoData(mito_nm_result3, mito_pt_result3, mito_nm_result7, mito_pt_result7, mito_gc_content)
-plastid_nm_result3, plastid_pt_result3, plastid_nm_result7, plastid_pt_result7, plastid_gc_content = plastidData(plastid_nm_result3, plastid_pt_result3, plastid_nm_result7, plastid_pt_result7, plastid_gc_content)
+virus_nm_result3, virus_pt_result3, virus_nm_result4, virus_pt_result4, virus_nm_result7, virus_pt_result7, virus_gc_content = virusData(virus_nm_result3, virus_pt_result3, virus_nm_result4, virus_pt_result4, virus_nm_result7, virus_pt_result7, virus_gc_content)
+bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result4, bacteria_pt_result4, bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content = bacteriaData(bacteria_nm_result3, bacteria_pt_result3, bacteria_nm_result4, bacteria_pt_result4, bacteria_nm_result7, bacteria_pt_result7, bacteria_gc_content)
+archaea_nm_result3, archaea_pt_result3, archaea_nm_result4, archaea_pt_result4, archaea_nm_result7, archaea_pt_result7, archaea_gc_content = archaeaData(archaea_nm_result3, archaea_pt_result3, archaea_nm_result4, archaea_pt_result4, archaea_nm_result7, archaea_pt_result7, archaea_gc_content)
+fungi_nm_result3, fungi_pt_result3, fungi_nm_result4, fungi_pt_result4, fungi_nm_result7, fungi_pt_result7, fungi_gc_content = fungiData(fungi_nm_result3, fungi_pt_result3, fungi_nm_result4, fungi_pt_result4, fungi_nm_result7, fungi_pt_result7, fungi_gc_content)
+plant_nm_result3, plant_pt_result3, plant_nm_result4, plant_pt_result4, plant_nm_result7, plant_pt_result7, plant_gc_content = plantData(plant_nm_result3, plant_pt_result3, plant_nm_result4, plant_pt_result4, plant_nm_result7, plant_pt_result7, plant_gc_content)
+protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result4, protozoa_pt_result4, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content = protozoaData(protozoa_nm_result3, protozoa_pt_result3, protozoa_nm_result4, protozoa_pt_result4, protozoa_nm_result7, protozoa_pt_result7, protozoa_gc_content)
+mito_nm_result3, mito_pt_result3, mito_nm_result4, mito_pt_result4, mito_nm_result7, mito_pt_result7, mito_gc_content = mitoData(mito_nm_result3, mito_pt_result3, mito_nm_result4, mito_pt_result4, mito_nm_result7, mito_pt_result7, mito_gc_content)
+plastid_nm_result3, plastid_pt_result3, plastid_nm_result4, plastid_pt_result4, plastid_nm_result7, plastid_pt_result7, plastid_gc_content = plastidData(plastid_nm_result3, plastid_pt_result3, plastid_nm_result4, plastid_pt_result4, plastid_nm_result7, plastid_pt_result7, plastid_gc_content)
 
 # Fit a normal distribution to the data
 mu_virus_nm3, std_virus_nm3 = norm.fit(virus_nm_result3)
 mu_virus_pt3, std_virus_pt3 = norm.fit(virus_pt_result3)
+mu_virus_nm4, std_virus_nm4 = norm.fit(virus_nm_result4)
+mu_virus_pt4, std_virus_pt4 = norm.fit(virus_pt_result4)
 mu_virus_nm7, std_virus_nm7 = norm.fit(virus_nm_result7)
 mu_virus_pt7, std_virus_pt7 = norm.fit(virus_pt_result7)
 mu_virus_gc, std_virus_gc = norm.fit(virus_gc_content)
 
 mu_bacteria_nm3, std_bacteria_nm3 = norm.fit(bacteria_nm_result3)
 mu_bacteria_pt3, std_bacteria_pt3 = norm.fit(bacteria_pt_result3)
+mu_bacteria_nm4, std_bacteria_nm4 = norm.fit(bacteria_nm_result4)
+mu_bacteria_pt4, std_bacteria_pt4 = norm.fit(bacteria_pt_result4)
 mu_bacteria_nm7, std_bacteria_nm7 = norm.fit(bacteria_nm_result7)
 mu_bacteria_pt7, std_bacteria_pt7 = norm.fit(bacteria_pt_result7)
 mu_bacteria_gc, std_bacteria_gc = norm.fit(bacteria_gc_content)
 
 mu_archaea_nm3, std_archaea_nm3 = norm.fit(archaea_nm_result3)
 mu_archaea_pt3, std_archaea_pt3 = norm.fit(archaea_pt_result3)
+mu_archaea_nm4, std_archaea_nm4 = norm.fit(archaea_nm_result4)
+mu_archaea_pt4, std_archaea_pt4 = norm.fit(archaea_pt_result4)
 mu_archaea_nm7, std_archaea_nm7 = norm.fit(archaea_nm_result7)
 mu_archaea_pt7, std_archaea_pt7 = norm.fit(archaea_pt_result7)
 mu_archaea_gc, std_archaea_gc = norm.fit(archaea_gc_content)
 
 mu_fungi_nm3, std_fungi_nm3 = norm.fit(fungi_nm_result3)
 mu_fungi_pt3, std_fungi_pt3 = norm.fit(fungi_pt_result3)
+mu_fungi_nm4, std_fungi_nm4 = norm.fit(fungi_nm_result4)
+mu_fungi_pt4, std_fungi_pt4 = norm.fit(fungi_pt_result4)
 mu_fungi_nm7, std_fungi_nm7 = norm.fit(fungi_nm_result7)
 mu_fungi_pt7, std_fungi_pt7 = norm.fit(fungi_pt_result7)
 mu_fungi_gc, std_fungi_gc = norm.fit(fungi_gc_content)
 
 mu_plant_nm3, std_plant_nm3 = norm.fit(plant_nm_result3)
 mu_plant_pt3, std_plant_pt3 = norm.fit(plant_pt_result3)
+mu_plant_nm4, std_plant_nm4 = norm.fit(plant_nm_result4)
+mu_plant_pt4, std_plant_pt4 = norm.fit(plant_pt_result4)
 mu_plant_nm7, std_plant_nm7 = norm.fit(plant_nm_result7)
 mu_plant_pt7, std_plant_pt7 = norm.fit(plant_pt_result7)
 mu_plant_gc, std_plant_gc = norm.fit(plant_gc_content)
 
 mu_protozoa_nm3, std_protozoa_nm3 = norm.fit(protozoa_nm_result3)
 mu_protozoa_pt3, std_protozoa_pt3 = norm.fit(protozoa_pt_result3)
+mu_protozoa_nm4, std_protozoa_nm4 = norm.fit(protozoa_nm_result4)
+mu_protozoa_pt4, std_protozoa_pt4 = norm.fit(protozoa_pt_result4)
 mu_protozoa_nm7, std_protozoa_nm7 = norm.fit(protozoa_nm_result7)
 mu_protozoa_pt7, std_protozoa_pt7 = norm.fit(protozoa_pt_result7)
 mu_protozoa_gc, std_protozoa_gc = norm.fit(protozoa_gc_content)
 
 mu_mito_nm3, std_mito_nm3 = norm.fit(mito_nm_result3)
 mu_mito_pt3, std_mito_pt3 = norm.fit(mito_pt_result3)
+mu_mito_nm4, std_mito_nm4 = norm.fit(mito_nm_result4)
+mu_mito_pt4, std_mito_pt4 = norm.fit(mito_pt_result4)
 mu_mito_nm7, std_mito_nm7 = norm.fit(mito_nm_result7)
 mu_mito_pt7, std_mito_pt7 = norm.fit(mito_pt_result7)
 mu_mito_gc, std_mito_gc = norm.fit(mito_gc_content)
 
 mu_plastid_nm3, std_plastid_nm3 = norm.fit(plastid_nm_result3)
 mu_plastid_pt3, std_plastid_pt3 = norm.fit(plastid_pt_result3)
+mu_plastid_nm4, std_plastid_nm4 = norm.fit(plastid_nm_result4)
+mu_plastid_pt4, std_plastid_pt4 = norm.fit(plastid_pt_result4)
 mu_plastid_nm7, std_plastid_nm7 = norm.fit(plastid_nm_result7)
 mu_plastid_pt7, std_plastid_pt7 = norm.fit(plastid_pt_result7)
 mu_plastid_gc, std_plastid_gc = norm.fit(plastid_gc_content)
@@ -607,61 +658,77 @@ p_type = math.log(1/N,2)
 
 likelihood_virus_dna3 = math.log(NormalDist(mu_virus_nm3,std_virus_nm3).pdf(sample_DNA_3),2)
 likelihood_virus_aa3 = math.log(NormalDist(mu_virus_pt3,std_virus_pt3).pdf(sample_AA_3),2)
+likelihood_virus_dna4 = math.log(NormalDist(mu_virus_nm4,std_virus_nm4).pdf(sample_DNA_4),2)
+likelihood_virus_aa4 = math.log(NormalDist(mu_virus_pt4,std_virus_pt4).pdf(sample_AA_4),2)
 likelihood_virus_dna7 = math.log(NormalDist(mu_virus_nm7,std_virus_nm7).pdf(sample_DNA_7),2)
 likelihood_virus_aa7 = math.log(NormalDist(mu_virus_pt7,std_virus_pt7).pdf(sample_AA_7),2)
 likelihood_virus_gc = math.log(NormalDist(mu_virus_gc,std_virus_gc).pdf(gc_percent),2)
 
 likelihood_bacteria_dna3 = math.log(NormalDist(mu_bacteria_nm3,std_bacteria_nm3).pdf(sample_DNA_3),2)
 likelihood_bacteria_aa3 = math.log(NormalDist(mu_bacteria_pt3,std_bacteria_pt3).pdf(sample_AA_3),2)
+likelihood_bacteria_dna4 = math.log(NormalDist(mu_bacteria_nm4,std_bacteria_nm4).pdf(sample_DNA_4),2)
+likelihood_bacteria_aa4 = math.log(NormalDist(mu_bacteria_pt4,std_bacteria_pt4).pdf(sample_AA_4),2)
 likelihood_bacteria_dna7 = math.log(NormalDist(mu_bacteria_nm7,std_bacteria_nm7).pdf(sample_DNA_7),2)
 likelihood_bacteria_aa7 = math.log(NormalDist(mu_bacteria_pt7,std_bacteria_pt7).pdf(sample_AA_7),2)
 likelihood_bacteria_gc = math.log(NormalDist(mu_bacteria_gc,std_bacteria_gc).pdf(gc_percent),2)
 
 likelihood_archaea_dna3 = math.log(NormalDist(mu_archaea_nm3,std_archaea_nm3).pdf(sample_DNA_3),2)
 likelihood_archaea_aa3 = math.log(NormalDist(mu_archaea_pt3,std_archaea_pt3).pdf(sample_AA_3),2)
+likelihood_archaea_dna4 = math.log(NormalDist(mu_archaea_nm4,std_archaea_nm4).pdf(sample_DNA_4),2)
+likelihood_archaea_aa4 = math.log(NormalDist(mu_archaea_pt4,std_archaea_pt4).pdf(sample_AA_4),2)
 likelihood_archaea_dna7 = math.log(NormalDist(mu_archaea_nm7,std_archaea_nm7).pdf(sample_DNA_7),2)
 likelihood_archaea_aa7 = math.log(NormalDist(mu_archaea_pt7,std_archaea_pt7).pdf(sample_AA_7),2)
 likelihood_archaea_gc = math.log(NormalDist(mu_archaea_gc,std_archaea_gc).pdf(gc_percent),2)
 
 likelihood_fungi_dna3 = math.log(NormalDist(mu_fungi_nm3,std_fungi_nm3).pdf(sample_DNA_3),2)
 likelihood_fungi_aa3 = math.log(NormalDist(mu_fungi_pt3,std_fungi_pt3).pdf(sample_AA_3),2)
+likelihood_fungi_dna4 = math.log(NormalDist(mu_fungi_nm4,std_fungi_nm4).pdf(sample_DNA_4),2)
+likelihood_fungi_aa4 = math.log(NormalDist(mu_fungi_pt4,std_fungi_pt4).pdf(sample_AA_4),2)
 likelihood_fungi_dna7 = math.log(NormalDist(mu_fungi_nm7,std_fungi_nm7).pdf(sample_DNA_7),2)
 likelihood_fungi_aa7 = math.log(NormalDist(mu_fungi_pt7,std_fungi_pt7).pdf(sample_AA_7),2)
 likelihood_fungi_gc = math.log(NormalDist(mu_fungi_gc,std_fungi_gc).pdf(gc_percent),2)
 
 likelihood_plant_dna3 = math.log(NormalDist(mu_plant_nm3,std_plant_nm3).pdf(sample_DNA_3),2)
 likelihood_plant_aa3 = math.log(NormalDist(mu_plant_pt3,std_plant_pt3).pdf(sample_AA_3),2)
+likelihood_plant_dna4 = math.log(NormalDist(mu_plant_nm4,std_plant_nm4).pdf(sample_DNA_4),2)
+likelihood_plant_aa4 = math.log(NormalDist(mu_plant_pt4,std_plant_pt4).pdf(sample_AA_4),2)
 likelihood_plant_dna7 = math.log(NormalDist(mu_plant_nm7,std_plant_nm7).pdf(sample_DNA_7),2)
 likelihood_plant_aa7 = math.log(NormalDist(mu_plant_pt7,std_plant_pt7).pdf(sample_AA_7),2)
 likelihood_plant_gc = math.log(NormalDist(mu_plant_gc,std_plant_gc).pdf(gc_percent),2)
 
 likelihood_protozoa_dna3 = math.log(NormalDist(mu_protozoa_nm3,std_protozoa_nm3).pdf(sample_DNA_3),2)
 likelihood_protozoa_aa3 = math.log(NormalDist(mu_protozoa_pt3,std_protozoa_pt3).pdf(sample_AA_3),2)
+likelihood_protozoa_dna4 = math.log(NormalDist(mu_protozoa_nm4,std_protozoa_nm4).pdf(sample_DNA_4),2)
+likelihood_protozoa_aa4 = math.log(NormalDist(mu_protozoa_pt4,std_protozoa_pt4).pdf(sample_AA_4),2)
 likelihood_protozoa_dna7 = math.log(NormalDist(mu_protozoa_nm7,std_protozoa_nm7).pdf(sample_DNA_7),2)
 likelihood_protozoa_aa7 = math.log(NormalDist(mu_protozoa_pt7,std_protozoa_pt7).pdf(sample_AA_7),2)
 likelihood_protozoa_gc = math.log(NormalDist(mu_protozoa_gc,std_protozoa_gc).pdf(gc_percent),2)
 
 likelihood_mito_dna3 = math.log(NormalDist(mu_mito_nm3,std_mito_nm3).pdf(sample_DNA_3),2)
 likelihood_mito_aa3 = math.log(NormalDist(mu_mito_pt3,std_mito_pt3).pdf(sample_AA_3),2)
+likelihood_mito_dna4 = math.log(NormalDist(mu_mito_nm4,std_mito_nm4).pdf(sample_DNA_4),2)
+likelihood_mito_aa4 = math.log(NormalDist(mu_mito_pt4,std_mito_pt4).pdf(sample_AA_4),2)
 likelihood_mito_dna7 = math.log(NormalDist(mu_mito_nm7,std_mito_nm7).pdf(sample_DNA_7),2)
 likelihood_mito_aa7 = math.log(NormalDist(mu_mito_pt7,std_mito_pt7).pdf(sample_AA_7),2)
 likelihood_mito_gc = math.log(NormalDist(mu_mito_gc,std_mito_gc).pdf(gc_percent),2)
 
 likelihood_plastid_dna3 = math.log(NormalDist(mu_plastid_nm3,std_plastid_nm3).pdf(sample_DNA_3),2)
 likelihood_plastid_aa3 = math.log(NormalDist(mu_plastid_pt3,std_plastid_pt3).pdf(sample_AA_3),2)
+likelihood_plastid_dna4 = math.log(NormalDist(mu_plastid_nm4,std_plastid_nm4).pdf(sample_DNA_4),2)
+likelihood_plastid_aa4 = math.log(NormalDist(mu_plastid_pt4,std_plastid_pt4).pdf(sample_AA_4),2)
 likelihood_plastid_dna7 = math.log(NormalDist(mu_plastid_nm7,std_plastid_nm7).pdf(sample_DNA_7),2)
 likelihood_plastid_aa7 = math.log(NormalDist(mu_plastid_pt7,std_plastid_pt7).pdf(sample_AA_7),2)
 likelihood_plastid_gc = math.log(NormalDist(mu_plastid_gc,std_plastid_gc).pdf(gc_percent),2)
 
 # Final Probabilities
-p_virus = calcProb(p_type, likelihood_virus_dna3, likelihood_virus_aa3, likelihood_virus_dna7, likelihood_virus_aa7, likelihood_virus_gc)
-p_bacteria = calcProb(p_type, likelihood_bacteria_dna3, likelihood_bacteria_aa3, likelihood_bacteria_dna7, likelihood_bacteria_aa7, likelihood_bacteria_gc)
-p_archaea = calcProb(p_type, likelihood_archaea_dna3, likelihood_archaea_aa3, likelihood_archaea_dna7, likelihood_archaea_aa7, likelihood_archaea_gc)
-p_fungi = calcProb(p_type, likelihood_fungi_dna3, likelihood_fungi_aa3, likelihood_fungi_dna7, likelihood_fungi_aa7, likelihood_fungi_gc)
-p_plant = calcProb(p_type, likelihood_plant_dna3, likelihood_plant_aa3, likelihood_plant_dna7, likelihood_plant_aa7, likelihood_plant_gc)
-p_protozoa = calcProb(p_type, likelihood_protozoa_dna3, likelihood_protozoa_aa3, likelihood_protozoa_dna7, likelihood_protozoa_aa7, likelihood_protozoa_gc)
-p_mito = calcProb(p_type, likelihood_mito_dna3, likelihood_mito_aa3, likelihood_mito_dna7, likelihood_mito_aa7, likelihood_mito_gc)
-p_plastid = calcProb(p_type, likelihood_plastid_dna3, likelihood_plastid_aa3, likelihood_plastid_dna7, likelihood_plastid_aa7, likelihood_plastid_gc)
+p_virus = calcProb(p_type, likelihood_virus_dna3, likelihood_virus_aa3, likelihood_virus_dna4, likelihood_virus_aa4, likelihood_virus_dna7, likelihood_virus_aa7, likelihood_virus_gc)
+p_bacteria = calcProb(p_type, likelihood_bacteria_dna3, likelihood_bacteria_aa3, likelihood_bacteria_dna4, likelihood_bacteria_aa4, likelihood_bacteria_dna7, likelihood_bacteria_aa7, likelihood_bacteria_gc)
+p_archaea = calcProb(p_type, likelihood_archaea_dna3, likelihood_archaea_aa3, likelihood_archaea_dna4, likelihood_archaea_aa4, likelihood_archaea_dna7, likelihood_archaea_aa7, likelihood_archaea_gc)
+p_fungi = calcProb(p_type, likelihood_fungi_dna3, likelihood_fungi_aa3, likelihood_fungi_dna4, likelihood_fungi_aa4, likelihood_fungi_dna7, likelihood_fungi_aa7, likelihood_fungi_gc)
+p_plant = calcProb(p_type, likelihood_plant_dna3, likelihood_plant_aa3, likelihood_plant_dna4, likelihood_plant_aa4, likelihood_plant_dna7, likelihood_plant_aa7, likelihood_plant_gc)
+p_protozoa = calcProb(p_type, likelihood_protozoa_dna3, likelihood_protozoa_aa3, likelihood_protozoa_dna4, likelihood_protozoa_aa4, likelihood_protozoa_dna7, likelihood_protozoa_aa7, likelihood_protozoa_gc)
+p_mito = calcProb(p_type, likelihood_mito_dna3, likelihood_mito_aa3, likelihood_mito_dna4, likelihood_mito_aa4, likelihood_mito_dna7, likelihood_mito_aa7, likelihood_mito_gc)
+p_plastid = calcProb(p_type, likelihood_plastid_dna3, likelihood_plastid_aa3, likelihood_plastid_dna4, likelihood_plastid_aa4, likelihood_plastid_dna7, likelihood_plastid_aa7, likelihood_plastid_gc)
 
 probabilities=[p_virus, p_bacteria, p_archaea, p_fungi, p_plant, p_protozoa, p_mito, p_plastid]
 
