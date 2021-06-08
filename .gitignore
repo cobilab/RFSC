@@ -16,7 +16,7 @@ clean.sh
 ORFs/NodesProteins
 
 # Tests Folder
-Tests/
+#Tests/
 
 # Training IA Files
 test.sh
