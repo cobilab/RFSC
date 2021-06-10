@@ -95,20 +95,16 @@ function VIRUS_TEST () {
     while read line; 
     do
         DNA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
-        DNA_VALUE_2+=("0"`echo $line | cut -d ' ' -f8`)
         DNA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        DNA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
         DNA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/GeCo/Virus/geco3_Viral.csv
 
     while read line; 
     do
-        AA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
-        AA_VALUE_2+=("0"`echo $line | cut -d ' ' -f8`)
-        AA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        AA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
-        AA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
+        AA_VALUE_1+=(`echo $line | cut -d ' ' -f7`)
+        AA_VALUE_3+=(`echo $line | cut -d ' ' -f9`)
+        AA_VALUE_7+=(`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/AC/Virus/ac2_Viral.csv
 
@@ -117,7 +113,7 @@ function VIRUS_TEST () {
     do
         if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_4[seq]} ${AA_VALUE_4[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Virus_3-4-7.txt
+            python3 src/naiveBayes.py ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Virus_1-3-7.txt
         fi
     done
 }
@@ -143,16 +139,16 @@ function BACTERIA_TEST () {
 
     while read line; 
     do
+        DNA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
         DNA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        DNA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
         DNA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/GeCo/Bacteria/geco3_Bacteria.csv
 
     while read line; 
     do
+        AA_VALUE_1+=(`echo $line | cut -d ' ' -f7`)
         AA_VALUE_3+=(`echo $line | cut -d ' ' -f9`)
-        AA_VALUE_4+=(`echo $line | cut -d ' ' -f10`)
         AA_VALUE_7+=(`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/AC/Bacteria/ac2_Bacteria.csv
@@ -162,7 +158,7 @@ function BACTERIA_TEST () {
     do
         if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_4[seq]} ${AA_VALUE_4[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Bacteria_3-4-7.txt
+            python3 src/naiveBayes.py ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Bacteria_1-3-7.txt
         fi
     done
 }
@@ -188,17 +184,17 @@ function ARCHAEA_TEST () {
 
     while read line; 
     do
+        DNA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
         DNA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        DNA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
         DNA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/GeCo/Archaea/geco3_Archaea.csv
 
     while read line; 
     do
-        AA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        AA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
-        AA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
+        AA_VALUE_1+=(`echo $line | cut -d ' ' -f7`)
+        AA_VALUE_3+=(`echo $line | cut -d ' ' -f9`)
+        AA_VALUE_7+=(`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/AC/Archaea/ac2_Archaea.csv
 
@@ -207,7 +203,7 @@ function ARCHAEA_TEST () {
     do
         if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_4[seq]} ${AA_VALUE_4[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Archaea_3-4-7.txt
+            python3 src/naiveBayes.py ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Archaea_1-3-7.txt
         fi
     done
 }
@@ -233,17 +229,17 @@ function FUNGI_TEST () {
 
     while read line; 
     do
+        DNA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
         DNA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        DNA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
         DNA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/GeCo/Fungi/geco3_Fungi.csv
 
     while read line; 
     do
-        AA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        AA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
-        AA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
+        AA_VALUE_1+=(`echo $line | cut -d ' ' -f7`)
+        AA_VALUE_3+=(`echo $line | cut -d ' ' -f9`)
+        AA_VALUE_7+=(`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/AC/Fungi/ac2_Fungi.csv
 
@@ -252,7 +248,7 @@ function FUNGI_TEST () {
     do
         if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_4[seq]} ${AA_VALUE_4[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Fungi_3-4-7.txt
+            python3 src/naiveBayes.py ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Fungi_1-3-7.txt
         fi
     done
 }
@@ -278,17 +274,17 @@ function PLANT_TEST () {
 
     while read line; 
     do
+        DNA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
         DNA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        DNA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
         DNA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/GeCo/Plant/geco3_Plant.csv
 
     while read line; 
     do
-        AA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        AA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
-        AA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
+        AA_VALUE_1+=(`echo $line | cut -d ' ' -f7`)
+        AA_VALUE_3+=(`echo $line | cut -d ' ' -f9`)
+        AA_VALUE_7+=(`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/AC/Plant/ac2_Plant.csv
 
@@ -297,7 +293,7 @@ function PLANT_TEST () {
     do
         if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_4[seq]} ${AA_VALUE_4[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Plant_3-4-7.txt
+            python3 src/naiveBayes.py ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Plant_1-3-7.txt
         fi
     done
 }
@@ -323,17 +319,17 @@ function PROTOZOA_TEST () {
 
     while read line; 
     do
+        DNA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
         DNA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        DNA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
         DNA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/GeCo/Protozoa/geco3_Protozoa.csv
 
     while read line; 
     do
-        AA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        AA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
-        AA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
+        AA_VALUE_1+=(`echo $line | cut -d ' ' -f7`)
+        AA_VALUE_3+=(`echo $line | cut -d ' ' -f9`)
+        AA_VALUE_7+=(`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/AC/Protozoa/ac2_Protozoa.csv
 
@@ -342,7 +338,7 @@ function PROTOZOA_TEST () {
     do
         if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_4[seq]} ${AA_VALUE_4[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Protozoa_3-4-7.txt
+            python3 src/naiveBayes.py ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Protozoa_1-3-7.txt
         fi
     done
 }
@@ -368,17 +364,17 @@ function MITO_TEST () {
 
     while read line; 
     do
+        DNA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
         DNA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        DNA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
         DNA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/GeCo/Mitochondrial/geco3_Mitochondrial.csv
 
     while read line; 
     do
-        AA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        AA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
-        AA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
+        AA_VALUE_1+=(`echo $line | cut -d ' ' -f7`)
+        AA_VALUE_3+=(`echo $line | cut -d ' ' -f9`)
+        AA_VALUE_7+=(`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/AC/Mitochondrial/ac2_Mitochondrial.csv
 
@@ -387,7 +383,7 @@ function MITO_TEST () {
     do
         if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_4[seq]} ${AA_VALUE_4[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Mitochondrial_3-4-7.txt
+            python3 src/naiveBayes.py ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Mitochondrial_1-3-7.txt
         fi
     done
 }
@@ -413,17 +409,17 @@ function PLASTID_TEST () {
 
     while read line; 
     do
+        DNA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
         DNA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        DNA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
         DNA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/GeCo/Plastid/geco3_Plastid.csv
 
     while read line; 
     do
-        AA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
-        AA_VALUE_4+=("0"`echo $line | cut -d ' ' -f10`)
-        AA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
+        AA_VALUE_1+=(`echo $line | cut -d ' ' -f7`)
+        AA_VALUE_3+=(`echo $line | cut -d ' ' -f9`)
+        AA_VALUE_7+=(`echo $line | cut -d ' ' -f11`)
         
     done <Analysis/AC/Plastid/ac2_Plastid.csv
 
@@ -432,7 +428,7 @@ function PLASTID_TEST () {
     do
         if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_4[seq]} ${AA_VALUE_4[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Plastid_3-4-7.txt
+            python3 src/naiveBayes.py ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Plastid_1-3-7.txt
         fi
     done
 }
