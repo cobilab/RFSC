@@ -11,13 +11,18 @@ L7 = 10                             # Level 7 (position 10 of the csv)
 
 N = 8                               # Number of types (Domains)
 
-sample_DNA_1 = float(sys.argv[1])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 1)
-sample_AA_1 = float(sys.argv[2])    # Normalize Compression Rate of the AA for the Input Sequence (Level 1)
-sample_DNA_3 = float(sys.argv[3])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 3)
-sample_AA_3 = float(sys.argv[4])    # Normalize Compression Rate of the AA for the Input Sequence (Level 3)
-sample_DNA_7 = float(sys.argv[5])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 7)
-sample_AA_7 = float(sys.argv[6])    # Normalize Compression Rate of the AA for the Input Sequence (Level 7)
-gc_percent = float(sys.argv[7])     # GC-Content Percentage ([0..1]) of the Input Sequence
+crossValidation_Min_Lim = float(sys.argv[1])    # Inferior limit of the block used for testing
+crossValidation_Max_Lim = float(sys.argv[2])    # Superior limit of the block used for testing
+
+sample_DNA_1 = float(sys.argv[3])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 1)
+sample_AA_1 = float(sys.argv[4])    # Normalize Compression Rate of the AA for the Input Sequence (Level 1)
+sample_DNA_3 = float(sys.argv[5])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 3)
+sample_AA_3 = float(sys.argv[6])    # Normalize Compression Rate of the AA for the Input Sequence (Level 3)
+sample_DNA_7 = float(sys.argv[7])   # Normalize Compression Rate of the DNA for the Input Sequence (Level 7)
+sample_AA_7 = float(sys.argv[8])    # Normalize Compression Rate of the AA for the Input Sequence (Level 7)
+gc_percent = float(sys.argv[9])     # GC-Content Percentage ([0..1]) of the Input Sequence
+
+
 
 trainDatabase = 0.8                 # Percentage of the (current) domain database used for training the model (80%)
 
@@ -413,16 +418,24 @@ def protozoaData(protozoa_nm_result1, protozoa_pt_result1, protozoa_nm_result3, 
     protozoaFilePT = dir_path + '/../Analysis/AC/Protozoa/ac2_Protozoa.csv'
     protozoaFileGC = dir_path + '/../Analysis/GCcontent/Protozoa/gc_content_Protozoa.csv'
 
-    numFilesNM = int(len(open(protozoaFileNM).readlines(  )) * trainDatabase)
-    numFilesPT = int(len(open(protozoaFilePT).readlines(  )) * trainDatabase)
-    numFilesGC = int(len(open(protozoaFileGC).readlines(  )) * trainDatabase)
+    #numFilesNM = int(len(open(protozoaFileNM).readlines(  )) * trainDatabase)
+    #numFilesPT = int(len(open(protozoaFilePT).readlines(  )) * trainDatabase)
+    #numFilesGC = int(len(open(protozoaFileGC).readlines(  )) * trainDatabase)
+
+    numFilesNM_ForTestMin = int(len(open(protozoaFileNM).readlines(  )) * crossValidation_Min_Lim)
+    numFilesNM_ForTestMax = int(len(open(protozoaFileNM).readlines(  )) * crossValidation_Max_Lim)
+    numFilesPT_ForTestMin = int(len(open(protozoaFilePT).readlines(  )) * crossValidation_Min_Lim)
+    numFilesPT_ForTestMax = int(len(open(protozoaFilePT).readlines(  )) * crossValidation_Max_Lim)
+    numFilesGC_ForTestMin = int(len(open(protozoaFileGC).readlines(  )) * crossValidation_Min_Lim)
+    numFilesGC_ForTestMax = int(len(open(protozoaFileGC).readlines(  )) * crossValidation_Max_Lim)
 
     # Protozoa CSV files
     with open('Analysis/GeCo/Protozoa/geco3_Protozoa.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countNM == numFilesNM:
-                break
+            #if countNM == numFilesNM:
+            if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
+                countNM = countNM + 1
             else:
                 protozoa_nm_result1.append("0"+row[0].split("\t")[L1])
                 protozoa_nm_result3.append("0"+row[0].split("\t")[L3])
@@ -432,8 +445,9 @@ def protozoaData(protozoa_nm_result1, protozoa_pt_result1, protozoa_nm_result3, 
     with open('Analysis/AC/Protozoa/ac2_Protozoa.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countPT == numFilesPT:
-                break
+            #if countPT == numFilesPT:
+            if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
+                countPT = countPT + 1
             else:
                 protozoa_pt_result1.append(row[0].split("\t")[L1])
                 protozoa_pt_result3.append(row[0].split("\t")[L3])
@@ -443,8 +457,9 @@ def protozoaData(protozoa_nm_result1, protozoa_pt_result1, protozoa_nm_result3, 
     with open('Analysis/GCcontent/Protozoa/gc_content_Protozoa.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countGC == numFilesGC:
-                break
+            #if countGC == numFilesGC:
+            if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
+                countGC = countGC + 1
             else:
                 protozoa_gc_content.append("0"+row[0].split("\t")[3])
                 countGC = countGC + 1
