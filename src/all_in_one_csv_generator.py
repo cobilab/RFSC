@@ -310,7 +310,7 @@ plastid_nm_result3, plastid_pt_result3, plastid_gc_content = plastidData(plastid
 
 with open('Analysis/SVM/Domains.csv', 'w', newline='') as file:
     writer = csv.writer(file)
-    writer.writerow(["Domain", "NC", "AA", "GC"])
+    writer.writerow(["Domain", "DNA", "AA", "GC"])
     for domain in domains:
         for x in range(samples):
             writer.writerow([domain, virus_nm_result3[x], virus_pt_result3[x], virus_gc_content[x]])
