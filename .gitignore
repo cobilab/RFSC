@@ -19,4 +19,4 @@ ORFs/NodesProteins
 #Tests/
 
 # Training IA Files
-test.sh
+test*
