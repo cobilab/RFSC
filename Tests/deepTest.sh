@@ -111,6 +111,13 @@ function VIRUS_TEST () {
         
     done <Analysis/AC/Virus/ac2_Viral.csv
 
+    while read line; 
+    do
+        DNA_LENGTH+=(`echo $line | cut -d ' ' -f2`)
+        AA_LENGTH+=(`echo $line | cut -d ' ' -f3`)
+        
+    done <Analysis/LengthSeq/Virus/length_Viral.csv
+
     for i in $(eval echo "{0..$num_blocks}")
     do
         training_block_min=`echo $virus_files_NM*${blocks_perc[i]} | bc`
@@ -124,7 +131,7 @@ function VIRUS_TEST () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Virus_1-3-7_CV.txt
+            python3 src/naiveBayes.py ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} >> Tests/Predictions/Prediction_Virus_1-3-7_CV.txt
             fi
         done
     done
@@ -381,6 +388,13 @@ function PROTOZOA_TEST () {
         
     done <Analysis/AC/Protozoa/ac2_Protozoa.csv
 
+    while read line; 
+    do
+        DNA_LENGTH+=(`echo $line | cut -d ' ' -f2`)
+        AA_LENGTH+=(`echo $line | cut -d ' ' -f3`)
+        
+    done <Analysis/LengthSeq/Protozoa/length_Protozoa.csv
+
     for i in $(eval echo "{0..$num_blocks}")
     do
         training_block_min=`echo $protozoa_files_NM*${blocks_perc[i]} | bc`
@@ -394,7 +408,7 @@ function PROTOZOA_TEST () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} >> Tests/Predictions/Prediction_Protozoa_1-3-7_CV.txt
+            python3 src/naiveBayes.py ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} >> Tests/Predictions/Prediction_Protozoa_1-3-7_CV.txt
             fi
         done
     done
