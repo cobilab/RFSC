@@ -17,6 +17,7 @@ ORFs/NodesProteins
 
 # Tests Folder
 #Tests/
+Tests/predictions.py
 
 # Training IA Files
 test*
