@@ -9,9 +9,9 @@ L1 = 6                              # Level 1 (position 6 of the csv)
 L3 = 8                              # Level 3 (position 8 of the csv)
 L7 = 10                             # Level 7 (position 10 of the csv)
 
-N = int(sys.argv[1]) #8                               # Number of types (Domains)
+N = int(sys.argv[1])                # Number of types (Domains)
 
-trainDatabase = float(sys.argv[2])# 0.8                 # Percentage of the (current) domain database used for training the model (80%)
+trainDatabase = float(sys.argv[2])  # Percentage of the (current) domain database used for training the model (80%)
 
 crossValidation_Min_Lim = float(sys.argv[3])    # Inferior limit of the block used for testing
 crossValidation_Max_Lim = float(sys.argv[4])    # Superior limit of the block used for testing
@@ -25,6 +25,8 @@ sample_AA_7 = float(sys.argv[10])       # Normalize Compression Rate of the AA f
 gc_percent = float(sys.argv[11])        # GC-Content Percentage ([0..1]) of the Input Sequence
 sample_DNA_LEN = float(sys.argv[12])    # Length of the DNA
 sample_AA_LEN = float(sys.argv[13])     # Length of the AA
+
+preditors_required = str(sys.argv[14])
 
 maxvaluefound_length_DNA = 0
 maxvaluefound_length_AA = 0
@@ -756,8 +758,43 @@ def normalizeLengths(virus_length, bacteria_length, archaea_length, fungi_lenth,
     return virus_length, bacteria_length, archaea_length, fungi_lenth, plant_length, protozoa_length, mito_length, plastid_length, maxvaluefound
 
 def calcProb(p_type, likelihood_dna_1, likelihood_aa1, likelihood_dna_3, likelihood_aa3, likelihood_dna_7, likelihood_aa7, likelihood_gc, likelihood_dna_length, likelihood_aa_length):
-    return p_type + likelihood_dna_1 + likelihood_aa1 + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_7 + likelihood_aa7 + likelihood_gc + likelihood_dna_length + likelihood_aa_length
-    # Gradiente Descendente
+    # TODO: Gradiente Descendente
+    if preditors_required == "1111": # All predictors
+        return p_type + likelihood_dna_1 + likelihood_aa1 + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_7 + likelihood_aa7 + likelihood_gc + likelihood_dna_length + likelihood_aa_length
+    elif preditors_required == "0001": # Only DNA Compression
+        return p_type + likelihood_dna_1 + likelihood_dna_3 + likelihood_dna_7
+    elif preditors_required == "0010": # Only AA Compression
+        return p_type + likelihood_aa1 + likelihood_aa3 + likelihood_aa7
+    elif preditors_required == "0011": # Only GC-Content
+        return p_type + likelihood_gc
+    elif preditors_required == "0100": # Only DNA Length
+        return p_type + likelihood_dna_length
+    elif preditors_required == "0101": # Only AA Length
+        return p_type + likelihood_aa_length
+    elif preditors_required == "0110": # DNA & AA Compression
+        return p_type + likelihood_dna_1 + likelihood_aa1 + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_7 + likelihood_aa7
+    elif preditors_required == "0111": # DNA & AA Compression + GC-Content
+        return p_type + likelihood_dna_1 + likelihood_aa1 + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_7 + likelihood_aa7 + likelihood_gc
+    elif preditors_required == "1000": # DNA & AA Compression + GC-Content + DNA Length
+        return p_type + likelihood_dna_1 + likelihood_aa1 + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_7 + likelihood_aa7 + likelihood_gc + likelihood_dna_length
+    elif preditors_required == "1001": # DNA & AA Compression + GC-Content + DNA & AA Length
+        return p_type + likelihood_dna_1 + likelihood_aa1 + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_7 + likelihood_aa7 + likelihood_gc + likelihood_dna_length + likelihood_aa_length
+    elif preditors_required == "1010": # DNA & AA Compression + DNA & AA Length
+        return p_type + likelihood_dna_1 + likelihood_aa1 + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_7 + likelihood_aa7 + likelihood_dna_length + likelihood_aa_length
+    else:
+        print("Insert a correct code for the predictors wanted!")
+        print(" 1111 -> All predictors")
+        print(" 0001 -> Only DNA Compression")
+        print(" 0010 -> Only AA Compression")
+        print(" 0011 -> Only GC-Content")
+        print(" 0100 -> Only DNA Length")
+        print(" 0101 -> Only AA Length")
+        print(" 0110 -> DNA & AA Compression")
+        print(" 0111 -> DNA & AA Compression + GC-Content")
+        print(" 1000 -> DNA & AA Compression + GC-Content + DNA Length")
+        print(" 1001 -> DNA & AA Compression + GC-Content + DNA & AA Length")
+        print(" 1010 -> DNA & AA Compression + DNA & AA Length")
+        return 0;
 
 def domainAnalysis(probabilities):
     domains=["Virus", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
