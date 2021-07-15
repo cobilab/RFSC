@@ -9,26 +9,25 @@ L1 = 6                              # Level 1 (position 6 of the csv)
 L3 = 8                              # Level 3 (position 8 of the csv)
 L7 = 10                             # Level 7 (position 10 of the csv)
 
-N = 8                               # Number of types (Domains)
+N = int(sys.argv[1]) #8                               # Number of types (Domains)
 
-crossValidation_Min_Lim = float(sys.argv[1])    # Inferior limit of the block used for testing
-crossValidation_Max_Lim = float(sys.argv[2])    # Superior limit of the block used for testing
+trainDatabase = float(sys.argv[2])# 0.8                 # Percentage of the (current) domain database used for training the model (80%)
 
-sample_DNA_1 = float(sys.argv[3])       # Normalize Compression Rate of the DNA for the Input Sequence (Level 1)
-sample_AA_1 = float(sys.argv[4])        # Normalize Compression Rate of the AA for the Input Sequence (Level 1)
-sample_DNA_3 = float(sys.argv[5])       # Normalize Compression Rate of the DNA for the Input Sequence (Level 3)
-sample_AA_3 = float(sys.argv[6])        # Normalize Compression Rate of the AA for the Input Sequence (Level 3)
-sample_DNA_7 = float(sys.argv[7])       # Normalize Compression Rate of the DNA for the Input Sequence (Level 7)
-sample_AA_7 = float(sys.argv[8])        # Normalize Compression Rate of the AA for the Input Sequence (Level 7)
-gc_percent = float(sys.argv[9])         # GC-Content Percentage ([0..1]) of the Input Sequence
-sample_DNA_LEN = float(sys.argv[10])    #
-sample_AA_LEN = float(sys.argv[11])     #
+crossValidation_Min_Lim = float(sys.argv[3])    # Inferior limit of the block used for testing
+crossValidation_Max_Lim = float(sys.argv[4])    # Superior limit of the block used for testing
+
+sample_DNA_1 = float(sys.argv[5])       # Normalize Compression Rate of the DNA for the Input Sequence (Level 1)
+sample_AA_1 = float(sys.argv[6])        # Normalize Compression Rate of the AA for the Input Sequence (Level 1)
+sample_DNA_3 = float(sys.argv[7])       # Normalize Compression Rate of the DNA for the Input Sequence (Level 3)
+sample_AA_3 = float(sys.argv[8])        # Normalize Compression Rate of the AA for the Input Sequence (Level 3)
+sample_DNA_7 = float(sys.argv[9])       # Normalize Compression Rate of the DNA for the Input Sequence (Level 7)
+sample_AA_7 = float(sys.argv[10])       # Normalize Compression Rate of the AA for the Input Sequence (Level 7)
+gc_percent = float(sys.argv[11])        # GC-Content Percentage ([0..1]) of the Input Sequence
+sample_DNA_LEN = float(sys.argv[12])    # Length of the DNA
+sample_AA_LEN = float(sys.argv[13])     # Length of the AA
 
 maxvaluefound_length_DNA = 0
 maxvaluefound_length_AA = 0
-
-
-trainDatabase = 0.8                 # Percentage of the (current) domain database used for training the model (80%)
 
 dir_path = os.path.dirname(os.path.realpath(__file__))  # Current directory path
 
@@ -758,6 +757,7 @@ def normalizeLengths(virus_length, bacteria_length, archaea_length, fungi_lenth,
 
 def calcProb(p_type, likelihood_dna_1, likelihood_aa1, likelihood_dna_3, likelihood_aa3, likelihood_dna_7, likelihood_aa7, likelihood_gc, likelihood_dna_length, likelihood_aa_length):
     return p_type + likelihood_dna_1 + likelihood_aa1 + likelihood_dna_3 + likelihood_aa3 + likelihood_dna_7 + likelihood_aa7 + likelihood_gc + likelihood_dna_length + likelihood_aa_length
+    # Gradiente Descendente
 
 def domainAnalysis(probabilities):
     domains=["Virus", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
