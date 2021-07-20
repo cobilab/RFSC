@@ -24,7 +24,7 @@ TOTAL=0;
 
 file_name=$(basename $INPUT_FILE);
 
-VIRUS=`grep -o 'Virus' $INPUT_FILE | wc -l`
+VIRUS=`grep -o 'Virus\|Viral' $INPUT_FILE | wc -l`
 BACTERIA=`grep -o 'Bacteria' $INPUT_FILE | wc -l`
 ARCHAEA=`grep -o 'Archaea' $INPUT_FILE | wc -l`
 FUNGI=`grep -o 'Fungi' $INPUT_FILE | wc -l`
