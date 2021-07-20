@@ -1,5 +1,5 @@
 '''
-	Usage: python3 src/KNN.py 2 0.7545 0.783272 0.19727258 1.927032e-10 3.87563e-11
+	Usage: python3 src/KNN.py Test 2 0 1 0.7545 0.783272 0.19727258 1.927032e-10 3.87563e-11 NULL
 '''
 
 # Packages for analysis
@@ -7,18 +7,28 @@ import pandas as pd
 import numpy as np
 from math import sqrt
 import csv, sys
+import os, os.path
 
-K = int(sys.argv[1]);				# K-Neighbors
+Mode = str(sys.argv[1])				# Test | CV
 
-dna_input = float(sys.argv[2])   	# DNA Compression Value
-aa_input = float(sys.argv[3])    	# AA Compression Value
-gc_content = float(sys.argv[4])    	# GC-Content Value
-len_dna_input = float(sys.argv[5])  # Length of the DNA sequence
-len_aa_input = float(sys.argv[6])   # Length of the AA sequence
+K = int(sys.argv[2]);				# K-Neighbors
+
+crossValidation_Min_Lim = float(sys.argv[3])    # Inferior limit of the block used for testing
+crossValidation_Max_Lim = float(sys.argv[4])    # Superior limit of the block used for testing
+
+dna_input = float(sys.argv[5])   	# DNA Compression Value
+aa_input = float(sys.argv[6])    	# AA Compression Value
+gc_content = float(sys.argv[7])    	# GC-Content Value
+len_dna_input = float(sys.argv[8])  # Length of the DNA sequence
+len_aa_input = float(sys.argv[9])   # Length of the AA sequence
+
+CV_Domain = str(sys.argv[10])		# NULL | Viral
 
 samplesDomains = ["Viral", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
 train_samples = []
 to_predict = [dna_input, aa_input, gc_content, len_dna_input, len_aa_input]
+
+dir_path = os.path.dirname(os.path.realpath(__file__))  # Current directory path
 
 # calculate the Euclidean distance between two vectors
 def euclidean_distance(row1, row2):
@@ -46,14 +56,40 @@ def predict_classification(train, test_row, num_neighbors):
 	prediction = max(set(output_values), key=output_values.count)
 	return prediction
 
+if Mode == "Test":
+	with open('Analysis/KNN/Train.csv', 'r') as file:
+		samples = csv.reader(file)
+		next(samples)
+		for row in samples:
+			train_samples.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5]),row[0]])
 
-with open('Analysis/KNN/Domains.csv', 'r') as file:
-    samples = csv.reader(file)
-    next(samples)
-    for row in samples:
-        #if (row[0] == "Viral"):
-            #train_samples.append([float(row[1]),float(row[2]),row[0]])
-        train_samples.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5]),row[0]])
+elif Mode == "CV":
+	numberSamples=0
+	with open('Analysis/KNN/Train.csv', 'r') as file:
+		samples = csv.reader(file)
+		next(samples)
+		for row in samples:
+			if row[0] == CV_Domain:
+				numberSamples=numberSamples+1
+	numFiles_ForTestMin = int(numberSamples * crossValidation_Min_Lim)
+	numFiles_ForTestMax = int(numberSamples * crossValidation_Max_Lim)
+
+	sampleCounter = 0;
+
+	with open('Analysis/KNN/Train.csv', 'r') as file:
+		samples = csv.reader(file)
+		next(samples)
+		for row in samples:
+			if row[0] == CV_Domain:
+				if sampleCounter >= numFiles_ForTestMin and sampleCounter <= numFiles_ForTestMax:
+					sampleCounter = sampleCounter + 1
+				else:
+					train_samples.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5]),row[0]])
+					sampleCounter = sampleCounter + 1
+
+else:
+	print("Mode not found. Please specify the correct mode of use: Test or CV")
+
             
 #for row in train_samples:
 #	distance = euclidean_distance(to_predict, row)
