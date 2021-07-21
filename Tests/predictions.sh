@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script used to output the predictions percentages presented
-# in a file previously generated (i.e. ./Tests/deepTest.sh)
+# in a file previously generated (i.e. ./Tests/deepTest_(...).sh)
 #
 # Outputs the solution in the terminal with all the percentages
 # of each domain
