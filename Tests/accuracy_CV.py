@@ -15,7 +15,7 @@ TotalSamples = 0;
 
 folder = sys.argv[1]
 
-f = open("Tests/Predictions/"+folder+"/Prediction_Virus_CV.txt", "r")
+f = open("Tests/Predictions/"+folder+"/Prediction_Viral_CV.txt", "r")
 for prediction in f:
   TotalSamples = TotalSamples + 1;
   if prediction.rstrip('\n') == 'Virus' or prediction.rstrip('\n') == 'Viral':

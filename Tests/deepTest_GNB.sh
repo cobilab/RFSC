@@ -131,7 +131,7 @@ function VIRUS_TEST () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py 8 0.8 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/Prediction_Virus_CV.txt
+            python3 src/naiveBayes.py 8 0.8 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/Prediction_Viral_CV.txt
             fi
         done
     done
