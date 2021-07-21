@@ -1,5 +1,6 @@
 '''
   Usage: python3 Tests/accuracy_CV.py CV_NBG_With_LEN
+         python3 Tests/accuracy_CV.py KNN/CrossValidation
 '''
 
 from matplotlib import font_manager
