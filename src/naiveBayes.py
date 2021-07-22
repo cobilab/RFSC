@@ -562,7 +562,7 @@ def protozoaData(protozoa_nm_result1, protozoa_pt_result1, protozoa_nm_result3, 
                 protozoa_gc_content.append("0"+row[0].split("\t")[3])
                 countGC = countGC + 1
 
-    with open('Analysis/GCcontent/Protozoa/gc_content_Protozoa.csv', 'r') as file:
+    with open('Analysis/LengthSeq/Protozoa/length_Protozoa.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
