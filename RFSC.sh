@@ -71,6 +71,28 @@ RUN_ENCRYPT=0;
 #
 ORFFINDER_FLAG=0;
 #
+ORF_DATASETS=0;
+ORF_TOOL="";
+ORF_DOMAIN="";
+#
+NC_DNA_FLAG=0;
+NC_DNA_DOMAIN="";
+#
+NC_AA_FLAG=0;
+NC_AA_DOMAIN="";
+#
+GC_CONTENT_FLAG=0;
+GC_CONTENT_DOMAIN="";
+#
+LEN_SEQ_FLAG=0;
+LEN_SEQ_DOMAIN="";
+#
+TRAIN_TEST_DATASET_FLAG=0;
+TRAIN_TEST_DATASET_PARTITION="";
+#
+LIMIT_SAMPLES_DATASET_FLAG=0;
+LIMIT_SAMPLES_DATASET="";
+#
 RUN_GNB=0;
 NUM_DOMAINS="";
 PREDICTORS_CODE="";
@@ -505,6 +527,12 @@ do
 			ORFFINDER_FLAG=1;
 			shift
 		;;
+		-orfd|--orf-dataset)
+			ORF_DATASETS=1;
+			ORF_TOOL="$2";
+			ORF_DOMAIN="$3";
+			shift 3
+		;;
 		-enc|--encrypt)
 			RUN_ENCRYPT=1;
 			shift
@@ -526,6 +554,36 @@ do
 			BUILD_DB_MITOCHONDRIAL=1;
 			BUILD_DB_PLASTID=1;
 			shift
+		;;
+		-ncd|--nc-dna-csv)
+			NC_DNA_FLAG=1;
+			NC_DNA_DOMAIN="$2";
+			shift 2
+		;;
+		-nca|--nc-aa-csv)
+			NC_AA_FLAG=1;
+			NC_AA_DOMAIN="$2";
+			shift 2
+		;;
+		-gc|--gc-content-csv)
+			GC_CONTENT_FLAG=1;
+			GC_CONTENT_DOMAIN="$2";
+			shift 2
+		;;
+		-lenseq|--len-dna-aa-csv)
+			LEN_SEQ_FLAG=1;
+			LEN_SEQ_DOMAIN="$2";
+			shift 2
+		;;
+		-train-test|--train-test-dataset-csv)
+			TRAIN_TEST_DATASET_FLAG=1;
+			TRAIN_TEST_DATASET_PARTITION="$2";
+			shift 2
+		;;
+		-sdataset|--small-dataset-csv)
+			LIMIT_SAMPLES_DATASET_FLAG=1;
+			LIMIT_SAMPLES_DATASET="$2";
+			shift 2
 		;;
 		-gnb|--run-gaussian-naive-bayes-classifier)
 			RUN_GNB=1;
@@ -587,6 +645,9 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo -e "   -t,  --threads \033[0;34m<THREADS>\033[0m                                                  "
 	echo "                          Number of threads to be used                       "
 	echo "                                                                             "
+	echo "   -dec, --decrypt        Decrypt all files in /Data_Security/Decrypted_Data "
+	echo "   -enc, --encrypt        Encrypt all files in /Data_Security/Encrypted_data "
+	echo "                                                                             "
 	echo -e "   -tmm,  --set-threshold-max-min \033[0;34m<MAX> <MIN>\033[0m                                "
 	echo "                          Set Max & Min thresholds for percentage            "
 	echo "                          similarity in reference based analysis             "
@@ -594,23 +655,6 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo -e "   -dlc,  --set-len-cov \033[0;34m<LEN> <COV>\033[0m                                          "
 	echo "                          Define the Length and Coverage values              "
 	echo "                          for the scaffolds filtering process                "
-	echo "                                                                             "
-	echo "   -bviral, --build-ref-virus                                                "
-	echo -e "                          Build reference database for \033[1;36mvirus\033[0m from NCBI       "
-	echo "   -bbact,  --build-ref-bacteria                                             "
-	echo -e "                          Build reference database for \033[1;36mbacterias\033[0m from NCBI   "
-	echo "   -barch,  --build-ref-archaea                                              "
-	echo -e "                          Build reference database for \033[1;36marchaeas\033[0m from NCBI    "
-	echo "   -bprot,  --build-ref-protozoa                                             "
-	echo -e "                          Build reference database for \033[1;36mprotozoa\033[0m from NCBI    "
-	echo "   -bfung,  --build-ref-fungi                                                "
-	echo -e "                          Build reference database for \033[1;36mfungi\033[0m from NCBI       "
-	echo "   -bplan,  --build-ref-plant                                                "
-	echo -e "                          Build reference database for \033[1;36mplant\033[0m from NCBI       "
-	echo "   -bmito,  --build-ref-mitochondrial                                        "
-	echo -e "                          Build reference database for \033[1;36mmitochondrial\033[0m from NCBI"
-	echo "   -bplas,  --build-ref-plastid                                              "
-	echo -e "                          Build reference database for \033[1;36mplastid\033[0m from NCBI     "
 	echo "                                                                             "
 	echo "   -gad,  --gen-adapters  Generate FASTA file with adapters                  "
 	echo "                                                                             "
@@ -630,8 +674,52 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          finds all open reading frames (ORF) and remove     "
 	echo "                          stop codons                                        "
 	echo "                                                                             "
-	echo "   -dec, --decrypt        Decrypt all files in /Data_Security/Decrypted_Data "
-	echo "   -enc, --encrypt        Encrypt all files in /Data_Security/Encrypted_data "
+	echo -e "   -orfd, --orf-dataset \033[0;34m<TOOL> <DOMAIN>                                     \033[0m "
+	echo "                          Converts nucleotide sequences presented in the     "
+	echo "                          NCBI databasesinto protein sequences               "
+	echo "                          TOOL: orfM (-orfm) [DEFAULT]                       "
+	echo "                                or using ORF-Finder (-orffinder)             "
+	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
+	echo "                                                                             "
+	echo -e "   -ncd, --nc-dna-csv \033[0;34m<DOMAIN>                                              \033[0m "
+	echo "                          Compresses and generates a CSV file for the        "
+	echo "                          DNA NCBI datasets                                  "
+	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
+	echo "                                                                             "
+	echo -e "   -nca, --nc-aa-csv \033[0;34m<DOMAIN>                                               \033[0m "
+	echo "                          Compresses and generates a CSV file for the        "
+	echo "                          AA NCBI datasets                                   "
+	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
+	echo "                                                                             "
+	echo -e "   -gc, --gc-content-csv \033[0;34m<DOMAIN>                                           \033[0m "
+	echo "                          Analyses the percentage of GC-Content in each      "
+	echo "                          sequece of the choosen NCBI database               "
+	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
+	echo "                                                                             "
+	echo -e "   -lenseq, --len-dna-aa-csv \033[0;34m<DOMAIN>                                       \033[0m "
+	echo "                          Analyses the Length (DNA & AA) sequences the       "
+	echo "                          choosen NCBI database                              "
+	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
+	echo "                                                                             "
+	echo -e " \033[1;33m                       B U I L D    D A T A B A S E S                      \033[0m "
+	echo "                                                                             "
+	echo "   -bviral, --build-ref-virus                                                "
+	echo -e "                          Build reference database for \033[1;36mvirus\033[0m from NCBI       "
+	echo "   -bbact,  --build-ref-bacteria                                             "
+	echo -e "                          Build reference database for \033[1;36mbacterias\033[0m from NCBI   "
+	echo "   -barch,  --build-ref-archaea                                              "
+	echo -e "                          Build reference database for \033[1;36marchaeas\033[0m from NCBI    "
+	echo "   -bprot,  --build-ref-protozoa                                             "
+	echo -e "                          Build reference database for \033[1;36mprotozoa\033[0m from NCBI    "
+	echo "   -bfung,  --build-ref-fungi                                                "
+	echo -e "                          Build reference database for \033[1;36mfungi\033[0m from NCBI       "
+	echo "   -bplan,  --build-ref-plant                                                "
+	echo -e "                          Build reference database for \033[1;36mplant\033[0m from NCBI       "
+	echo "   -bmito,  --build-ref-mitochondrial                                        "
+	echo -e "                          Build reference database for \033[1;36mmitochondrial\033[0m from NCBI"
+	echo "   -bplas,  --build-ref-plastid                                              "
+	echo -e "                          Build reference database for \033[1;36mplastid\033[0m from NCBI     "
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
 	echo -e " \033[1;33m              R E F E R E N C E   B A S E D   A P P R O A C H              \033[0m "
 	echo "                                                                             "
@@ -643,6 +731,17 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -rbr, --run-blastn-remote                                                 "
 	echo "                          Run Data Analysus with Blast+ using remote         "
 	echo "                          access to NCBI databases                           "
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
+	echo "                                                                             "
+	echo -e "   -train-test, --train-test-dataset-csv \033[0;34m<TRAIN_PARTITION>                  \033[0m "
+	echo "                          Divide the dataset into a train and test dataset   "
+	echo "                          (Usefull for testing the KNN Classifier)           "
+	echo "                          TRAIN_PARTITION: value (0..1) for the train partition"
+	echo "                                                                             "
+	echo -e "   -sdataset, --small-dataset-csv \033[0;34m<MAX_SAMPLES>                             \033[0m "
+	echo "                          Create a small dataset with a maximum of samples   "
+	echo "                          for each domain                                    "
+	echo "                          MAX_SAMPLES: Maximum samples per domain            "
 	echo "                                                                             "
 	echo -e " \033[1;33m               R E F E R E N C E   F R E E   A P P R O A C H               \033[0m "
 	echo "                                                                             "
@@ -663,6 +762,7 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                                                                             "
 	echo -e "   -knn, --run-k-nearest-neighbor-classifier \033[0;34m<K>                            \033[0m "
 	echo "                          K: Number of neighbors for the classifier          "
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
 	echo "   -clc, --clean-all      Clean all generated files (Including Results)      "
 	echo "                                                                             "
@@ -866,6 +966,12 @@ fi
 #
 # ===================================================================
 #
+if [[ "$ORF_DATASETS" -eq "1" ]]; then
+	./src/protein_conversion_DB.sh $ORF_TOOL $ORF_DOMAIN
+fi
+#
+# ===================================================================
+#
 if [[ "$RUN_ENCRYPT" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Encryption!"
 	ENCRYPT_DATA;
@@ -890,6 +996,32 @@ fi
 # ===================================================================
 # ==== R E F E R E N C E   F R E E   C L A S S I F I C A T I O N ====
 # ===================================================================
+#
+if [[ "$NC_DNA_FLAG" -eq "1" ]]; then
+	./src/dna_compression.sh $NC_DNA_DOMAIN
+fi
+#
+if [[ "$NC_AA_FLAG" -eq "1" ]]; then
+	./src/protein_compression.sh $NC_AA_DOMAIN
+fi
+#
+if [[ "$GC_CONTENT_FLAG" -eq "1" ]]; then
+	./src/GCcontent_DB_analysis.sh $GC_CONTENT_DOMAIN
+fi
+#
+if [[ "$LEN_SEQ_FLAG" -eq "1" ]]; then
+	./src/length_DB_analysis.sh $LEN_SEQ_DOMAIN
+fi
+#
+if [[ "$TRAIN_TEST_DATASET_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Generating the Train and Test Dataset"
+	./src/train_test_dataset_generator.sh $TRAIN_TEST_DATASET_PARTITION
+fi
+#
+if [[ "$LIMIT_SAMPLES_DATASET_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Generating the Dataset"
+	./src/all_in_one_csv_generator.sh $LIMIT_SAMPLES_DATASET
+fi
 #
 if [[ "$RUN_GNB" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Processing Input Sequences"
