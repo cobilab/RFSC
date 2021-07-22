@@ -10,7 +10,7 @@ GeneratedFiles/out_spades_
 run.sh
 
 # Cleaner of Generated Files
-clean.sh
+#clean.sh
 
 # Protein Fasta Files
 ORFs/NodesProteins
