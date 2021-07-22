@@ -1,10 +1,11 @@
 import csv
 import os, os.path
 import numpy as np
+import sys
 
-L3 = 8              # Level 3 (position 8 of the csv)
+L3 = 8                          # Level 3 (position 8 of the csv)
 
-samples = 500       # Number of samples used in the csv                       
+samples = int(sys.argv[1])       # Number of samples used in the csv                       
 
 domains = ["Viral", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
 
