@@ -14,6 +14,7 @@
 SHOW_HELP=0;
 SHOW_VERSION=0;
 INSTALL=0;
+CLEAN=0;
 #
 BUILD_DB_VIRUS=0;
 BUILD_DB_BACTERIA=0;
@@ -70,11 +71,13 @@ RUN_ENCRYPT=0;
 #
 ORFFINDER_FLAG=0;
 #
+RUN_GNB=0;
+NUM_DOMAINS="";
+PREDICTORS_CODE="";
 #
-# ==================================================================
-# CURRENT VIRUSES OR VIRUSES GROUPS ACCEPTED TO BE SEARCHED
+RUN_KNN=0;
+KNN_K="";
 #
-declare -a VIRUSES=("B19" "HBV");
 #
 # ==================================================================
 # VERIFICATION FUNCTIONS
@@ -522,6 +525,22 @@ do
 			BUILD_DB_VERTEBRATE_OTHER=1;
 			BUILD_DB_MITOCHONDRIAL=1;
 			BUILD_DB_PLASTID=1;
+			shift
+		;;
+		-gnb|--run-gaussian-naive-bayes-classifier)
+			RUN_GNB=1;
+			NUM_DOMAINS="$2";
+			PREDICTORS_CODE="$3";
+			shift 3
+		;;
+		-knn|--run-k-nearest-neighbor-classifier)
+			RUN_KNN=1;
+			KNN_K="$2";
+			shift 2
+		;;
+		-clc|--clean-all)
+			CLEAN=1;
+			shift
 		;;
 		-all|--run-all)
 			TRIMMING_FLAG=1;
@@ -607,6 +626,15 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                                                                             "
 	echo "   -rda, --run-de-novo    De-Novo Sequence Assembly                          "
 	echo "                                                                             "
+	echo "   -orf, --orf-finder     Perform DNA sequence translation for amino acids,  "
+	echo "                          finds all open reading frames (ORF) and remove     "
+	echo "                          stop codons                                        "
+	echo "                                                                             "
+	echo "   -dec, --decrypt        Decrypt all files in /Data_Security/Decrypted_Data "
+	echo "   -enc, --encrypt        Encrypt all files in /Data_Security/Encrypted_data "
+	echo "                                                                             "
+	echo -e " \033[1;33m              R E F E R E N C E   B A S E D   A P P R O A C H              \033[0m "
+	echo "                                                                             "
 	echo -e "   -rfa, --run-falcon \033[0;34m<MODE>\033[0m                                                 "
 	echo "                          Run Data Analysis with FALCON using only the       "
 	echo "                          scaffolds (SO) or analysing by each                "
@@ -616,12 +644,27 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          Run Data Analysus with Blast+ using remote         "
 	echo "                          access to NCBI databases                           "
 	echo "                                                                             "
-	echo "   -orf, --orf-finder     Perform DNA sequence translation for amino acids,  "
-	echo "                          finds all open reading frames (ORF) and remove     "
-	echo "                          stop codons                                        "
+	echo -e " \033[1;33m               R E F E R E N C E   F R E E   A P P R O A C H               \033[0m "
 	echo "                                                                             "
-	echo "   -dec, --decrypt        Decrypt all files in /Data_Security/Decrypted_Data "
-	echo "   -enc, --encrypt        Encrypt all files in /Data_Security/Encrypted_data "
+	echo -e "   -gnb, --run-gaussian-naive-bayes-classifier \033[0;34m<NUM_DOMAINS> <PREDICTORS>\033[0m    "
+	echo "                          NUM_DOMAINS: Number of domains supported           "
+	echo "                          PREDICTORS: Code regarding the desired predictors: "
+	echo "                '1111' -> All predictors                                     "
+	echo "                '0001' -> Only Nucleotide Compression                        "
+	echo "                '0010' -> Only AA Compression                                "
+	echo "                '0011' -> Only GC-Content                                    "
+	echo "                '0100' -> Only DNA Length                                    "
+	echo "                '0101' -> Only AA Length                                     "
+	echo "                '0110' -> DNA & AA Compression                               "
+	echo "                '0111' -> DNA & AA Compression + GC-Content                  "
+	echo "                '1000' -> DNA & AA Compression + GC-Content + DNA Length     "
+	echo "                '1001' -> DNA & AA Compression + GC-Content + DNA & AA Length"
+	echo "                '1010' -> DNA & AA Compression + DNA & AA Length             "
+	echo "                                                                             "
+	echo -e "   -knn, --run-k-nearest-neighbor-classifier \033[0;34m<K>                            \033[0m "
+	echo "                          K: Number of neighbors for the classifier          "
+	echo "                                                                             "
+	echo "   -clc, --clean-all      Clean all generated files (Including Results)      "
 	echo "                                                                             "
 	echo "   -all, --run-all        Run all the options (considering real data)        "
 	echo "                                                                             "
@@ -835,3 +878,27 @@ if [[ "$RUN_DECRYPT" -eq "1" ]]; then
 	DECRYPT_DATA;
 fi
 #
+if [[ "$CLEAN" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Cleaning all files..."
+	read -p "Are you sure you want to proceed? " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+    	./clean.sh
+	fi
+fi
+#
+# ===================================================================
+# ==== R E F E R E N C E   F R E E   C L A S S I F I C A T I O N ====
+# ===================================================================
+#
+if [[ "$RUN_GNB" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Processing Input Sequences"
+	./src/get_input_predictors.sh
+	./src/ref_free_analysis.sh GNB 0 $NUM_DOMAINS $PREDICTORS_CODE
+fi
+#
+if [[ "$RUN_KNN" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Processing Input Sequences!"
+	./src/get_input_predictors.sh
+	./src/ref_free_analysis.sh KNN $KNN_K 0 NULL
+fi
