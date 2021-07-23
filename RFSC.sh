@@ -100,6 +100,12 @@ PREDICTORS_CODE="";
 RUN_KNN=0;
 KNN_K="";
 #
+TEST_KNN_FLAG=0;
+TEST_KNN_MODE="";
+#
+TEST_GNB_FLAG=0;
+TEST_GNB_DOMAIN="";
+#
 #
 # ==================================================================
 # VERIFICATION FUNCTIONS
@@ -596,6 +602,16 @@ do
 			KNN_K="$2";
 			shift 2
 		;;
+		-testKNN)
+			TEST_KNN_FLAG=1;
+			TEST_KNN_MODE="$2";
+			shift 2
+		;;
+		-testGNB)
+			TEST_GNB_FLAG=1;
+			TEST_GNB_DOMAIN="$2";
+			shift 2
+		;;
 		-clc|--clean-all)
 			CLEAN=1;
 			shift
@@ -762,6 +778,18 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                                                                             "
 	echo -e "   -knn, --run-k-nearest-neighbor-classifier \033[0;34m<K>                            \033[0m "
 	echo "                          K: Number of neighbors for the classifier          "
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
+	echo "                                                                             "
+	echo -e " \033[1;33m         T E S T    C L A S S I F I E R S    P E R F O R M A N C E    \033[0m      "
+	echo "                                                                             "
+	echo -e "   -testKNN \033[0;34m<MODE>                                                          \033[0m "
+	echo "                          Deep test the KNN Classifier                       "
+	echo "                          MODE: Test Database against Train Database (--test)"
+	echo "                                Cross-Validation (--viral, --bacteria, ...)  "
+	echo "                                                                             "
+	echo -e "   -testGNB \033[0;34m<DOMAIN>                                                        \033[0m "
+	echo "                          Deep test the GNB Classifier with Cross-Validation "
+	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
 	echo "   -clc, --clean-all      Clean all generated files (Including Results)      "
@@ -1033,4 +1061,14 @@ if [[ "$RUN_KNN" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Processing Input Sequences!"
 	./src/get_input_predictors.sh
 	./src/ref_free_analysis.sh KNN $KNN_K 0 NULL
+fi
+#
+if [[ "$TEST_KNN_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the KNN Classifier!"
+	./src/deepTest_KNN.sh $TEST_KNN_MODE
+fi
+#
+if [[ "$TEST_GNB_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the GNB Classifier with 5-Fold Cross-Validation!"
+	./src/deepTest_GNB.sh $TEST_GNB_DOMAIN
 fi
