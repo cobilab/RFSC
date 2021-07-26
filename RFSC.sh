@@ -106,6 +106,9 @@ TEST_KNN_MODE="";
 TEST_GNB_FLAG=0;
 TEST_GNB_DOMAIN="";
 #
+ACCURACY_KNN_FLAG=0;
+ACCURACY_KNN_MODE="";
+#
 #
 # ==================================================================
 # VERIFICATION FUNCTIONS
@@ -612,6 +615,11 @@ do
 			TEST_GNB_DOMAIN="$2";
 			shift 2
 		;;
+		-aKNN|--accuracy-KNN)
+			ACCURACY_KNN_FLAG=1;
+			ACCURACY_KNN_MODE="$2";
+			shift 2
+		;;
 		-clc|--clean-all)
 			CLEAN=1;
 			shift
@@ -790,6 +798,12 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo -e "   -testGNB \033[0;34m<DOMAIN>                                                        \033[0m "
 	echo "                          Deep test the GNB Classifier with Cross-Validation "
 	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
+	echo "                                                                             "
+	echo -e "   -aKNN, --accuracy-KNN \033[0;34m<MODE>                                             \033[0m "
+	echo "                          Analyse the accuracy of the KNN Classifier when    "
+	echo "                          testing it against a known dataset                 "
+	echo "                          MODE: Simple Accuracy Mean (Accuracy)              "
+	echo "                                Weighted F1-Score (F1Score)                  "
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
 	echo "   -clc, --clean-all      Clean all generated files (Including Results)      "
@@ -1072,3 +1086,9 @@ if [[ "$TEST_GNB_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the GNB Classifier with 5-Fold Cross-Validation!"
 	./src/deepTest_GNB.sh $TEST_GNB_DOMAIN
 fi
+#
+if [[ "$ACCURACY_KNN_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Analysing the KNN Classifier Accuracy using $ACCURACY_KNN_MODE!"
+	python3 Tests/accuracy_KNN.py $ACCURACY_KNN_MODE
+fi
+#
