@@ -149,56 +149,95 @@ def virusData(virus_nm_result1, virus_pt_result1, virus_nm_result3, virus_pt_res
     virusFileGC = dir_path + '/../Analysis/GCcontent/Virus/gc_content_Viral.csv'
     virusFileLN = dir_path + '/../Analysis/LengthSeq/Virus/length_Viral.csv'
 
-    numFilesNM_ForTestMin = int(len(open(virusFileNM).readlines(  )) * crossValidation_Min_Lim)
-    numFilesNM_ForTestMax = int(len(open(virusFileNM).readlines(  )) * crossValidation_Max_Lim)
-    numFilesPT_ForTestMin = int(len(open(virusFilePT).readlines(  )) * crossValidation_Min_Lim)
-    numFilesPT_ForTestMax = int(len(open(virusFilePT).readlines(  )) * crossValidation_Max_Lim)
-    numFilesGC_ForTestMin = int(len(open(virusFileGC).readlines(  )) * crossValidation_Min_Lim)
-    numFilesGC_ForTestMax = int(len(open(virusFileGC).readlines(  )) * crossValidation_Max_Lim)
-    numFilesLN_ForTestMin = int(len(open(virusFileLN).readlines(  )) * crossValidation_Min_Lim)
-    numFilesLN_ForTestMax = int(len(open(virusFileLN).readlines(  )) * crossValidation_Max_Lim)
+    if trainDatabase > 0:
+        numFilesNM = int(len(open(virusFileNM).readlines(  )) * trainDatabase)
+        numFilesPT = int(len(open(virusFilePT).readlines(  )) * trainDatabase)
+        numFilesGC = int(len(open(virusFileGC).readlines(  )) * trainDatabase)
+        numFilesLen = int(len(open(virusFileLN).readlines(  )) * trainDatabase)
+    else:
+        numFilesNM_ForTestMin = int(len(open(virusFileNM).readlines(  )) * crossValidation_Min_Lim)
+        numFilesNM_ForTestMax = int(len(open(virusFileNM).readlines(  )) * crossValidation_Max_Lim)
+        numFilesPT_ForTestMin = int(len(open(virusFilePT).readlines(  )) * crossValidation_Min_Lim)
+        numFilesPT_ForTestMax = int(len(open(virusFilePT).readlines(  )) * crossValidation_Max_Lim)
+        numFilesGC_ForTestMin = int(len(open(virusFileGC).readlines(  )) * crossValidation_Min_Lim)
+        numFilesGC_ForTestMax = int(len(open(virusFileGC).readlines(  )) * crossValidation_Max_Lim)
+        numFilesLN_ForTestMin = int(len(open(virusFileLN).readlines(  )) * crossValidation_Min_Lim)
+        numFilesLN_ForTestMax = int(len(open(virusFileLN).readlines(  )) * crossValidation_Max_Lim)
 
     # Viral CSV files
     with open('Analysis/GeCo/Virus/geco3_Viral.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
-                countNM = countNM + 1
+            if trainDatabase > 0:
+                if countNM == numFilesNM:
+                    break
+                else:
+                    virus_nm_result1.append("0"+row[0].split("\t")[L1])
+                    virus_nm_result3.append("0"+row[0].split("\t")[L3])
+                    virus_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
             else:
-                virus_nm_result1.append("0"+row[0].split("\t")[L1])
-                virus_nm_result3.append("0"+row[0].split("\t")[L3])
-                virus_nm_result7.append("0"+row[0].split("\t")[L7])
-                countNM = countNM + 1
+                if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
+                    countNM = countNM + 1
+                else:
+                    virus_nm_result1.append("0"+row[0].split("\t")[L1])
+                    virus_nm_result3.append("0"+row[0].split("\t")[L3])
+                    virus_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
 
     with open('Analysis/AC/Virus/ac2_Viral.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
-                countPT = countPT + 1
+            if trainDatabase > 0:
+                if countPT == numFilesPT:
+                    break
+                else:
+                    virus_pt_result1.append(row[0].split("\t")[L1])
+                    virus_pt_result3.append(row[0].split("\t")[L3])
+                    virus_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
             else:
-                virus_pt_result1.append(row[0].split("\t")[L1])
-                virus_pt_result3.append(row[0].split("\t")[L3])
-                virus_pt_result7.append(row[0].split("\t")[L7])
-                countPT = countPT + 1
+                if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
+                    countPT = countPT + 1
+                else:
+                    virus_pt_result1.append(row[0].split("\t")[L1])
+                    virus_pt_result3.append(row[0].split("\t")[L3])
+                    virus_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
 
     with open('Analysis/GCcontent/Virus/gc_content_Viral.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
-                countGC = countGC + 1
+            if trainDatabase > 0:
+                if countGC == numFilesGC:
+                    break
+                else:
+                    virus_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
             else:
-                virus_gc_content.append("0"+row[0].split("\t")[3])
-                countGC = countGC + 1
+                if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
+                    countGC = countGC + 1
+                else:
+                    virus_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
 
     with open('Analysis/LengthSeq/Virus/length_Viral.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
-                countLen = countLen + 1
+            if trainDatabase > 0:
+                if countLen == numFilesLen:
+                    break
+                else:
+                    virus_nm_length.append(row[0].split("\t")[1])
+                    virus_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
             else:
-                virus_nm_length.append(row[0].split("\t")[1])
-                virus_pt_length.append(row[0].split("\t")[2])
-                countLen = countLen + 1
+                if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
+                    countLen = countLen + 1
+                else:
+                    virus_nm_length.append(row[0].split("\t")[1])
+                    virus_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
 
     # Data conversion and header removal
     virus_nm_result1 = np.array(virus_nm_result1[1:], dtype=float)
@@ -222,56 +261,95 @@ def bacteriaData(bacteria_nm_result1, bacteria_pt_result1, bacteria_nm_result3, 
     bacteriaFileGC = dir_path + '/../Analysis/GCcontent/Bacteria/gc_content_Bacteria.csv'
     bacteriaFileLN = dir_path + '/../Analysis/LengthSeq/Bacteria/length_Bacteria.csv'
 
-    numFilesNM_ForTestMin = int(len(open(bacteriaFileNM).readlines(  )) * crossValidation_Min_Lim)
-    numFilesNM_ForTestMax = int(len(open(bacteriaFileNM).readlines(  )) * crossValidation_Max_Lim)
-    numFilesPT_ForTestMin = int(len(open(bacteriaFilePT).readlines(  )) * crossValidation_Min_Lim)
-    numFilesPT_ForTestMax = int(len(open(bacteriaFilePT).readlines(  )) * crossValidation_Max_Lim)
-    numFilesGC_ForTestMin = int(len(open(bacteriaFileGC).readlines(  )) * crossValidation_Min_Lim)
-    numFilesGC_ForTestMax = int(len(open(bacteriaFileGC).readlines(  )) * crossValidation_Max_Lim)
-    numFilesLN_ForTestMin = int(len(open(bacteriaFileLN).readlines(  )) * crossValidation_Min_Lim)
-    numFilesLN_ForTestMax = int(len(open(bacteriaFileLN).readlines(  )) * crossValidation_Max_Lim)
+    if trainDatabase > 0:
+        numFilesNM = int(len(open(bacteriaFileNM).readlines(  )) * trainDatabase)
+        numFilesPT = int(len(open(bacteriaFilePT).readlines(  )) * trainDatabase)
+        numFilesGC = int(len(open(bacteriaFileGC).readlines(  )) * trainDatabase)
+        numFilesLen = int(len(open(bacteriaFileLN).readlines(  )) * trainDatabase)
+    else:
+        numFilesNM_ForTestMin = int(len(open(bacteriaFileNM).readlines(  )) * crossValidation_Min_Lim)
+        numFilesNM_ForTestMax = int(len(open(bacteriaFileNM).readlines(  )) * crossValidation_Max_Lim)
+        numFilesPT_ForTestMin = int(len(open(bacteriaFilePT).readlines(  )) * crossValidation_Min_Lim)
+        numFilesPT_ForTestMax = int(len(open(bacteriaFilePT).readlines(  )) * crossValidation_Max_Lim)
+        numFilesGC_ForTestMin = int(len(open(bacteriaFileGC).readlines(  )) * crossValidation_Min_Lim)
+        numFilesGC_ForTestMax = int(len(open(bacteriaFileGC).readlines(  )) * crossValidation_Max_Lim)
+        numFilesLN_ForTestMin = int(len(open(bacteriaFileLN).readlines(  )) * crossValidation_Min_Lim)
+        numFilesLN_ForTestMax = int(len(open(bacteriaFileLN).readlines(  )) * crossValidation_Max_Lim)
 
     # Bacterias CSV files
     with open('Analysis/GeCo/Bacteria/geco3_Bacteria.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
-                countNM = countNM + 1
+            if trainDatabase > 0:
+                if countNM == numFilesNM:
+                    break
+                else:
+                    bacteria_nm_result1.append("0"+row[0].split("\t")[L1])
+                    bacteria_nm_result3.append("0"+row[0].split("\t")[L3])
+                    bacteria_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
             else:
-                bacteria_nm_result1.append("0"+row[0].split("\t")[L1])
-                bacteria_nm_result3.append("0"+row[0].split("\t")[L3])
-                bacteria_nm_result7.append("0"+row[0].split("\t")[L7])
-                countNM = countNM + 1
+                if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
+                    countNM = countNM + 1
+                else:
+                    bacteria_nm_result1.append("0"+row[0].split("\t")[L1])
+                    bacteria_nm_result3.append("0"+row[0].split("\t")[L3])
+                    bacteria_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
 
     with open('Analysis/AC/Bacteria/ac2_Bacteria.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
-                countPT = countPT + 1
+            if trainDatabase > 0:
+                if countPT == numFilesPT:
+                    break
+                else:
+                    bacteria_pt_result1.append(row[0].split("\t")[L1])
+                    bacteria_pt_result3.append(row[0].split("\t")[L3])
+                    bacteria_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
             else:
-                bacteria_pt_result1.append(row[0].split("\t")[L1])
-                bacteria_pt_result3.append(row[0].split("\t")[L3])
-                bacteria_pt_result7.append(row[0].split("\t")[L7])
-                countPT = countPT + 1
+                if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
+                    countPT = countPT + 1
+                else:
+                    bacteria_pt_result1.append(row[0].split("\t")[L1])
+                    bacteria_pt_result3.append(row[0].split("\t")[L3])
+                    bacteria_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
 
     with open('Analysis/GCcontent/Bacteria/gc_content_Bacteria.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
-                countGC = countGC + 1
+            if trainDatabase > 0:
+                if countGC == numFilesGC:
+                    break
+                else:
+                    bacteria_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
             else:
-                bacteria_gc_content.append("0"+row[0].split("\t")[3])
-                countGC = countGC + 1
+                if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
+                    countGC = countGC + 1
+                else:
+                    bacteria_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
 
     with open('Analysis/LengthSeq/Bacteria/length_Bacteria.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
-                countLen = countLen + 1
+            if trainDatabase > 0:
+                if countLen == numFilesLen:
+                    break
+                else:
+                    bacteria_nm_length.append(row[0].split("\t")[1])
+                    bacteria_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
             else:
-                bacteria_nm_length.append(row[0].split("\t")[1])
-                bacteria_pt_length.append(row[0].split("\t")[2])
-                countLen = countLen + 1
+                if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
+                    countLen = countLen + 1
+                else:
+                    bacteria_nm_length.append(row[0].split("\t")[1])
+                    bacteria_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
 
     # Data conversion and header removal
     bacteria_nm_result1 = np.array(bacteria_nm_result1[1:], dtype=float)
@@ -295,56 +373,95 @@ def archaeaData(archaea_nm_result1, archaea_pt_result1, archaea_nm_result3, arch
     archaeaFileGC = dir_path + '/../Analysis/GCcontent/Archaea/gc_content_Archaea.csv'
     archaeaFileLN = dir_path + '/../Analysis/LengthSeq/Archaea/length_Archaea.csv'
 
-    numFilesNM_ForTestMin = int(len(open(archaeaFileNM).readlines(  )) * crossValidation_Min_Lim)
-    numFilesNM_ForTestMax = int(len(open(archaeaFileNM).readlines(  )) * crossValidation_Max_Lim)
-    numFilesPT_ForTestMin = int(len(open(archaeaFilePT).readlines(  )) * crossValidation_Min_Lim)
-    numFilesPT_ForTestMax = int(len(open(archaeaFilePT).readlines(  )) * crossValidation_Max_Lim)
-    numFilesGC_ForTestMin = int(len(open(archaeaFileGC).readlines(  )) * crossValidation_Min_Lim)
-    numFilesGC_ForTestMax = int(len(open(archaeaFileGC).readlines(  )) * crossValidation_Max_Lim)
-    numFilesLN_ForTestMin = int(len(open(archaeaFileLN).readlines(  )) * crossValidation_Min_Lim)
-    numFilesLN_ForTestMax = int(len(open(archaeaFileLN).readlines(  )) * crossValidation_Max_Lim)
+    if trainDatabase > 0:
+        numFilesNM = int(len(open(archaeaFileNM).readlines(  )) * trainDatabase)
+        numFilesPT = int(len(open(archaeaFilePT).readlines(  )) * trainDatabase)
+        numFilesGC = int(len(open(archaeaFileGC).readlines(  )) * trainDatabase)
+        numFilesLen = int(len(open(archaeaFileLN).readlines(  )) * trainDatabase)
+    else:
+        numFilesNM_ForTestMin = int(len(open(archaeaFileNM).readlines(  )) * crossValidation_Min_Lim)
+        numFilesNM_ForTestMax = int(len(open(archaeaFileNM).readlines(  )) * crossValidation_Max_Lim)
+        numFilesPT_ForTestMin = int(len(open(archaeaFilePT).readlines(  )) * crossValidation_Min_Lim)
+        numFilesPT_ForTestMax = int(len(open(archaeaFilePT).readlines(  )) * crossValidation_Max_Lim)
+        numFilesGC_ForTestMin = int(len(open(archaeaFileGC).readlines(  )) * crossValidation_Min_Lim)
+        numFilesGC_ForTestMax = int(len(open(archaeaFileGC).readlines(  )) * crossValidation_Max_Lim)
+        numFilesLN_ForTestMin = int(len(open(archaeaFileLN).readlines(  )) * crossValidation_Min_Lim)
+        numFilesLN_ForTestMax = int(len(open(archaeaFileLN).readlines(  )) * crossValidation_Max_Lim)
 
     # Archaeas CSV files
     with open('Analysis/GeCo/Archaea/geco3_Archaea.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
-                countNM = countNM + 1
+            if trainDatabase > 0:
+                if countNM == numFilesNM:
+                    break
+                else:
+                    archaea_nm_result1.append("0"+row[0].split("\t")[L1])
+                    archaea_nm_result3.append("0"+row[0].split("\t")[L3])
+                    archaea_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
             else:
-                archaea_nm_result1.append("0"+row[0].split("\t")[L1])
-                archaea_nm_result3.append("0"+row[0].split("\t")[L3])
-                archaea_nm_result7.append("0"+row[0].split("\t")[L7])
-                countNM = countNM + 1
+                if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
+                    countNM = countNM + 1
+                else:
+                    archaea_nm_result1.append("0"+row[0].split("\t")[L1])
+                    archaea_nm_result3.append("0"+row[0].split("\t")[L3])
+                    archaea_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
 
     with open('Analysis/AC/Archaea/ac2_Archaea.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
-                countPT = countPT + 1
+            if trainDatabase > 0:
+                if countPT == numFilesPT:
+                    break
+                else:
+                    archaea_pt_result1.append(row[0].split("\t")[L1])
+                    archaea_pt_result3.append(row[0].split("\t")[L3])
+                    archaea_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
             else:
-                archaea_pt_result1.append(row[0].split("\t")[L1])
-                archaea_pt_result3.append(row[0].split("\t")[L3])
-                archaea_pt_result7.append(row[0].split("\t")[L7])
-                countPT = countPT + 1
+                if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
+                    countPT = countPT + 1
+                else:
+                    archaea_pt_result1.append(row[0].split("\t")[L1])
+                    archaea_pt_result3.append(row[0].split("\t")[L3])
+                    archaea_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
 
     with open('Analysis/GCcontent/Archaea/gc_content_Archaea.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
-                countGC = countGC + 1
+            if trainDatabase > 0:
+                if countGC == numFilesGC:
+                    break
+                else:
+                    archaea_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
             else:
-                archaea_gc_content.append("0"+row[0].split("\t")[3])
-                countGC = countGC + 1
+                if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
+                    countGC = countGC + 1
+                else:
+                    archaea_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
 
     with open('Analysis/LengthSeq/Archaea/length_Archaea.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
-                countLen = countLen + 1
+            if trainDatabase > 0:
+                if countLen == numFilesLen:
+                    break
+                else:
+                    archaea_nm_length.append(row[0].split("\t")[1])
+                    archaea_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
             else:
-                archaea_nm_length.append(row[0].split("\t")[1])
-                archaea_pt_length.append(row[0].split("\t")[2])
-                countLen = countLen + 1
+                if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
+                    countLen = countLen + 1
+                else:
+                    archaea_nm_length.append(row[0].split("\t")[1])
+                    archaea_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
 
     # Data conversion and header removal
     archaea_nm_result1 = np.array(archaea_nm_result1[1:], dtype=float)
@@ -364,60 +481,99 @@ def fungiData(fungi_nm_result1, fungi_pt_result1, fungi_nm_result3, fungi_pt_res
     countNM, countPT, countGC, countLen = 0, 0, 0, 0
 
     fungiFileNM = dir_path + '/../Analysis/GeCo/Fungi/geco3_Fungi.csv'
-    fungiFilePT = dir_path + '/../Analysis/AC/Fungi/ac2_Fungi.csv'
+    fungiFileNM = dir_path + '/../Analysis/AC/Fungi/ac2_Fungi.csv'
     fungiFileGC = dir_path + '/../Analysis/GCcontent/Fungi/gc_content_Fungi.csv'
     fungiFileLN = dir_path + '/../Analysis/LengthSeq/Fungi/length_Fungi.csv'
 
-    numFilesNM_ForTestMin = int(len(open(fungiFileNM).readlines(  )) * crossValidation_Min_Lim)
-    numFilesNM_ForTestMax = int(len(open(fungiFileNM).readlines(  )) * crossValidation_Max_Lim)
-    numFilesPT_ForTestMin = int(len(open(fungiFilePT).readlines(  )) * crossValidation_Min_Lim)
-    numFilesPT_ForTestMax = int(len(open(fungiFilePT).readlines(  )) * crossValidation_Max_Lim)
-    numFilesGC_ForTestMin = int(len(open(fungiFileGC).readlines(  )) * crossValidation_Min_Lim)
-    numFilesGC_ForTestMax = int(len(open(fungiFileGC).readlines(  )) * crossValidation_Max_Lim)
-    numFilesLN_ForTestMin = int(len(open(fungiFileLN).readlines(  )) * crossValidation_Min_Lim)
-    numFilesLN_ForTestMax = int(len(open(fungiFileLN).readlines(  )) * crossValidation_Max_Lim)
+    if trainDatabase > 0:
+        numFilesNM = int(len(open(fungiFileNM).readlines(  )) * trainDatabase)
+        numFilesPT = int(len(open(fungiFileNM).readlines(  )) * trainDatabase)
+        numFilesGC = int(len(open(fungiFileGC).readlines(  )) * trainDatabase)
+        numFilesLen = int(len(open(fungiFileLN).readlines(  )) * trainDatabase)
+    else:
+        numFilesNM_ForTestMin = int(len(open(fungiFileNM).readlines(  )) * crossValidation_Min_Lim)
+        numFilesNM_ForTestMax = int(len(open(fungiFileNM).readlines(  )) * crossValidation_Max_Lim)
+        numFilesPT_ForTestMin = int(len(open(fungiFilePT).readlines(  )) * crossValidation_Min_Lim)
+        numFilesPT_ForTestMax = int(len(open(fungiFilePT).readlines(  )) * crossValidation_Max_Lim)
+        numFilesGC_ForTestMin = int(len(open(fungiFileGC).readlines(  )) * crossValidation_Min_Lim)
+        numFilesGC_ForTestMax = int(len(open(fungiFileGC).readlines(  )) * crossValidation_Max_Lim)
+        numFilesLN_ForTestMin = int(len(open(fungiFileLN).readlines(  )) * crossValidation_Min_Lim)
+        numFilesLN_ForTestMax = int(len(open(fungiFileLN).readlines(  )) * crossValidation_Max_Lim)
 
     # Fungis CSV files
     with open('Analysis/GeCo/Fungi/geco3_Fungi.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
-                countNM = countNM + 1
+            if trainDatabase > 0:
+                if countNM == numFilesNM:
+                    break
+                else:
+                    fungi_nm_result1.append("0"+row[0].split("\t")[L1])
+                    fungi_nm_result3.append("0"+row[0].split("\t")[L3])
+                    fungi_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
             else:
-                fungi_nm_result1.append("0"+row[0].split("\t")[L1])
-                fungi_nm_result3.append("0"+row[0].split("\t")[L3])
-                fungi_nm_result7.append("0"+row[0].split("\t")[L7])
-                countNM = countNM + 1
+                if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
+                    countNM = countNM + 1
+                else:
+                    fungi_nm_result1.append("0"+row[0].split("\t")[L1])
+                    fungi_nm_result3.append("0"+row[0].split("\t")[L3])
+                    fungi_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
 
     with open('Analysis/AC/Fungi/ac2_Fungi.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
-                countPT = countPT + 1
+            if trainDatabase > 0:
+                if countPT == numFilesPT:
+                    break
+                else:
+                    fungi_pt_result1.append(row[0].split("\t")[L1])
+                    fungi_pt_result3.append(row[0].split("\t")[L3])
+                    fungi_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
             else:
-                fungi_pt_result1.append(row[0].split("\t")[L1])
-                fungi_pt_result3.append(row[0].split("\t")[L3])
-                fungi_pt_result7.append(row[0].split("\t")[L7])
-                countPT = countPT + 1
+                if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
+                    countPT = countPT + 1
+                else:
+                    fungi_pt_result1.append(row[0].split("\t")[L1])
+                    fungi_pt_result3.append(row[0].split("\t")[L3])
+                    fungi_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
 
     with open('Analysis/GCcontent/Fungi/gc_content_Fungi.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
-                countGC = countGC + 1
+            if trainDatabase > 0:
+                if countGC == numFilesGC:
+                    break
+                else:
+                    fungi_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
             else:
-                fungi_gc_content.append("0"+row[0].split("\t")[3])
-                countGC = countGC + 1
+                if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
+                    countGC = countGC + 1
+                else:
+                    fungi_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
 
     with open('Analysis/LengthSeq/Fungi/length_Fungi.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
-                countLen = countLen + 1
+            if trainDatabase > 0:
+                if countLen == numFilesLen:
+                    break
+                else:
+                    fungi_nm_length.append(row[0].split("\t")[1])
+                    fungi_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
             else:
-                fungi_nm_length.append(row[0].split("\t")[1])
-                fungi_pt_length.append(row[0].split("\t")[2])
-                countLen = countLen + 1
+                if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
+                    countLen = countLen + 1
+                else:
+                    fungi_nm_length.append(row[0].split("\t")[1])
+                    fungi_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
 
     # Data conversion and header removal
     fungi_nm_result1 = np.array(fungi_nm_result1[1:], dtype=float)
@@ -441,56 +597,95 @@ def plantData(plant_nm_result1, plant_pt_result1, plant_nm_result3, plant_pt_res
     plantFileGC = dir_path + '/../Analysis/GCcontent/Plant/gc_content_Plant.csv'
     plantFileLN = dir_path + '/../Analysis/LengthSeq/Plant/length_Plant.csv'
 
-    numFilesNM_ForTestMin = int(len(open(plantFileNM).readlines(  )) * crossValidation_Min_Lim)
-    numFilesNM_ForTestMax = int(len(open(plantFileNM).readlines(  )) * crossValidation_Max_Lim)
-    numFilesPT_ForTestMin = int(len(open(plantFilePT).readlines(  )) * crossValidation_Min_Lim)
-    numFilesPT_ForTestMax = int(len(open(plantFilePT).readlines(  )) * crossValidation_Max_Lim)
-    numFilesGC_ForTestMin = int(len(open(plantFileGC).readlines(  )) * crossValidation_Min_Lim)
-    numFilesGC_ForTestMax = int(len(open(plantFileGC).readlines(  )) * crossValidation_Max_Lim)
-    numFilesLN_ForTestMin = int(len(open(plantFileLN).readlines(  )) * crossValidation_Min_Lim)
-    numFilesLN_ForTestMax = int(len(open(plantFileLN).readlines(  )) * crossValidation_Max_Lim)
+    if trainDatabase > 0:
+        numFilesNM = int(len(open(plantFileNM).readlines(  )) * trainDatabase)
+        numFilesPT = int(len(open(plantFilePT).readlines(  )) * trainDatabase)
+        numFilesGC = int(len(open(plantFileGC).readlines(  )) * trainDatabase)
+        numFilesLen = int(len(open(plantFileLN).readlines(  )) * trainDatabase)
+    else:
+        numFilesNM_ForTestMin = int(len(open(plantFileNM).readlines(  )) * crossValidation_Min_Lim)
+        numFilesNM_ForTestMax = int(len(open(plantFileNM).readlines(  )) * crossValidation_Max_Lim)
+        numFilesPT_ForTestMin = int(len(open(plantFilePT).readlines(  )) * crossValidation_Min_Lim)
+        numFilesPT_ForTestMax = int(len(open(plantFilePT).readlines(  )) * crossValidation_Max_Lim)
+        numFilesGC_ForTestMin = int(len(open(plantFileGC).readlines(  )) * crossValidation_Min_Lim)
+        numFilesGC_ForTestMax = int(len(open(plantFileGC).readlines(  )) * crossValidation_Max_Lim)
+        numFilesLN_ForTestMin = int(len(open(plantFileLN).readlines(  )) * crossValidation_Min_Lim)
+        numFilesLN_ForTestMax = int(len(open(plantFileLN).readlines(  )) * crossValidation_Max_Lim)
 
     # Plants CSV files
     with open('Analysis/GeCo/Plant/geco3_Plant.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
-                countNM = countNM + 1
+            if trainDatabase > 0:
+                if countNM == numFilesNM:
+                    break
+                else:
+                    plant_nm_result1.append("0"+row[0].split("\t")[L1])
+                    plant_nm_result3.append("0"+row[0].split("\t")[L3])
+                    plant_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
             else:
-                plant_nm_result1.append("0"+row[0].split("\t")[L1])
-                plant_nm_result3.append("0"+row[0].split("\t")[L3])
-                plant_nm_result7.append("0"+row[0].split("\t")[L7])
-                countNM = countNM + 1
+                if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
+                    countNM = countNM + 1
+                else:
+                    plant_nm_result1.append("0"+row[0].split("\t")[L1])
+                    plant_nm_result3.append("0"+row[0].split("\t")[L3])
+                    plant_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
 
     with open('Analysis/AC/Plant/ac2_Plant.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
-                countPT = countPT + 1
+            if trainDatabase > 0:
+                if countPT == numFilesPT:
+                    break
+                else:
+                    plant_pt_result1.append(row[0].split("\t")[L1])
+                    plant_pt_result3.append(row[0].split("\t")[L3])
+                    plant_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
             else:
-                plant_pt_result1.append(row[0].split("\t")[L1])
-                plant_pt_result3.append(row[0].split("\t")[L3])
-                plant_pt_result7.append(row[0].split("\t")[L7])
-                countPT = countPT + 1
+                if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
+                    countPT = countPT + 1
+                else:
+                    plant_pt_result1.append(row[0].split("\t")[L1])
+                    plant_pt_result3.append(row[0].split("\t")[L3])
+                    plant_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
 
     with open('Analysis/GCcontent/Plant/gc_content_Plant.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
-                countGC = countGC + 1
+            if trainDatabase > 0:
+                if countGC == numFilesGC:
+                    break
+                else:
+                    plant_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
             else:
-                plant_gc_content.append("0"+row[0].split("\t")[3])
-                countGC = countGC + 1
+                if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
+                    countGC = countGC + 1
+                else:
+                    plant_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
 
     with open('Analysis/LengthSeq/Plant/length_Plant.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
-                countLen = countLen + 1
+            if trainDatabase > 0:
+                if countLen == numFilesLen:
+                    break
+                else:
+                    plant_nm_length.append(row[0].split("\t")[1])
+                    plant_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
             else:
-                plant_nm_length.append(row[0].split("\t")[1])
-                plant_pt_length.append(row[0].split("\t")[2])
-                countLen = countLen + 1
+                if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
+                    countLen = countLen + 1
+                else:
+                    plant_nm_length.append(row[0].split("\t")[1])
+                    plant_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
 
     # Data conversion and header removal
     plant_nm_result1 = np.array(plant_nm_result1[1:], dtype=float)
@@ -514,63 +709,95 @@ def protozoaData(protozoa_nm_result1, protozoa_pt_result1, protozoa_nm_result3, 
     protozoaFileGC = dir_path + '/../Analysis/GCcontent/Protozoa/gc_content_Protozoa.csv'
     protozoaFileLN = dir_path + '/../Analysis/LengthSeq/Protozoa/length_Protozoa.csv'
 
-    #numFilesNM = int(len(open(protozoaFileNM).readlines(  )) * trainDatabase)
-    #numFilesPT = int(len(open(protozoaFilePT).readlines(  )) * trainDatabase)
-    #numFilesGC = int(len(open(protozoaFileGC).readlines(  )) * trainDatabase)
-
-    numFilesNM_ForTestMin = int(len(open(protozoaFileNM).readlines(  )) * crossValidation_Min_Lim)
-    numFilesNM_ForTestMax = int(len(open(protozoaFileNM).readlines(  )) * crossValidation_Max_Lim)
-    numFilesPT_ForTestMin = int(len(open(protozoaFilePT).readlines(  )) * crossValidation_Min_Lim)
-    numFilesPT_ForTestMax = int(len(open(protozoaFilePT).readlines(  )) * crossValidation_Max_Lim)
-    numFilesGC_ForTestMin = int(len(open(protozoaFileGC).readlines(  )) * crossValidation_Min_Lim)
-    numFilesGC_ForTestMax = int(len(open(protozoaFileGC).readlines(  )) * crossValidation_Max_Lim)
-    numFilesLN_ForTestMin = int(len(open(protozoaFileLN).readlines(  )) * crossValidation_Min_Lim)
-    numFilesLN_ForTestMax = int(len(open(protozoaFileLN).readlines(  )) * crossValidation_Max_Lim)
+    if trainDatabase > 0:
+        numFilesNM = int(len(open(protozoaFileNM).readlines(  )) * trainDatabase)
+        numFilesPT = int(len(open(protozoaFilePT).readlines(  )) * trainDatabase)
+        numFilesGC = int(len(open(protozoaFileGC).readlines(  )) * trainDatabase)
+        numFilesLen = int(len(open(protozoaFileLN).readlines(  )) * trainDatabase)
+    else:
+        numFilesNM_ForTestMin = int(len(open(protozoaFileNM).readlines(  )) * crossValidation_Min_Lim)
+        numFilesNM_ForTestMax = int(len(open(protozoaFileNM).readlines(  )) * crossValidation_Max_Lim)
+        numFilesPT_ForTestMin = int(len(open(protozoaFilePT).readlines(  )) * crossValidation_Min_Lim)
+        numFilesPT_ForTestMax = int(len(open(protozoaFilePT).readlines(  )) * crossValidation_Max_Lim)
+        numFilesGC_ForTestMin = int(len(open(protozoaFileGC).readlines(  )) * crossValidation_Min_Lim)
+        numFilesGC_ForTestMax = int(len(open(protozoaFileGC).readlines(  )) * crossValidation_Max_Lim)
+        numFilesLN_ForTestMin = int(len(open(protozoaFileLN).readlines(  )) * crossValidation_Min_Lim)
+        numFilesLN_ForTestMax = int(len(open(protozoaFileLN).readlines(  )) * crossValidation_Max_Lim)
 
     # Protozoa CSV files
     with open('Analysis/GeCo/Protozoa/geco3_Protozoa.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            #if countNM == numFilesNM:
-            if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
-                countNM = countNM + 1
+            if trainDatabase > 0:
+                if countNM == numFilesNM:
+                    break
+                else:
+                    protozoa_nm_result1.append("0"+row[0].split("\t")[L1])
+                    protozoa_nm_result3.append("0"+row[0].split("\t")[L3])
+                    protozoa_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
             else:
-                protozoa_nm_result1.append("0"+row[0].split("\t")[L1])
-                protozoa_nm_result3.append("0"+row[0].split("\t")[L3])
-                protozoa_nm_result7.append("0"+row[0].split("\t")[L7])
-                countNM = countNM + 1
+                if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
+                    countNM = countNM + 1
+                else:
+                    protozoa_nm_result1.append("0"+row[0].split("\t")[L1])
+                    protozoa_nm_result3.append("0"+row[0].split("\t")[L3])
+                    protozoa_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
 
     with open('Analysis/AC/Protozoa/ac2_Protozoa.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            #if countPT == numFilesPT:
-            if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
-                countPT = countPT + 1
+            if trainDatabase > 0:
+                if countPT == numFilesPT:
+                    break
+                else:
+                    protozoa_pt_result1.append(row[0].split("\t")[L1])
+                    protozoa_pt_result3.append(row[0].split("\t")[L3])
+                    protozoa_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
             else:
-                protozoa_pt_result1.append(row[0].split("\t")[L1])
-                protozoa_pt_result3.append(row[0].split("\t")[L3])
-                protozoa_pt_result7.append(row[0].split("\t")[L7])
-                countPT = countPT + 1
+                if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
+                    countPT = countPT + 1
+                else:
+                    protozoa_pt_result1.append(row[0].split("\t")[L1])
+                    protozoa_pt_result3.append(row[0].split("\t")[L3])
+                    protozoa_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
 
     with open('Analysis/GCcontent/Protozoa/gc_content_Protozoa.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            #if countGC == numFilesGC:
-            if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
-                countGC = countGC + 1
+            if trainDatabase > 0:
+                if countGC == numFilesGC:
+                    break
+                else:
+                    protozoa_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
             else:
-                protozoa_gc_content.append("0"+row[0].split("\t")[3])
-                countGC = countGC + 1
+                if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
+                    countGC = countGC + 1
+                else:
+                    protozoa_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
 
     with open('Analysis/LengthSeq/Protozoa/length_Protozoa.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
-                countLen = countLen + 1
+            if trainDatabase > 0:
+                if countLen == numFilesLen:
+                    break
+                else:
+                    protozoa_nm_length.append(row[0].split("\t")[1])
+                    protozoa_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
             else:
-                protozoa_nm_length.append(row[0].split("\t")[1])
-                protozoa_pt_length.append(row[0].split("\t")[2])
-                countLen = countLen + 1
+                if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
+                    countLen = countLen + 1
+                else:
+                    protozoa_nm_length.append(row[0].split("\t")[1])
+                    protozoa_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
 
     # Data conversion and header removal
     protozoa_nm_result1 = np.array(protozoa_nm_result1[1:], dtype=float)
@@ -594,56 +821,95 @@ def mitoData(mito_nm_result1, mito_pt_result1, mito_nm_result3, mito_pt_result3,
     mitoFileGC = dir_path + '/../Analysis/GCcontent/Mitochondrial/gc_content_Mitochondrial.csv'
     mitoFileLN = dir_path + '/../Analysis/LengthSeq/Mitochondrial/length_Mitochondrial.csv'
 
-    numFilesNM_ForTestMin = int(len(open(mitoFileNM).readlines(  )) * crossValidation_Min_Lim)
-    numFilesNM_ForTestMax = int(len(open(mitoFileNM).readlines(  )) * crossValidation_Max_Lim)
-    numFilesPT_ForTestMin = int(len(open(mitoFilePT).readlines(  )) * crossValidation_Min_Lim)
-    numFilesPT_ForTestMax = int(len(open(mitoFilePT).readlines(  )) * crossValidation_Max_Lim)
-    numFilesGC_ForTestMin = int(len(open(mitoFileGC).readlines(  )) * crossValidation_Min_Lim)
-    numFilesGC_ForTestMax = int(len(open(mitoFileGC).readlines(  )) * crossValidation_Max_Lim)
-    numFilesLN_ForTestMin = int(len(open(mitoFileLN).readlines(  )) * crossValidation_Min_Lim)
-    numFilesLN_ForTestMax = int(len(open(mitoFileLN).readlines(  )) * crossValidation_Max_Lim)
+    if trainDatabase > 0:
+        numFilesNM = int(len(open(mitoFileNM).readlines(  )) * trainDatabase)
+        numFilesPT = int(len(open(mitoFilePT).readlines(  )) * trainDatabase)
+        numFilesGC = int(len(open(mitoFileGC).readlines(  )) * trainDatabase)
+        numFilesLen = int(len(open(mitoFileLN).readlines(  )) * trainDatabase)
+    else:
+        numFilesNM_ForTestMin = int(len(open(mitoFileNM).readlines(  )) * crossValidation_Min_Lim)
+        numFilesNM_ForTestMax = int(len(open(mitoFileNM).readlines(  )) * crossValidation_Max_Lim)
+        numFilesPT_ForTestMin = int(len(open(mitoFilePT).readlines(  )) * crossValidation_Min_Lim)
+        numFilesPT_ForTestMax = int(len(open(mitoFilePT).readlines(  )) * crossValidation_Max_Lim)
+        numFilesGC_ForTestMin = int(len(open(mitoFileGC).readlines(  )) * crossValidation_Min_Lim)
+        numFilesGC_ForTestMax = int(len(open(mitoFileGC).readlines(  )) * crossValidation_Max_Lim)
+        numFilesLN_ForTestMin = int(len(open(mitoFileLN).readlines(  )) * crossValidation_Min_Lim)
+        numFilesLN_ForTestMax = int(len(open(mitoFileLN).readlines(  )) * crossValidation_Max_Lim)
 
     # Mitochondrial CSV files
     with open('Analysis/GeCo/Mitochondrial/geco3_Mitochondrial.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
-                countNM = countNM + 1
+            if trainDatabase > 0:
+                if countNM == numFilesNM:
+                    break
+                else:
+                    mito_nm_result1.append("0"+row[0].split("\t")[L1])
+                    mito_nm_result3.append("0"+row[0].split("\t")[L3])
+                    mito_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
             else:
-                mito_nm_result1.append("0"+row[0].split("\t")[L1])
-                mito_nm_result3.append("0"+row[0].split("\t")[L3])
-                mito_nm_result7.append("0"+row[0].split("\t")[L7])
-                countNM = countNM + 1
+                if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
+                    countNM = countNM + 1
+                else:
+                    mito_nm_result1.append("0"+row[0].split("\t")[L1])
+                    mito_nm_result3.append("0"+row[0].split("\t")[L3])
+                    mito_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
 
     with open('Analysis/AC/Mitochondrial/ac2_Mitochondrial.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
-                countPT = countPT + 1
+            if trainDatabase > 0:
+                if countPT == numFilesPT:
+                    break
+                else:
+                    mito_pt_result1.append(row[0].split("\t")[L1])
+                    mito_pt_result3.append(row[0].split("\t")[L3])
+                    mito_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
             else:
-                mito_pt_result1.append(row[0].split("\t")[L1])
-                mito_pt_result3.append(row[0].split("\t")[L3])
-                mito_pt_result7.append(row[0].split("\t")[L7])
-                countPT = countPT + 1
+                if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
+                    countPT = countPT + 1
+                else:
+                    mito_pt_result1.append(row[0].split("\t")[L1])
+                    mito_pt_result3.append(row[0].split("\t")[L3])
+                    mito_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
 
     with open('Analysis/GCcontent/Mitochondrial/gc_content_Mitochondrial.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
-                countGC = countGC + 1
+            if trainDatabase > 0:
+                if countGC == numFilesGC:
+                    break
+                else:
+                    mito_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
             else:
-                mito_gc_content.append("0"+row[0].split("\t")[3])
-                countGC = countGC + 1
+                if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
+                    countGC = countGC + 1
+                else:
+                    mito_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
 
     with open('Analysis/LengthSeq/Mitochondrial/length_Mitochondrial.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
-                countLen = countLen + 1
+            if trainDatabase > 0:
+                if countLen == numFilesLen:
+                    break
+                else:
+                    mito_nm_length.append(row[0].split("\t")[1])
+                    mito_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
             else:
-                mito_nm_length.append(row[0].split("\t")[1])
-                mito_pt_length.append(row[0].split("\t")[2])
-                countLen = countLen + 1
+                if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
+                    countLen = countLen + 1
+                else:
+                    mito_nm_length.append(row[0].split("\t")[1])
+                    mito_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
 
     # Data conversion and header removal
     mito_nm_result1 = np.array(mito_nm_result1[1:], dtype=float)
@@ -667,56 +933,95 @@ def plastidData(plastid_nm_result1, plastid_pt_result1, plastid_nm_result3, plas
     plastidFileGC = dir_path + '/../Analysis/GCcontent/Plastid/gc_content_Plastid.csv'
     plastidFileLN = dir_path + '/../Analysis/LengthSeq/Plastid/length_Plastid.csv'
 
-    numFilesNM_ForTestMin = int(len(open(plastidFileNM).readlines(  )) * crossValidation_Min_Lim)
-    numFilesNM_ForTestMax = int(len(open(plastidFileNM).readlines(  )) * crossValidation_Max_Lim)
-    numFilesPT_ForTestMin = int(len(open(plastidFilePT).readlines(  )) * crossValidation_Min_Lim)
-    numFilesPT_ForTestMax = int(len(open(plastidFilePT).readlines(  )) * crossValidation_Max_Lim)
-    numFilesGC_ForTestMin = int(len(open(plastidFileGC).readlines(  )) * crossValidation_Min_Lim)
-    numFilesGC_ForTestMax = int(len(open(plastidFileGC).readlines(  )) * crossValidation_Max_Lim)
-    numFilesLN_ForTestMin = int(len(open(plastidFileLN).readlines(  )) * crossValidation_Min_Lim)
-    numFilesLN_ForTestMax = int(len(open(plastidFileLN).readlines(  )) * crossValidation_Max_Lim)
+    if trainDatabase > 0:
+        numFilesNM = int(len(open(plastidFileNM).readlines(  )) * trainDatabase)
+        numFilesPT = int(len(open(plastidFilePT).readlines(  )) * trainDatabase)
+        numFilesGC = int(len(open(plastidFileGC).readlines(  )) * trainDatabase)
+        numFilesLen = int(len(open(plastidFileLN).readlines(  )) * trainDatabase)
+    else:
+        numFilesNM_ForTestMin = int(len(open(plastidFileNM).readlines(  )) * crossValidation_Min_Lim)
+        numFilesNM_ForTestMax = int(len(open(plastidFileNM).readlines(  )) * crossValidation_Max_Lim)
+        numFilesPT_ForTestMin = int(len(open(plastidFilePT).readlines(  )) * crossValidation_Min_Lim)
+        numFilesPT_ForTestMax = int(len(open(plastidFilePT).readlines(  )) * crossValidation_Max_Lim)
+        numFilesGC_ForTestMin = int(len(open(plastidFileGC).readlines(  )) * crossValidation_Min_Lim)
+        numFilesGC_ForTestMax = int(len(open(plastidFileGC).readlines(  )) * crossValidation_Max_Lim)
+        numFilesLN_ForTestMin = int(len(open(plastidFileLN).readlines(  )) * crossValidation_Min_Lim)
+        numFilesLN_ForTestMax = int(len(open(plastidFileLN).readlines(  )) * crossValidation_Max_Lim)
 
     # Plastid CSV files
     with open('Analysis/GeCo/Plastid/geco3_Plastid.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
-                countNM = countNM + 1
+            if trainDatabase > 0:
+                if countNM == numFilesNM:
+                    break
+                else:
+                    plastid_nm_result1.append("0"+row[0].split("\t")[L1])
+                    plastid_nm_result3.append("0"+row[0].split("\t")[L3])
+                    plastid_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
             else:
-                plastid_nm_result1.append("0"+row[0].split("\t")[L1])
-                plastid_nm_result3.append("0"+row[0].split("\t")[L3])
-                plastid_nm_result7.append("0"+row[0].split("\t")[L7])
-                countNM = countNM + 1
+                if countNM >= numFilesNM_ForTestMin and countNM <= numFilesNM_ForTestMax:
+                    countNM = countNM + 1
+                else:
+                    plastid_nm_result1.append("0"+row[0].split("\t")[L1])
+                    plastid_nm_result3.append("0"+row[0].split("\t")[L3])
+                    plastid_nm_result7.append("0"+row[0].split("\t")[L7])
+                    countNM = countNM + 1
 
     with open('Analysis/AC/Plastid/ac2_Plastid.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
-                countPT = countPT + 1
+            if trainDatabase > 0:
+                if countPT == numFilesPT:
+                    break
+                else:
+                    plastid_pt_result1.append(row[0].split("\t")[L1])
+                    plastid_pt_result3.append(row[0].split("\t")[L3])
+                    plastid_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
             else:
-                plastid_pt_result1.append(row[0].split("\t")[L1])
-                plastid_pt_result3.append(row[0].split("\t")[L3])
-                plastid_pt_result7.append(row[0].split("\t")[L7])
-                countPT = countPT + 1
+                if countPT >= numFilesPT_ForTestMin and countPT <= numFilesPT_ForTestMax:
+                    countPT = countPT + 1
+                else:
+                    plastid_pt_result1.append(row[0].split("\t")[L1])
+                    plastid_pt_result3.append(row[0].split("\t")[L3])
+                    plastid_pt_result7.append(row[0].split("\t")[L7])
+                    countPT = countPT + 1
 
     with open('Analysis/GCcontent/Plastid/gc_content_Plastid.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
-                countGC = countGC + 1
+            if trainDatabase > 0:
+                if countGC == numFilesGC:
+                    break
+                else:
+                    plastid_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
             else:
-                plastid_gc_content.append("0"+row[0].split("\t")[3])
-                countGC = countGC + 1
+                if countGC >= numFilesGC_ForTestMin and countGC <= numFilesGC_ForTestMax:
+                    countGC = countGC + 1
+                else:
+                    plastid_gc_content.append("0"+row[0].split("\t")[3])
+                    countGC = countGC + 1
 
     with open('Analysis/LengthSeq/Plastid/length_Plastid.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
-                countLen = countLen + 1
+            if trainDatabase > 0:
+                if countLen == numFilesLen:
+                    break
+                else:
+                    plastid_nm_length.append(row[0].split("\t")[1])
+                    plastid_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
             else:
-                plastid_nm_length.append(row[0].split("\t")[1])
-                plastid_pt_length.append(row[0].split("\t")[2])
-                countLen = countLen + 1
+                if countLen >= numFilesLN_ForTestMin and countLen <= numFilesLN_ForTestMax:
+                    countLen = countLen + 1
+                else:
+                    plastid_nm_length.append(row[0].split("\t")[1])
+                    plastid_pt_length.append(row[0].split("\t")[2])
+                    countLen = countLen + 1
 
     # Data conversion and header removal
     plastid_nm_result1 = np.array(plastid_nm_result1[1:], dtype=float)
@@ -797,7 +1102,7 @@ def calcProb(p_type, likelihood_dna_1, likelihood_aa1, likelihood_dna_3, likelih
         return 0;
 
 def domainAnalysis(probabilities):
-    domains=["Virus", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
+    domains=["Viral", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
     return domains[probabilities.index(max(probabilities))]
 
 virus_nm_result1, virus_pt_result1, virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_result7, virus_gc_content, virus_nm_length, virus_pt_length = virusData(virus_nm_result1, virus_pt_result1, virus_nm_result3, virus_pt_result3, virus_nm_result7, virus_pt_result7, virus_gc_content, virus_nm_length, virus_pt_length)
