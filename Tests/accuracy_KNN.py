@@ -66,8 +66,7 @@ if Mode == "Accuracy":
   #print(Hits)
   #print(Miss)
   #print(TotalPredictions)
-  print(sum(Hits) / TotalPredictions * 100)
-  print("%.3f" % (sum(Hits) / TotalPredictions * 100))
+  print("%.3f%%" % (sum(Hits) / TotalPredictions * 100))
 
 elif Mode == "F1Score":
   Test_Domains = []
@@ -80,7 +79,7 @@ elif Mode == "F1Score":
       Train_Domains.append(prediction.rstrip('\n').split(",")[1])
 
   f1score=f1_score(Test_Domains, Train_Domains, average='weighted')
-  print("%.3f" % (f1score * 100))
+  print("%.3f%%" % (f1score * 100))
 
 else:
   print("Mode not found. Please insert a valid mode.")
