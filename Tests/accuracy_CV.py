@@ -1,7 +1,7 @@
 '''
-  Usage: python3 Tests/accuracy_CV.py CV_NBG_With_LEN Accuracy
+  Usage: python3 Tests/accuracy_CV.py GNB/CrossValidation Accuracy
          python3 Tests/accuracy_CV.py KNN/CrossValidation Accuracy
-         python3 Tests/accuracy_CV.py CV_NBG_With_LEN F1Score
+         python3 Tests/accuracy_CV.py GNB/CrossValidation F1Score
          python3 Tests/accuracy_CV.py KNN/CrossValidation F1Score
 '''
 

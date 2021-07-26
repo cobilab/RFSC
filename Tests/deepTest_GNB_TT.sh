@@ -7,9 +7,8 @@
 #
 # Run: ./Tests/deepTest.sh
 
-blocks_perc=(0 0.2 0.4 0.6 0.8 1) # Five-Fold Cross Validation (5 blocks)
-num_blocks=$(( ${#blocks_perc[@]} - 2 ))
-#
+SIZE=$1     # Percentage of the training dataset (ex: 0.8)
+
 VIRAL=0;
 BACTERIA=0;
 ARCHAEA=0;
@@ -29,9 +28,9 @@ if [ "$#" -eq 0 ];
 #
 POSITIONAL=();
 #
-while [[ $# -gt 0 ]]
+while [[ $# -gt 1 ]]
   do
-  i="$1";
+  i="$2";
   case $i in
     -h|--help)                                          HELP=1; shift  ;;
     -vi|--viral)                VIRAL=1;                HELP=0; shift  ;;
@@ -54,7 +53,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 if [[ "$HELP" -eq "1" ]]
   then
   echo "                                                                                "
-  echo "Usage: ./deepTest.sh [options]                                                  "
+  echo "Usage: ./deepTest_GNB_TT.sh <Percentage> [options]                              "
   echo "                                                                                "
   echo "Script for training and assess the level of accuracy of the classifier          "
   echo "                                                                                "
@@ -69,7 +68,7 @@ if [[ "$HELP" -eq "1" ]]
   echo "   -mi,  --mitochondrion          Run for mitochondrion DB,                     "
   echo "   -ps,  --plastid                Run for plastid DB.                           "
   echo "                                                                                "
-  echo "Example: ./deepTest.sh --viral --fungi --plant                                  "
+  echo "Example: ./deepTest_GNB_TT.sh 0.8 --viral --fungi --plant                       "
   echo "                                                                                "
   exit 1
   fi
@@ -81,6 +80,9 @@ if [[ "$HELP" -eq "1" ]]
 function VIRUS_TEST () {
     virus_files_NM=`wc -l Analysis/GeCo/Virus/geco3_Viral.csv | awk '{ print $1 }'`
 
+    training_seq=`echo $virus_files_NM*$SIZE -1 | bc`
+    training_seq=${training_seq%.*}
+
     START=1;
     STOP=$virus_files_NM;
 
@@ -89,7 +91,7 @@ function VIRUS_TEST () {
     while read line; 
     do
         GC_VALUE+=("0"`echo $line | cut -d ' ' -f4`)
-        
+
     done <Analysis/GCcontent/Virus/gc_content_Viral.csv
 
     while read line; 
@@ -97,15 +99,15 @@ function VIRUS_TEST () {
         DNA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
         DNA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
         DNA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
-        
+
     done <Analysis/GeCo/Virus/geco3_Viral.csv
 
     while read line; 
     do
-        AA_VALUE_1+=(`echo $line | cut -d ' ' -f7`)
-        AA_VALUE_3+=(`echo $line | cut -d ' ' -f9`)
-        AA_VALUE_7+=(`echo $line | cut -d ' ' -f11`)
-        
+        AA_VALUE_1+=("0"`echo $line | cut -d ' ' -f7`)
+        AA_VALUE_3+=("0"`echo $line | cut -d ' ' -f9`)
+        AA_VALUE_7+=("0"`echo $line | cut -d ' ' -f11`)
+
     done <Analysis/AC/Virus/ac2_Viral.csv
 
     while read line; 
@@ -115,22 +117,12 @@ function VIRUS_TEST () {
         
     done <Analysis/LengthSeq/Virus/length_Viral.csv
 
-    for i in $(eval echo "{0..$num_blocks}")
+    for seq in $(eval echo "{$START..$STOP}")
     do
-        training_block_min=`echo $virus_files_NM*${blocks_perc[i]} | bc`
-        training_block_min=${training_block_min%.*}
-        training_block_max=`echo $virus_files_NM*${blocks_perc[i+1]} | bc`
-        training_block_max=${training_block_max%.*}
-        
-        echo -e "\033[1;34m[RFSC]\033[0m Testing sequences from: $training_block_min - $training_block_max:"
-
-        for seq in $(eval echo "{$START..$STOP}")
-        do
-            if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
+        if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py 8 0 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/CrossValidation/Prediction_Viral_CV.txt
-            fi
-        done
+            python3 src/naiveBayes.py 8 $SIZE 0 0 ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/Test_Train_Database/Prediction_Viral.txt
+        fi
     done
 }
 #
@@ -138,6 +130,9 @@ function VIRUS_TEST () {
 #
 function BACTERIA_TEST () {
     bacteria_files_NM=`wc -l Analysis/GeCo/Bacteria/geco3_Bacteria.csv | awk '{ print $1 }'`
+
+    training_seq=`echo $bacteria_files_NM*$SIZE -1 | bc`
+    training_seq=${training_seq%.*}
 
     START=1;
     STOP=$bacteria_files_NM;
@@ -173,22 +168,12 @@ function BACTERIA_TEST () {
         
     done <Analysis/LengthSeq/Bacteria/length_Bacteria.csv
 
-    for i in $(eval echo "{0..$num_blocks}")
+    for seq in $(eval echo "{$START..$STOP}")
     do
-        training_block_min=`echo $bacteria_files_NM*${blocks_perc[i]} | bc`
-        training_block_min=${training_block_min%.*}
-        training_block_max=`echo $bacteria_files_NM*${blocks_perc[i+1]} | bc`
-        training_block_max=${training_block_max%.*}
-        
-        echo -e "\033[1;34m[RFSC]\033[0m Testing sequences from: $training_block_min - $training_block_max:"
-
-        for seq in $(eval echo "{$START..$STOP}")
-        do
-            if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
+        if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py 8 0 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/CrossValidation/Prediction_Bacteria_CV.txt
-            fi
-        done
+            python3 src/naiveBayes.py 8 $SIZE 0 0 ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/Test_Train_Database/Prediction_Bacteria.txt
+        fi
     done
 }
 #
@@ -196,6 +181,9 @@ function BACTERIA_TEST () {
 #
 function ARCHAEA_TEST () {
     archaea_files_NM=`wc -l Analysis/GeCo/Archaea/geco3_Archaea.csv | awk '{ print $1 }'`
+
+    training_seq=`echo $archaea_files_NM*$SIZE -1 | bc`
+    training_seq=${training_seq%.*}
 
     START=1;
     STOP=$archaea_files_NM;
@@ -231,22 +219,13 @@ function ARCHAEA_TEST () {
         
     done <Analysis/LengthSeq/Archaea/length_Archaea.csv
 
-    for i in $(eval echo "{0..$num_blocks}")
-    do
-        training_block_min=`echo $archaea_files_NM*${blocks_perc[i]} | bc`
-        training_block_min=${training_block_min%.*}
-        training_block_max=`echo $archaea_files_NM*${blocks_perc[i+1]} | bc`
-        training_block_max=${training_block_max%.*}
-        
-        echo -e "\033[1;34m[RFSC]\033[0m Testing sequences from: $training_block_min - $training_block_max:"
 
-        for seq in $(eval echo "{$START..$STOP}")
-        do
-            if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
+    for seq in $(eval echo "{$START..$STOP}")
+    do
+        if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py 8 0 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/CrossValidation/Prediction_Archaea_CV.txt
-            fi
-        done
+            python3 src/naiveBayes.py 8 $SIZE 0 0 ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/Test_Train_Database/Prediction_Archaea.txt
+        fi
     done
 }
 #
@@ -254,6 +233,9 @@ function ARCHAEA_TEST () {
 #
 function FUNGI_TEST () {
     fungi_files_NM=`wc -l Analysis/GeCo/Fungi/geco3_Fungi.csv | awk '{ print $1 }'`
+
+    training_seq=`echo $fungi_files_NM*$SIZE -1 | bc`
+    training_seq=${training_seq%.*}
 
     START=1;
     STOP=$fungi_files_NM;
@@ -289,22 +271,12 @@ function FUNGI_TEST () {
         
     done <Analysis/LengthSeq/Fungi/length_Fungi.csv
 
-    for i in $(eval echo "{0..$num_blocks}")
+    for seq in $(eval echo "{$START..$STOP}")
     do
-        training_block_min=`echo $fungi_files_NM*${blocks_perc[i]} | bc`
-        training_block_min=${training_block_min%.*}
-        training_block_max=`echo $fungi_files_NM*${blocks_perc[i+1]} | bc`
-        training_block_max=${training_block_max%.*}
-        
-        echo -e "\033[1;34m[RFSC]\033[0m Testing sequences from: $training_block_min - $training_block_max:"
-
-        for seq in $(eval echo "{$START..$STOP}")
-        do
-            if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
+        if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py 8 0 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/CrossValidation/Prediction_Fungi_CV.txt
-            fi
-        done
+            python3 src/naiveBayes.py 8 $SIZE 0 0 ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/Test_Train_Database/Prediction_Fungi.txt
+        fi
     done
 }
 #
@@ -312,6 +284,9 @@ function FUNGI_TEST () {
 #
 function PLANT_TEST () {
     plant_files_NM=`wc -l Analysis/GeCo/Plant/geco3_Plant.csv | awk '{ print $1 }'`
+
+    training_seq=`echo $plant_files_NM*$SIZE -1 | bc`
+    training_seq=${training_seq%.*}
 
     START=1;
     STOP=$plant_files_NM;
@@ -347,22 +322,13 @@ function PLANT_TEST () {
         
     done <Analysis/LengthSeq/Plant/length_Plant.csv
 
-    for i in $(eval echo "{0..$num_blocks}")
-    do
-        training_block_min=`echo $plant_files_NM*${blocks_perc[i]} | bc`
-        training_block_min=${training_block_min%.*}
-        training_block_max=`echo $plant_files_NM*${blocks_perc[i+1]} | bc`
-        training_block_max=${training_block_max%.*}
-        
-        echo -e "\033[1;34m[RFSC]\033[0m Testing sequences from: $training_block_min - $training_block_max:"
 
-        for seq in $(eval echo "{$START..$STOP}")
-        do
-            if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
+    for seq in $(eval echo "{$START..$STOP}")
+    do
+        if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py 8 0 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/CrossValidation/Prediction_Plant_CV.txt
-            fi
-        done
+            python3 src/naiveBayes.py 8 $SIZE 0 0 ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/Test_Train_Database/Prediction_Plant.txt
+        fi
     done
 }
 #
@@ -370,6 +336,9 @@ function PLANT_TEST () {
 #
 function PROTOZOA_TEST () {
     protozoa_files_NM=`wc -l Analysis/GeCo/Protozoa/geco3_Protozoa.csv | awk '{ print $1 }'`
+
+    training_seq=`echo $protozoa_files_NM*$SIZE -1 | bc`
+    training_seq=${training_seq%.*}
 
     START=1;
     STOP=$protozoa_files_NM;
@@ -405,22 +374,13 @@ function PROTOZOA_TEST () {
         
     done <Analysis/LengthSeq/Protozoa/length_Protozoa.csv
 
-    for i in $(eval echo "{0..$num_blocks}")
-    do
-        training_block_min=`echo $protozoa_files_NM*${blocks_perc[i]} | bc`
-        training_block_min=${training_block_min%.*}
-        training_block_max=`echo $protozoa_files_NM*${blocks_perc[i+1]} | bc`
-        training_block_max=${training_block_max%.*}
-        
-        echo -e "\033[1;34m[RFSC]\033[0m Testing sequences from: $training_block_min - $training_block_max:"
 
-        for seq in $(eval echo "{$START..$STOP}")
-        do
-            if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
+    for seq in $(eval echo "{$START..$STOP}")
+    do
+        if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py 8 0 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/CrossValidation/Prediction_Protozoa_CV.txt
-            fi
-        done
+            python3 src/naiveBayes.py 8 $SIZE 0 0 ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/Test_Train_Database/Prediction_Protozoa.txt
+        fi
     done
 }
 #
@@ -428,6 +388,9 @@ function PROTOZOA_TEST () {
 #
 function MITO_TEST () {
     mito_files_NM=`wc -l Analysis/GeCo/Mitochondrial/geco3_Mitochondrial.csv | awk '{ print $1 }'`
+
+    training_seq=`echo $mito_files_NM*$SIZE -1 | bc`
+    training_seq=${training_seq%.*}
 
     START=1;
     STOP=$mito_files_NM;
@@ -463,22 +426,13 @@ function MITO_TEST () {
         
     done <Analysis/LengthSeq/Mitochondrial/length_Mitochondrial.csv
 
-    for i in $(eval echo "{0..$num_blocks}")
-    do
-        training_block_min=`echo $mito_files_NM*${blocks_perc[i]} | bc`
-        training_block_min=${training_block_min%.*}
-        training_block_max=`echo $mito_files_NM*${blocks_perc[i+1]} | bc`
-        training_block_max=${training_block_max%.*}
-        
-        echo -e "\033[1;34m[RFSC]\033[0m Testing sequences from: $training_block_min - $training_block_max:"
 
-        for seq in $(eval echo "{$START..$STOP}")
-        do
-            if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
+    for seq in $(eval echo "{$START..$STOP}")
+    do
+        if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py 8 0 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/CrossValidation/Prediction_Mitochondrial_CV.txt
-            fi
-        done
+            python3 src/naiveBayes.py 8 $SIZE 0 0 ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/Test_Train_Database/Prediction_Mitochondrial.txt
+        fi
     done
 }
 #
@@ -486,6 +440,9 @@ function MITO_TEST () {
 #
 function PLASTID_TEST () {
     plastid_files_NM=`wc -l Analysis/GeCo/Plastid/geco3_Plastid.csv | awk '{ print $1 }'`
+
+    training_seq=`echo $plastid_files_NM*$SIZE -1 | bc`
+    training_seq=${training_seq%.*}
 
     START=1;
     STOP=$plastid_files_NM;
@@ -521,22 +478,13 @@ function PLASTID_TEST () {
         
     done <Analysis/LengthSeq/Plastid/length_Plastid.csv
 
-    for i in $(eval echo "{0..$num_blocks}")
-    do
-        training_block_min=`echo $plastid_files_NM*${blocks_perc[i]} | bc`
-        training_block_min=${training_block_min%.*}
-        training_block_max=`echo $plastid_files_NM*${blocks_perc[i+1]} | bc`
-        training_block_max=${training_block_max%.*}
-        
-        echo -e "\033[1;34m[RFSC]\033[0m Testing sequences from: $training_block_min - $training_block_max:"
 
-        for seq in $(eval echo "{$START..$STOP}")
-        do
-            if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
+    for seq in $(eval echo "{$START..$STOP}")
+    do
+        if [[ "$seq" -gt "${training_seq}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/naiveBayes.py 8 0 ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/CrossValidation/Prediction_Plastid_CV.txt
-            fi
-        done
+            python3 src/naiveBayes.py 8 $SIZE 0 0 ${DNA_VALUE_1[seq]} ${AA_VALUE_1[seq]} ${DNA_VALUE_3[seq]} ${AA_VALUE_3[seq]} ${DNA_VALUE_7[seq]} ${AA_VALUE_7[seq]} ${GC_VALUE[seq]} ${DNA_LENGTH[seq]} ${AA_LENGTH[seq]} 1111 >> Tests/Predictions/GNB/Test_Train_Database/Prediction_Plastid.txt
+        fi
     done
 }
 #
