@@ -103,8 +103,11 @@ KNN_K="";
 TEST_KNN_FLAG=0;
 TEST_KNN_MODE="";
 #
-TEST_GNB_FLAG=0;
+TEST_GNB_CV_FLAG=0;
 TEST_GNB_DOMAIN="";
+#
+TEST_GNB_FLAG=0;
+TEST_GNB_TRAIN_PERCENTAGE="";
 #
 ACCURACY_KNN_FLAG=0;
 ACCURACY_KNN_MODE="";
@@ -113,6 +116,7 @@ ACCURACY_KNN_TRAIN="";
 ACCURACY_GNB_FLAG=0;
 ACCURACY_GNB_MODE="";
 ACCURACY_GNB_TRAIN="";
+ACCURACY_GNB_TRAIN_PERC="";
 #
 #
 # ==================================================================
@@ -617,6 +621,11 @@ do
 		;;
 		-testGNB)
 			TEST_GNB_FLAG=1;
+			TEST_GNB_TRAIN_PERCENTAGE="$2";
+			shift 2
+		;;
+		-testGNB-CV|--testGNB-CrossV)
+			TEST_GNB_CV_FLAG=1;
 			TEST_GNB_DOMAIN="$2";
 			shift 2
 		;;
@@ -630,6 +639,7 @@ do
 			ACCURACY_GNB_FLAG=1;
 			ACCURACY_GNB_MODE="$2";
 			ACCURACY_GNB_TRAIN="$3";
+			ACCURACY_GNB_TRAIN_PERC="$4"
 			shift 3
 		;;
 		-clc|--clean-all)
@@ -807,7 +817,13 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          MODE: Test Database against Train Database (--test)"
 	echo "                                Cross-Validation (--viral, --bacteria, ...)  "
 	echo "                                                                             "
-	echo -e "   -testGNB \033[0;34m<DOMAIN>                                                        \033[0m "
+	echo -e "   -testGNB \033[0;34m<PERCENTAGE>                                                    \033[0m "
+	echo "                          Deep test the GNB Classifier with Test & Train Datasets "
+	echo "                          PERCENTAGE: Value between 0..1 representing the    "
+	echo "                                      percentage of the dataset reserved for "
+	echo "                                      the training                           "
+	echo "                                                                             "
+	echo -e "   -testGNB-CV, --testGNB-CrossV \033[0;34m<DOMAIN>                                   \033[0m "
 	echo "                          Deep test the GNB Classifier with Cross-Validation "
 	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
 	echo "                                                                             "
@@ -819,13 +835,15 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          T-MODE: Cross-Validation Method (CV)               "
 	echo "                                  Train-Test Database (Test)                 "
 	echo "                                                                             "
-	echo -e "   -aGNB, --accuracy-GNB \033[0;34m<AC-MODE> <T-MODE>                                 \033[0m "
+	echo -e "   -aGNB, --accuracy-GNB \033[0;34m<AC-MODE> <T-MODE> <TRAIN-PERCENTAGE>              \033[0m "
 	echo "                          Analyse the accuracy of the KNN Classifier when    "
 	echo "                          testing it against a known dataset                 "
 	echo "                          AC-MODE: Simple Accuracy Mean (Accuracy)           "
 	echo "                                   Weighted F1-Score (F1Score)               "
 	echo "                          T-MODE: Cross-Validation Method (CV)               "
 	echo "                                  Train-Test Database (Test)                 "
+	echo "                          TRAIN-PERCENTAGE: Percentage of the dataset used   "
+	echo "                                            for training purpouses           "
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
 	echo "   -clc, --clean-all      Clean all generated files (Including Results)      "
@@ -1097,6 +1115,11 @@ if [[ "$TEST_KNN_FLAG" -eq "1" ]]; then
 fi
 #
 if [[ "$TEST_GNB_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the GNB Classifier using $TEST_GNB_TRAIN_PERCENTAGE % of the dataset for training!"
+	./src/deepTest_GNB_TT.sh $TEST_GNB_TRAIN_PERCENTAGE --viral --bacteria --archaea --fungi --plant --protozoa --mitochondrion --plastid
+fi
+#
+if [[ "$TEST_GNB_CV_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the GNB Classifier with 5-Fold Cross-Validation!"
 	./src/deepTest_GNB.sh $TEST_GNB_DOMAIN
 fi
@@ -1115,9 +1138,9 @@ fi
 if [[ "$ACCURACY_GNB_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Analysing the GNB Classifier Accuracy using $ACCURACY_GNB_MODE!"
 	if [[ $ACCURACY_GNB_TRAIN == "Test" ]]; then
-		echo "Falta fazer este so"
+		python3 Tests/accuracy_GNB.py GNB/CrossValidation $ACCURACY_GNB_TRAIN_PERC $ACCURACY_GNB_MODE
 	elif [[ $ACCURACY_GNB_TRAIN == "CV" ]]; then
-		python3 Tests/accuracy_CV.py CV_NBG_With_LEN $ACCURACY_GNB_MODE
+		python3 Tests/accuracy_CV.py GNB/CrossValidation $ACCURACY_GNB_MODE
 	else
 		echo -e "\033[1;34m[RFSC]\033[0m $ACCURACY_KNN_MODE Testing mode is not recognized. Please insert a valid one!"
 	fi
