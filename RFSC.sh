@@ -899,18 +899,10 @@ fi
 # BUILD REFERENCE BACTERIAL DATABASE
 #
 if [ "$BUILD_DB_BACTERIA" -eq "1" ]; then
-	mkdir /media/alexloure/T7Touch/NCBI-Bacteria/
-	cp src/BUILD_DB.sh /media/alexloure/T7Touch/NCBI-Bacteria/
-	cd /media/alexloure/T7Touch/NCBI-Bacteria/
-
-	./BUILD_DB.sh --threads $THREADS_AVAILABLE --bacteria
-	rm BUILD_DB.sh
-
-	# Final Script
-	#cd References/NCBI-Bacteria/
-	#echo -e "\033[1;34m[RFSC]\033[0m Building bacterias database at References/NCBI-Archaea/";
-	#./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --bacteria
-	#cd ../..
+	cd References/NCBI-Bacteria/
+	echo -e "\033[1;34m[RFSC]\033[0m Building bacterias database at References/NCBI-Archaea/";
+	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --bacteria
+	cd ../..
 fi
 #
 # ======================================================================
