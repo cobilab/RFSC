@@ -46,7 +46,7 @@ if [ "$METHOD" = "GNB" ]; then
     for seq in $(eval echo "{$START..$STOP}")
     do
         echo -e "\033[1;34m[RFSC]\033[0m Analysing: ${IDENTIFIER[seq]}";
-        PREDICTION=`python3 src/naiveBayes.py $N_DOMAINS 0.8 1 1 ${GECO3_1[seq]} ${AC_1[seq]} ${GECO3_3[seq]} ${AC_3[seq]} ${GECO3_7[seq]} ${AC_7[seq]} ${GC[seq]} ${DNA_LEN[seq]} ${AA_LEN[seq]} $PREDICTOR_CODE`
+        PREDICTION=`python3 src/naiveBayes.py $N_DOMAINS 0 1 1 ${GECO3_1[seq]} ${AC_1[seq]} ${GECO3_3[seq]} ${AC_3[seq]} ${GECO3_7[seq]} ${AC_7[seq]} ${GC[seq]} ${DNA_LEN[seq]} ${AA_LEN[seq]} $PREDICTOR_CODE`
         echo "${IDENTIFIER[seq]} -> $PREDICTION" >> Results/ReferenceFree/GNB_Predictions.txt
         echo -e "\033[1;34m[RFSC]\033[0m Using Gaussian Naive Bayes classification ${IDENTIFIER[seq]} has been classified as $PREDICTION";
     done
