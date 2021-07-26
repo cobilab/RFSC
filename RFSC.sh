@@ -108,6 +108,11 @@ TEST_GNB_DOMAIN="";
 #
 ACCURACY_KNN_FLAG=0;
 ACCURACY_KNN_MODE="";
+ACCURACY_KNN_TRAIN="";
+#
+ACCURACY_GNB_FLAG=0;
+ACCURACY_GNB_MODE="";
+ACCURACY_GNB_TRAIN="";
 #
 #
 # ==================================================================
@@ -618,7 +623,14 @@ do
 		-aKNN|--accuracy-KNN)
 			ACCURACY_KNN_FLAG=1;
 			ACCURACY_KNN_MODE="$2";
-			shift 2
+			ACCURACY_KNN_TRAIN="$3";
+			shift 3
+		;;
+		-aGNB|--accuracy-GNB)
+			ACCURACY_GNB_FLAG=1;
+			ACCURACY_GNB_MODE="$2";
+			ACCURACY_GNB_TRAIN="$3";
+			shift 3
 		;;
 		-clc|--clean-all)
 			CLEAN=1;
@@ -799,11 +811,21 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          Deep test the GNB Classifier with Cross-Validation "
 	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
 	echo "                                                                             "
-	echo -e "   -aKNN, --accuracy-KNN \033[0;34m<MODE>                                             \033[0m "
+	echo -e "   -aKNN, --accuracy-KNN \033[0;34m<AC-MODE> <T-MODE>                                 \033[0m "
 	echo "                          Analyse the accuracy of the KNN Classifier when    "
 	echo "                          testing it against a known dataset                 "
-	echo "                          MODE: Simple Accuracy Mean (Accuracy)              "
-	echo "                                Weighted F1-Score (F1Score)                  "
+	echo "                          AC-MODE: Simple Accuracy Mean (Accuracy)           "
+	echo "                                   Weighted F1-Score (F1Score)               "
+	echo "                          T-MODE: Cross-Validation Method (CV)               "
+	echo "                                  Train-Test Database (Test)                 "
+	echo "                                                                             "
+	echo -e "   -aGNB, --accuracy-GNB \033[0;34m<AC-MODE> <T-MODE>                                 \033[0m "
+	echo "                          Analyse the accuracy of the KNN Classifier when    "
+	echo "                          testing it against a known dataset                 "
+	echo "                          AC-MODE: Simple Accuracy Mean (Accuracy)           "
+	echo "                                   Weighted F1-Score (F1Score)               "
+	echo "                          T-MODE: Cross-Validation Method (CV)               "
+	echo "                                  Train-Test Database (Test)                 "
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
 	echo "   -clc, --clean-all      Clean all generated files (Including Results)      "
@@ -1089,6 +1111,23 @@ fi
 #
 if [[ "$ACCURACY_KNN_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Analysing the KNN Classifier Accuracy using $ACCURACY_KNN_MODE!"
-	python3 Tests/accuracy_KNN.py $ACCURACY_KNN_MODE
+	if [[ $ACCURACY_KNN_TRAIN == "Test" ]]; then
+		python3 Tests/accuracy_KNN.py $ACCURACY_KNN_MODE
+	elif [[ $ACCURACY_KNN_TRAIN == "CV" ]]; then
+		python3 Tests/accuracy_CV.py KNN/CrossValidation $ACCURACY_KNN_MODE
+	else
+		echo -e "\033[1;34m[RFSC]\033[0m $ACCURACY_KNN_MODE Testing mode is not recognized. Please insert a valid one!"
+	fi
+fi
+#
+if [[ "$ACCURACY_GNB_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Analysing the GNB Classifier Accuracy using $ACCURACY_GNB_MODE!"
+	if [[ $ACCURACY_GNB_TRAIN == "Test" ]]; then
+		echo "Falta fazer este so"
+	elif [[ $ACCURACY_GNB_TRAIN == "CV" ]]; then
+		python3 Tests/accuracy_CV.py CV_NBG_With_LEN $ACCURACY_GNB_MODE
+	else
+		echo -e "\033[1;34m[RFSC]\033[0m $ACCURACY_KNN_MODE Testing mode is not recognized. Please insert a valid one!"
+	fi
 fi
 #
