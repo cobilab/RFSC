@@ -647,12 +647,21 @@ do
 			shift
 		;;
 		-all|--run-all)
+			CLEAN=1;
+			SET_THRESHOLD_REF_BASED=1;
+			GET_MAX_THRESHOLD_REF_BASED="70";
+			GET_MIN_THRESHOLD_REF_BASED="1";
+			SET_LEN_COV=1;
+			SET_NODE_LENGTH="100";
+			SET_NODE_COVERAGE="3";
 			TRIMMING_FLAG=1;
 			TRIMMING_TYPE="TT";
+			TRIMMING_MODE="PE";
 			ASSEMBLY_FLAG=1;
 			FALCON_FLAG=1;
 			FALCON_MODE="RM";
-			ORFFINDER_FLAG=1;
+			RUN_KNN=1;
+			KNN_K="2";
 			shift
 		;;
 		-*) # Unknown option
