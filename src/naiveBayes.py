@@ -481,7 +481,7 @@ def fungiData(fungi_nm_result1, fungi_pt_result1, fungi_nm_result3, fungi_pt_res
     countNM, countPT, countGC, countLen = 0, 0, 0, 0
 
     fungiFileNM = dir_path + '/../Analysis/GeCo/Fungi/geco3_Fungi.csv'
-    fungiFileNM = dir_path + '/../Analysis/AC/Fungi/ac2_Fungi.csv'
+    fungiFilePT = dir_path + '/../Analysis/AC/Fungi/ac2_Fungi.csv'
     fungiFileGC = dir_path + '/../Analysis/GCcontent/Fungi/gc_content_Fungi.csv'
     fungiFileLN = dir_path + '/../Analysis/LengthSeq/Fungi/length_Fungi.csv'
 
