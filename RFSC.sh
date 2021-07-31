@@ -15,6 +15,7 @@ SHOW_HELP=0;
 SHOW_VERSION=0;
 INSTALL=0;
 CLEAN=0;
+CLEAN_ALL=0;
 #
 BUILD_DB_VIRUS=0;
 BUILD_DB_BACTERIA=0;
@@ -642,8 +643,12 @@ do
 			ACCURACY_GNB_TRAIN_PERC="$4"
 			shift 3
 		;;
-		-clc|--clean-all)
+		-clc|--clean)
 			CLEAN=1;
+			shift
+		;;
+		-cla|--clean-all)
+			CLEAN_ALL=1;
 			shift
 		;;
 		-all|--run-all)
@@ -855,7 +860,9 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                                            for training purpouses           "
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
-	echo "   -clc, --clean-all      Clean all generated files (Including Results)      "
+	echo "   -clc, --clean          Clean all generated files (Including Results)      "
+	echo "                                                                             "
+	echo "   -cla, --clean-all      Clean all CSV files [DANGER!!]                     "
 	echo "                                                                             "
 	echo "   -all, --run-all        Run all the options (considering real data)        "
 	echo "                                                                             "
@@ -1073,6 +1080,15 @@ if [[ "$CLEAN" -eq "1" ]]; then
 	echo    # (optional) move to a new line
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
     	./clean.sh
+	fi
+fi
+#
+if [[ "$CLEAN_ALL" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Cleaning all CSV files..."
+	read -p "Are you sure you want to proceed? " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+    	./cleanAll.sh
 	fi
 fi
 #
