@@ -28,6 +28,13 @@ conda install -c bioconda art --yes
 #
 ./src/install_orf.sh
 #
+pip install wheel
+pip install pandas
+pip install numpy
+pip install sklearn
+pip install keras
+pip install tensorflow
+#
 Check_Installation "FALCON";
 Check_Installation "gto";
 Check_Installation "GeCo3";
