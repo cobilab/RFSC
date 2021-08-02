@@ -292,7 +292,7 @@ FALCON_SELECT_DOMAIN() {
 # FALCON ANALYSIS - SCAFFOLDS
 #
 FALCON_SO_MODE() {
-	FALCON_SELECT_DOMAIN()
+	FALCON_SELECT_DOMAIN;
 	FALCON -n $THREADS_AVAILABLE -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/$FALCON_TARGET_DOMAIN.fa
     echo -e "\033[1;34m[RFSC]\033[0m Outputs/falcon_SO_results.txt file was successfully been generated!"
 	#
@@ -315,7 +315,7 @@ FALCON_SO_MODE() {
 # FALCON ANALYSIS - EACH READS
 #
 FALCON_RM_MODE() {
-	FALCON_SELECT_DOMAIN()
+	FALCON_SELECT_DOMAIN;
 	reads=0
 	for file in GeneratedFiles/out_spades_/Nodes/*
 	do
