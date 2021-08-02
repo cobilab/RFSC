@@ -75,6 +75,30 @@ elif [ "$METHOD" = "KNN" ]; then
         echo -e "\033[1;34m[RFSC]\033[0m Using K-Nearest Neighbor classification ${IDENTIFIER[seq]} has been classified as \033[1;32m$PREDICTION\033[0m";
     done
 
+elif [ "$METHOD" = "XGB" ]; then
+    echo -e "\033[1;34m[RFSC]\033[0m Starting Xgboost Classification"
+
+    while read line; 
+    do
+        IDENTIFIER+=(`echo $line | cut -d ',' -f1`)
+        GECO3_3+=(`echo $line | cut -d ',' -f4`)
+        AC_3+=(`echo $line | cut -d ',' -f5`)
+        GC+=(`echo $line | cut -d ',' -f8`)
+        DNA_LEN+=(`echo $line | cut -d ',' -f9`)
+        AA_LEN+=(`echo $line | cut -d ',' -f10`)
+    done <Input_Data/ReferenceFree/GeneratedPredictorValues/Input_Predictors.csv
+
+    START=1;
+    STOP=$NUMBER_INPUTS;
+
+    for seq in $(eval echo "{$START..$STOP}")
+    do
+        echo -e "\033[1;34m[RFSC]\033[0m Analysing: ${IDENTIFIER[seq]}";
+        PREDICTION=`python3 src/Xgbosst.py Test 0 1 ${GECO3_3[seq]} ${AC_3[seq]} ${GC[seq]} ${DNA_LEN[seq]} ${AA_LEN[seq]} NULL`
+        echo "${IDENTIFIER[seq]} -> $PREDICTION" >> Results/ReferenceFree/XGB_Predictions.txt
+        echo -e "\033[1;34m[RFSC]\033[0m Using Xgboost classification ${IDENTIFIER[seq]} has been classified as \033[1;32m$PREDICTION\033[0m";
+    done
+
 else
-    echo -e "\033[1;34m[RFSC]\033[0m Classification Method not recognised! \n\033[1;34m[RFSC]\033[0m Please choose a method between GNB and KNN"
+    echo -e "\033[1;34m[RFSC]\033[0m Classification Method not recognised! \n\033[1;34m[RFSC]\033[0m Please choose a method between GNB, KNN and XGB"
 fi
