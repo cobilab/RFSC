@@ -43,3 +43,6 @@ rm Analysis/SVM/* &> /dev/null
 
 # Clean KNN CSV Files
 rm Analysis/KNN/* &> /dev/null
+
+# Clean Xgboost CSV Files
+rm Analysis/Xgbosst/* &> /dev/null
