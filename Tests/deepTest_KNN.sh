@@ -163,7 +163,7 @@ function VIRAL_CV () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Viral >> Tests/Predictions/KNN/Prediction_Viral_CV.txt
+            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Viral >> Tests/Predictions/KNN/CrossValidation/Prediction_Viral_CV.txt
             fi
         done
     done
@@ -220,7 +220,7 @@ function BACTERIA_CV () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Bacteria >> Tests/Predictions/KNN/Prediction_Bacteria_CV.txt
+            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Bacteria >> Tests/Predictions/KNN/CrossValidation/Prediction_Bacteria_CV.txt
             fi
         done
     done
@@ -277,7 +277,7 @@ function ARCHAEA_CV () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Archaea >> Tests/Predictions/KNN/Prediction_Archaea_CV.txt
+            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Archaea >> Tests/Predictions/KNN/CrossValidation/Prediction_Archaea_CV.txt
             fi
         done
     done
@@ -334,7 +334,7 @@ function FUNGI_CV () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Fungi >> Tests/Predictions/KNN/Prediction_Fungi_CV.txt
+            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Fungi >> Tests/Predictions/KNN/CrossValidation/Prediction_Fungi_CV.txt
             fi
         done
     done
@@ -391,7 +391,7 @@ function PLANT_CV () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Plant >> Tests/Predictions/KNN/Prediction_Plant_CV.txt
+            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Plant >> Tests/Predictions/KNN/CrossValidation/Prediction_Plant_CV.txt
             fi
         done
     done
@@ -448,7 +448,7 @@ function PROTOZOA_CV () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Protozoa >> Tests/Predictions/KNN/Prediction_Protozoa_CV.txt
+            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Protozoa >> Tests/Predictions/KNN/CrossValidation/Prediction_Protozoa_CV.txt
             fi
         done
     done
@@ -505,7 +505,7 @@ function MITO_CV () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Mitochondrial >> Tests/Predictions/KNN/Prediction_Mitochondrial_CV.txt
+            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Mitochondrial >> Tests/Predictions/KNN/CrossValidation/Prediction_Mitochondrial_CV.txt
             fi
         done
     done
@@ -562,7 +562,7 @@ function PLASTID_CV () {
         do
             if [[ "$seq" -ge "${training_block_min}" ]] && [[ "$seq" -le "${training_block_max}" ]]; then
             echo -e "\033[1;34m[RFSC]\033[0m Run: $seq";
-            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Plastid >> Tests/Predictions/KNN/Prediction_Plastid_CV.txt
+            python3 src/KNN.py CV $K ${blocks_perc[i]} ${blocks_perc[i+1]} ${DNA[seq]} ${AA[seq]} ${GC[seq]} ${L_DNA[seq]} ${L_AA[seq]} Plastid >> Tests/Predictions/KNN/CrossValidation/Prediction_Plastid_CV.txt
             fi
         done
     done
