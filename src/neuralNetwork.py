@@ -1,40 +1,78 @@
-import pandas
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.wrappers.scikit_learn import KerasClassifier
-from keras.utils import np_utils
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import KFold
-from sklearn.preprocessing import LabelEncoder
-from sklearn.pipeline import Pipeline
+from xgboost import XGBClassifier 
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report,confusion_matrix
+from xgboost import XGBClassifier
+from sklearn.metrics import f1_score 
+import csv
+import numpy as np
+
+def predict_XGBClassifier():
+    domains = ["Viral", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
+
+    X_train, y_train = [], []
+    X_test, y_test = [], []
+
+    with open('Analysis/KNN/Train.csv', 'r') as file:
+        samples = csv.reader(file)
+        next(samples)
+        for row in samples:
+            X_train.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])])
+            if row[0] == "Viral":
+                y_train.append(0)
+            elif row[0] == "Bacteria":
+                y_train.append(1)
+            elif row[0] == "Archaea":
+                y_train.append(2)
+            elif row[0] == "Fungi":
+                y_train.append(3)
+            elif row[0] == "Plant":
+                y_train.append(4)
+            elif row[0] == "Protozoa":
+                y_train.append(5)
+            elif row[0] == "Mitochondrial":
+                y_train.append(6)
+            elif row[0] == "Plastid":
+                y_train.append(7)
+
+    with open('Analysis/KNN/Test.csv', 'r') as file:
+        samples = csv.reader(file)
+        next(samples)
+        for row in samples:
+            X_test.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])])
+            if row[0] == "Viral":
+                y_test.append(0)
+            elif row[0] == "Bacteria":
+                y_test.append(1)
+            elif row[0] == "Archaea":
+                y_test.append(2)
+            elif row[0] == "Fungi":
+                y_test.append(3)
+            elif row[0] == "Plant":
+                y_test.append(4)
+            elif row[0] == "Protozoa":
+                y_test.append(5)
+            elif row[0] == "Mitochondrial":
+                y_test.append(6)
+            elif row[0] == "Plastid":
+                y_test.append(7)
+
+    X_train = np.array(X_train).astype('float32')
+    y_train = np.array(y_train).astype('int32') 
+    X_test = np.array(X_test).astype('float32')
+    y_test = np.array(y_test).astype('int32') 
+
+    model = XGBClassifier()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    predictions = [round(value) for value in y_pred]
+
+    accuracy = accuracy_score(y_test, predictions)
+    f1score=f1_score(y_test, y_pred, average='weighted')
+    print("Accuracy of : %.2f%%" % (accuracy * 100.0))
+    print("F1 score of : %.2f%%" % (f1score * 100.0))
+    print("--------------------------")
 
 
-# load dataset
-dataframe = pandas.read_csv("Analysis/KNN/Test.csv", header=0)
-dataset = dataframe.values
-X = dataset[:,1:6].astype(float)
-Y = dataset[:,0]
-
-# encode class values as integers
-encoder = LabelEncoder()
-encoder.fit(Y)
-encoded_Y = encoder.transform(Y)
-# convert integers to dummy variables (i.e. one hot encoded)
-dummy_y = np_utils.to_categorical(encoded_Y)
-
-# define baseline model
-def baseline_model():
-	# create model
-	model = Sequential()
-	model.add(Dense(8, input_dim=5, activation='relu'))
-	model.add(Dense(8, activation='softmax'))
-	# Compile model
-	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	return model
-
-estimator = KerasClassifier(build_fn=baseline_model, epochs=200, batch_size=5, verbose=0)
-kfold = KFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, dummy_y, cv=kfold)
-print("Baseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
-
-#Baseline: 72.28% (3.31%)
+if __name__ == "__main__":
+    predict_XGBClassifier()
