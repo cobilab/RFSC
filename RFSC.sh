@@ -65,6 +65,8 @@ SET_NODE_COVERAGE="";
 #
 FALCON_FLAG=0;
 FALCON_MODE="";
+FALCON_DOMAIN="";
+FALCON_TARGET_DOMAIN="DB-viral" # Default
 BLASTN_REMOTE_FLAG=0;
 #
 RUN_DECRYPT=0;
@@ -88,6 +90,10 @@ GC_CONTENT_DOMAIN="";
 LEN_SEQ_FLAG=0;
 LEN_SEQ_DOMAIN="";
 #
+EFETCH_FLAG=0;
+EFETCH_ID="";
+EFETCH_FOLDER="";
+#
 TRAIN_TEST_DATASET_FLAG=0;
 TRAIN_TEST_DATASET_PARTITION="";
 #
@@ -101,8 +107,13 @@ PREDICTORS_CODE="";
 RUN_KNN=0;
 KNN_K="";
 #
+RUN_XGB=0;
+#
 TEST_KNN_FLAG=0;
 TEST_KNN_MODE="";
+#
+TEST_XGB_FLAG=0;
+TEST_XGB_MODE="";
 #
 TEST_GNB_CV_FLAG=0;
 TEST_GNB_DOMAIN="";
@@ -113,6 +124,10 @@ TEST_GNB_TRAIN_PERCENTAGE="";
 ACCURACY_KNN_FLAG=0;
 ACCURACY_KNN_MODE="";
 ACCURACY_KNN_TRAIN="";
+#
+ACCURACY_XGB_FLAG=0;
+ACCURACY_XGB_MODE="";
+ACCURACY_XGB_TRAIN="";
 #
 ACCURACY_GNB_FLAG=0;
 ACCURACY_GNB_MODE="";
@@ -247,10 +262,38 @@ PARSE_SCAFFOLDS() {
 }
 #
 # ==================================================================
+# FALCON ANALYSIS - SELECT DOMAIN
+#
+FALCON_SELECT_DOMAIN() {
+	if [[ "$FALCON_DOMAIN" -eq "Viral" ]]; then
+		FALCON_TARGET_DOMAIN="DB-viral"
+	elif [[ "$FALCON_DOMAIN" -eq "Bacteria" ]]; then
+		FALCON_TARGET_DOMAIN="DB-bacteria"
+	elif [[ "$FALCON_DOMAIN" -eq "Archaea" ]]; then
+		FALCON_TARGET_DOMAIN="DB-archaea"
+	elif [[ "$FALCON_DOMAIN" -eq "Fungi" ]]; then
+		FALCON_TARGET_DOMAIN="DB-fungi"
+	elif [[ "$FALCON_DOMAIN" -eq "Plant" ]]; then
+		FALCON_TARGET_DOMAIN="DB-plant"
+	elif [[ "$FALCON_DOMAIN" -eq "Protozoa" ]]; then
+		FALCON_TARGET_DOMAIN="DB-protozoa"
+	elif [[ "$FALCON_DOMAIN" -eq "Mitochondrial" ]]; then
+		FALCON_TARGET_DOMAIN="DB-mitochondrion"
+	elif [[ "$FALCON_DOMAIN" -eq "Plastid" ]]; then
+		FALCON_TARGET_DOMAIN="DB-plastid"
+	else
+		echo -e "\033[1;34m[RFSC]\033[0m $FALCON_DOMAIN not recognized! Please select a valid domain from the next ones:"
+		echo -e "\033[1;34m[RFSC]\033[0m Viral | Bacteria | Archaea | Fungi | Plant | Protozoa | Mitochondrial | Plastid"
+		exit 0
+	fi
+}
+#
+# ==================================================================
 # FALCON ANALYSIS - SCAFFOLDS
 #
 FALCON_SO_MODE() {
-	FALCON -n $THREADS_AVAILABLE -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/DB-viral.fa
+	FALCON_SELECT_DOMAIN()
+	FALCON -n $THREADS_AVAILABLE -v -F -x Outputs/falcon_SO_results.txt GeneratedFiles/out_spades_/scaffolds.fasta References/NCBI-Virus/$FALCON_TARGET_DOMAIN.fa
     echo -e "\033[1;34m[RFSC]\033[0m Outputs/falcon_SO_results.txt file was successfully been generated!"
 	#
 	readarray -t results <Outputs/falcon_SO_results.txt
@@ -272,6 +315,7 @@ FALCON_SO_MODE() {
 # FALCON ANALYSIS - EACH READS
 #
 FALCON_RM_MODE() {
+	FALCON_SELECT_DOMAIN()
 	reads=0
 	for file in GeneratedFiles/out_spades_/Nodes/*
 	do
@@ -292,14 +336,14 @@ FALCON_RM_MODE() {
 			R1=${path_to_file1[3]}
 			R2=${path_to_file2[3]}
 			echo -e "\033[1;34m[RFSC]\033[0m Analysing Nodes $R1 & $R2 with $(($THREADS_AVAILABLE/2)) threads each!"
-			FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Nodes/$R1 References/NCBI-Virus/DB-viral.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Nodes/$R2 References/NCBI-Virus/DB-viral.fa
+			FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R1}"_results.txt GeneratedFiles/out_spades_/Nodes/$R1 References/NCBI-Virus/$FALCON_TARGET_DOMAIN.fa | FALCON -n $(($THREADS_AVAILABLE/2)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R2}"_results.txt GeneratedFiles/out_spades_/Nodes/$R2 References/NCBI-Virus/$FALCON_TARGET_DOMAIN.fa
 			(( i+=2 ))
 		else
 			path=${array[i]}
 			path_to_file=(${path//// })
 			R=${path_to_file[3]}
 			echo -e "\033[1;34m[RFSC]\033[0m Analysing Node $R with $(($THREADS_AVAILABLE)) threads!"
-			FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Nodes/$R References/NCBI-Virus/DB-viral.fa
+			FALCON -n $(($THREADS_AVAILABLE)) -v -F -x Outputs/FalconNodes/falcon_RM_"${R}"_results.txt GeneratedFiles/out_spades_/Nodes/$R References/NCBI-Virus/$FALCON_TARGET_DOMAIN.fa
 			(( i++ ))
 		fi 
 	done
@@ -536,7 +580,8 @@ do
 		-rfa|--run-falcon)
 			FALCON_FLAG=1;
 			FALCON_MODE="$2";
-			shift 2
+			FALCON_DOMAIN="$3"
+			shift 3
 		;;
 		-rbr|--run-blastn-remote)
 			BLASTN_REMOTE_FLAG=1;
@@ -594,6 +639,12 @@ do
 			LEN_SEQ_DOMAIN="$2";
 			shift 2
 		;;
+		-efetch|--efetch-fasta)
+			EFETCH_FLAG=1;
+			EFETCH_ID="$2";
+			EFETCH_FOLDER="$3";
+			shift 3
+		;;
 		-train-test|--train-test-dataset-csv)
 			TRAIN_TEST_DATASET_FLAG=1;
 			TRAIN_TEST_DATASET_PARTITION="$2";
@@ -615,9 +666,18 @@ do
 			KNN_K="$2";
 			shift 2
 		;;
+		-xgb|--run-xgboost)
+			RUN_XGB=1;
+			shift
+		;;
 		-testKNN)
 			TEST_KNN_FLAG=1;
 			TEST_KNN_MODE="$2";
+			shift 2
+		;;
+		-testXGB)
+			TEST_XGB_FLAG=1;
+			TEST_XGB_MODE="$2";
 			shift 2
 		;;
 		-testGNB)
@@ -634,6 +694,12 @@ do
 			ACCURACY_KNN_FLAG=1;
 			ACCURACY_KNN_MODE="$2";
 			ACCURACY_KNN_TRAIN="$3";
+			shift 3
+		;;
+		-aXGB|--accuracy-XGB)
+			ACCURACY_XGB_FLAG=1;
+			ACCURACY_XGB_MODE="$2";
+			ACCURACY_XGB_TRAIN="$3";
 			shift 3
 		;;
 		-aGNB|--accuracy-GNB)
@@ -665,6 +731,7 @@ do
 			ASSEMBLY_FLAG=1;
 			FALCON_FLAG=1;
 			FALCON_MODE="RM";
+			FALCON_DOMAIN="Viral";
 			RUN_KNN=1;
 			KNN_K="2";
 			shift
@@ -761,6 +828,10 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          choosen NCBI database                              "
 	echo "                          DOMAIN: --viral, --bacteria, --archaea, ...        "
 	echo "                                                                             "
+	echo -e "   -efetch, --efetch-fasta \033[0;34m<ID> <FOLDER>                                    \033[0m "
+	echo "                          Use entrez efetch to fetch a nucleotide using an ID"
+	echo "                          ID: Nucleotide Identifier                          "
+	echo "                          FOLDER: Destination Folder (RefBased or RefFree)   "
 	echo -e " \033[1;33m                       B U I L D    D A T A B A S E S                      \033[0m "
 	echo "                                                                             "
 	echo "   -bviral, --build-ref-virus                                                "
@@ -783,10 +854,12 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                                                                             "
 	echo -e " \033[1;33m              R E F E R E N C E   B A S E D   A P P R O A C H              \033[0m "
 	echo "                                                                             "
-	echo -e "   -rfa, --run-falcon \033[0;34m<MODE>\033[0m                                                 "
-	echo "                          Run Data Analysis with FALCON using only the       "
-	echo "                          scaffolds (SO) or analysing by each                "
+	echo -e "   -rfa, --run-falcon \033[0;34m<MODE> <DOMAIN>                                       \033[0m "
+	echo "                          Run Data Analysis with FALCON                      "
+	echo "                          MODE: Use only scaffolds (SO) or analyse by each   "
 	echo "                          Read (RM)                                          "
+	echo "                          DOMAIN: Select Domain to analyse (Viral, Bacteria) "
+	echo "                                  Archaea, Fungi, Plant, Plastid, etc.       "
 	echo "                                                                             "
 	echo "   -rbr, --run-blastn-remote                                                 "
 	echo "                          Run Data Analysus with Blast+ using remote         "
@@ -823,12 +896,19 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo -e "   -knn, --run-k-nearest-neighbor-classifier \033[0;34m<K>                            \033[0m "
 	echo "                          K: Number of neighbors for the classifier          "
 	echo "                          Recommended: K = 2                                 "
+	echo "                                                                             "
+	echo "   -xgb, --run-xgboost    Run Xgboost Classifier                             "
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
 	echo -e " \033[1;33m         T E S T    C L A S S I F I E R S    P E R F O R M A N C E    \033[0m      "
 	echo "                                                                             "
 	echo -e "   -testKNN \033[0;34m<MODE>                                                          \033[0m "
 	echo "                          Deep test the KNN Classifier                       "
+	echo "                          MODE: Test Database against Train Database (--test)"
+	echo "                                Cross-Validation (--viral, --bacteria, ...)  "
+	echo "                                                                             "
+	echo -e "   -testXGB \033[0;34m<MODE>                                                          \033[0m "
+	echo "                          Deep test the XGBoost Classifier                   "
 	echo "                          MODE: Test Database against Train Database (--test)"
 	echo "                                Cross-Validation (--viral, --bacteria, ...)  "
 	echo "                                                                             "
@@ -850,6 +930,14 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          T-MODE: Cross-Validation Method (CV)               "
 	echo "                                  Train-Test Database (Test)                 "
 	echo "                                                                             "
+	echo -e "   -aXGB, --accuracy-XGB \033[0;34m<AC-MODE> <T-MODE>                                 \033[0m "
+	echo "                          Analyse the accuracy of the XGB Classifier when    "
+	echo "                          testing it against a known dataset                 "
+	echo "                          AC-MODE: Simple Accuracy Mean (Accuracy)           "
+	echo "                                   Weighted F1-Score (F1Score)               "
+	echo "                          T-MODE: Cross-Validation Method (CV)               "
+	echo "                                  Train-Test Database (Test)                 "
+	echo "                                                                             "
 	echo -e "   -aGNB, --accuracy-GNB \033[0;34m<AC-MODE> <T-MODE> <TRAIN-PERCENTAGE>              \033[0m "
 	echo "                          Analyse the accuracy of the KNN Classifier when    "
 	echo "                          testing it against a known dataset                 "
@@ -863,7 +951,7 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                                                                             "
 	echo "   -clc, --clean          Clean all generated files (Including Results)      "
 	echo "                                                                             "
-	echo -e "   -cla, --clean-all      Clean all CSV files  \033[1;31m[!!DANGER!!]                 \033[0m "
+	echo -e "   -cla, --clean-all     \033[1;31m[!!DANGER!!]\033[0m Clean all CSV files \033[1;31m[!!DANGER!!]                 \033[0m "
 	echo "                                                                             "
 	echo "   -all, --run-all        Run all the options (considering real data)        "
 	echo "                                                                             "
@@ -937,6 +1025,7 @@ if [ "$BUILD_DB_BACTERIA" -eq "1" ]; then
 	cd References/NCBI-Bacteria/
 	echo -e "\033[1;34m[RFSC]\033[0m Building bacterias database at References/NCBI-Archaea/";
 	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --bacteria
+	gunzip DB-bacteria.fa.gz
 	cd ../..
 fi
 #
@@ -1113,6 +1202,23 @@ if [[ "$LEN_SEQ_FLAG" -eq "1" ]]; then
 	./src/length_DB_analysis.sh $LEN_SEQ_DOMAIN
 fi
 #
+if [[ "$EFETCH_FLAG" -eq "1" ]]; then
+	if [[ "$EFETCH_FOLDER" -eq "RefBased" ]]; then
+		cd Input_Data/ReferenceBased
+		efetch -db nucleotide -format fasta -id "$EFETCH_ID" > $EFETCH_ID.fa
+		cd ../..
+		echo -e "\033[1;34m[RFSC]\033[0m $EFETCH_ID.fa was placed in the $EFETCH_FOLDER folder."
+	elif [[ "$EFETCH_FOLDER" -eq "RefFree" ]]; then
+		cd Input_Data/ReferenceFree
+		efetch -db nucleotide -format fasta -id "$EFETCH_ID" > $EFETCH_ID.fa
+		cd ../..
+		echo -e "\033[1;34m[RFSC]\033[0m $EFETCH_ID.fa was placed in the $EFETCH_FOLDER folder."
+	else
+		echo -e "\033[1;34m[RFSC]\033[0m Folder not recognized! Please insert a RefBased or RefFree Folder."
+		exit 0
+	fi
+fi
+#
 if [[ "$TRAIN_TEST_DATASET_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Generating the Train and Test Dataset"
 	./src/train_test_dataset_generator.sh $TRAIN_TEST_DATASET_PARTITION
@@ -1124,20 +1230,43 @@ if [[ "$LIMIT_SAMPLES_DATASET_FLAG" -eq "1" ]]; then
 fi
 #
 if [[ "$RUN_GNB" -eq "1" ]]; then
+	if [[ -f "Input_Data/ReferenceFree/GeneratedPredictorValues/Input_Predictors.csv" ]]; then
+        echo -e "\033[1;34m[RFSC]\033[0m Removing Previous Input Sequences CSV Analysis"
+		rm Input_Data/ReferenceFree/GeneratedPredictorValues/Input_Predictors.csv
+    fi
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Processing Input Sequences"
 	./src/get_input_predictors.sh
 	./src/ref_free_analysis.sh GNB 0 $NUM_DOMAINS $PREDICTORS_CODE
 fi
 #
 if [[ "$RUN_KNN" -eq "1" ]]; then
+	if [[ -f "Input_Data/ReferenceFree/GeneratedPredictorValues/Input_Predictors.csv" ]]; then
+        echo -e "\033[1;34m[RFSC]\033[0m Removing Previous Input Sequences CSV Analysis"
+		rm Input_Data/ReferenceFree/GeneratedPredictorValues/Input_Predictors.csv
+    fi
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Processing Input Sequences!"
 	./src/get_input_predictors.sh
 	./src/ref_free_analysis.sh KNN $KNN_K 0 NULL
 fi
 #
+if [[ "$RUN_XGB" -eq "1" ]]; then
+	if [[ -f "Input_Data/ReferenceFree/GeneratedPredictorValues/Input_Predictors.csv" ]]; then
+        echo -e "\033[1;34m[RFSC]\033[0m Removing Previous Input Sequences CSV Analysis"
+		rm Input_Data/ReferenceFree/GeneratedPredictorValues/Input_Predictors.csv
+    fi
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Processing Input Sequences!"
+	./src/get_input_predictors.sh
+	./src/ref_free_analysis.sh XGB 0 0 NULL
+fi
+#
 if [[ "$TEST_KNN_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the KNN Classifier!"
 	./src/deepTest_KNN.sh $TEST_KNN_MODE
+fi
+#
+if [[ "$TEST_XGB_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the KNN Classifier!"
+	./src/deepTest_Xgbosst.sh $TEST_XGB_MODE
 fi
 #
 if [[ "$TEST_GNB_FLAG" -eq "1" ]]; then
@@ -1158,6 +1287,19 @@ if [[ "$ACCURACY_KNN_FLAG" -eq "1" ]]; then
 		python3 Tests/accuracy_CV.py KNN/CrossValidation $ACCURACY_KNN_MODE
 	else
 		echo -e "\033[1;34m[RFSC]\033[0m $ACCURACY_KNN_MODE Testing mode is not recognized. Please insert a valid one!"
+		exit 0
+	fi
+fi
+#
+if [[ "$ACCURACY_XGB_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Starting Analysing the XGB Classifier Accuracy using $ACCURACY_XGB_MODE!"
+	if [[ $ACCURACY_XGB_TRAIN == "Test" ]]; then
+		python3 Tests/accuracy_Xgbosst.py $ACCURACY_XGB_MODE
+	elif [[ $ACCURACY_XGB_TRAIN == "CV" ]]; then
+		python3 Tests/accuracy_CV.py Xgbosst/CrossValidation $ACCURACY_XGB_MODE
+	else
+		echo -e "\033[1;34m[RFSC]\033[0m $ACCURACY_XGB_MODE Testing mode is not recognized. Please insert a valid one!"
+		exit 0
 	fi
 fi
 #
@@ -1169,6 +1311,7 @@ if [[ "$ACCURACY_GNB_FLAG" -eq "1" ]]; then
 		python3 Tests/accuracy_CV.py GNB/CrossValidation $ACCURACY_GNB_MODE
 	else
 		echo -e "\033[1;34m[RFSC]\033[0m $ACCURACY_KNN_MODE Testing mode is not recognized. Please insert a valid one!"
+		exit 0
 	fi
 fi
 #
