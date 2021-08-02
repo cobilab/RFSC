@@ -48,7 +48,7 @@ if [ "$METHOD" = "GNB" ]; then
         echo -e "\033[1;34m[RFSC]\033[0m Analysing: ${IDENTIFIER[seq]}";
         PREDICTION=`python3 src/naiveBayes.py $N_DOMAINS 0 1 1 ${GECO3_1[seq]} ${AC_1[seq]} ${GECO3_3[seq]} ${AC_3[seq]} ${GECO3_7[seq]} ${AC_7[seq]} ${GC[seq]} ${DNA_LEN[seq]} ${AA_LEN[seq]} $PREDICTOR_CODE`
         echo "${IDENTIFIER[seq]} -> $PREDICTION" >> Results/ReferenceFree/GNB_Predictions.txt
-        echo -e "\033[1;34m[RFSC]\033[0m Using Gaussian Naive Bayes classification ${IDENTIFIER[seq]} has been classified as $PREDICTION";
+        echo -e "\033[1;34m[RFSC]\033[0m Using Gaussian Naive Bayes classification ${IDENTIFIER[seq]} has been classified as \033[1;32m$PREDICTION\033[0m";
     done
 
 elif [ "$METHOD" = "KNN" ]; then
@@ -72,7 +72,7 @@ elif [ "$METHOD" = "KNN" ]; then
         echo -e "\033[1;34m[RFSC]\033[0m Analysing: ${IDENTIFIER[seq]}";
         PREDICTION=`python3 src/KNN.py Test $K 0 1 ${GECO3_3[seq]} ${AC_3[seq]} ${GC[seq]} ${DNA_LEN[seq]} ${AA_LEN[seq]} NULL`
         echo "${IDENTIFIER[seq]} -> $PREDICTION" >> Results/ReferenceFree/KNN_Predictions.txt
-        echo -e "\033[1;34m[RFSC]\033[0m Using K-Nearest Neighbor classification ${IDENTIFIER[seq]} has been classified as $PREDICTION";
+        echo -e "\033[1;34m[RFSC]\033[0m Using K-Nearest Neighbor classification ${IDENTIFIER[seq]} has been classified as \033[1;32m$PREDICTION\033[0m";
     done
 
 else
