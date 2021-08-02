@@ -34,6 +34,7 @@ pip install numpy
 pip install sklearn
 pip install keras
 pip install tensorflow
+pip instal xgboost
 #
 Check_Installation "FALCON";
 Check_Installation "gto";
