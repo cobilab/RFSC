@@ -127,14 +127,14 @@ def generateHist_GC():
     mito_xmin, mito_xmax = plt.xlim()
     x_mito = np.linspace(mito_xmin, mito_xmax, 100)
     p_mito_gc = norm.pdf(x_mito, mu_mito_gc, std_mito_gc)
-    ax6.set_title("Protozoa GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_mito_gc, std_mito_gc))
+    ax6.set_title("Mito GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_mito_gc, std_mito_gc))
     ax6.plot(x_mito, p_mito_gc, 'k', linewidth=2)
 
     ax7.hist(plastid_gc_content, bins=25, density=True, alpha=0.6, color='g')
     plastid_xmin, plastid_xmax = plt.xlim()
     x_plastid = np.linspace(plastid_xmin, plastid_xmax, 100)
     p_plastid_gc = norm.pdf(x_plastid, mu_plastid_gc, std_plastid_gc)
-    ax7.set_title("Protozoa GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_plastid_gc, std_plastid_gc))
+    ax7.set_title("Plastid GC-Content: ")#\u03BC=%.2f,  \u03C3=%.2f" % (mu_plastid_gc, std_plastid_gc))
     ax7.plot(x_plastid, p_plastid_gc, 'k', linewidth=2)
 
     fig.tight_layout()
