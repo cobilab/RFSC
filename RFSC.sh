@@ -265,49 +265,49 @@ PARSE_SCAFFOLDS() {
 # FALCON ANALYSIS - SELECT DOMAIN
 #
 FALCON_SELECT_DOMAIN() {
-	if [[ "$FALCON_DOMAIN" -eq "Viral" ]]; then
+	if [[ "$FALCON_DOMAIN" == "Viral" ]]; then
 		FALCON_TARGET_DOMAIN="DB-viral"
 		if [[ ! -f "References/NCBI-Virus/DB-viral.fa" ]]; then
         	echo -e "\033[1;34m[RFSC]\033[0m DB-viral.fa was not found! Aborting..."
 			exit 0
     	fi
-	elif [[ "$FALCON_DOMAIN" -eq "Bacteria" ]]; then
+	elif [[ "$FALCON_DOMAIN" == "Bacteria" ]]; then
 		FALCON_TARGET_DOMAIN="DB-bacteria"
 		if [[ ! -f "References/NCBI-Bacteria/DB-bacteria.fa" ]]; then
         	echo -e "\033[1;34m[RFSC]\033[0m DB-bacteria.fa was not found! Aborting..."
 			exit 0
     	fi
-	elif [[ "$FALCON_DOMAIN" -eq "Archaea" ]]; then
+	elif [[ "$FALCON_DOMAIN" == "Archaea" ]]; then
 		FALCON_TARGET_DOMAIN="DB-archaea"
 		if [[ ! -f "References/NCBI-Archaea/DB-archaea.fa" ]]; then
         	echo -e "\033[1;34m[RFSC]\033[0m DB-archaea.fa was not found! Aborting..."
 			exit 0
     	fi
-	elif [[ "$FALCON_DOMAIN" -eq "Fungi" ]]; then
+	elif [[ "$FALCON_DOMAIN" == "Fungi" ]]; then
 		FALCON_TARGET_DOMAIN="DB-fungi"
 		if [[ ! -f "References/NCBI-Fungi/DB-fungi.fa" ]]; then
         	echo -e "\033[1;34m[RFSC]\033[0m DB-fungi.fa was not found! Aborting..."
 			exit 0
     	fi
-	elif [[ "$FALCON_DOMAIN" -eq "Plant" ]]; then
+	elif [[ "$FALCON_DOMAIN" == "Plant" ]]; then
 		FALCON_TARGET_DOMAIN="DB-plant"
 		if [[ ! -f "References/NCBI-Plant/DB-plant.fa" ]]; then
         	echo -e "\033[1;34m[RFSC]\033[0m DB-plant.fa was not found! Aborting..."
 			exit 0
     	fi
-	elif [[ "$FALCON_DOMAIN" -eq "Protozoa" ]]; then
+	elif [[ "$FALCON_DOMAIN" == "Protozoa" ]]; then
 		FALCON_TARGET_DOMAIN="DB-protozoa"
 		if [[ ! -f "References/NCBI-Protozoa/DB-protozoa.fa" ]]; then
         	echo -e "\033[1;34m[RFSC]\033[0m DB-protozoa.fa was not found! Aborting..."
 			exit 0
     	fi
-	elif [[ "$FALCON_DOMAIN" -eq "Mitochondrial" ]]; then
+	elif [[ "$FALCON_DOMAIN" == "Mitochondrial" ]]; then
 		FALCON_TARGET_DOMAIN="DB-mitochondrion"
 		if [[ ! -f "References/NCBI-Mitochondrial/DB-mitochondrion.fa" ]]; then
         	echo -e "\033[1;34m[RFSC]\033[0m DB-mitochondrion.fa was not found! Aborting..."
 			exit 0
     	fi
-	elif [[ "$FALCON_DOMAIN" -eq "Plastid" ]]; then
+	elif [[ "$FALCON_DOMAIN" == "Plastid" ]]; then
 		FALCON_TARGET_DOMAIN="DB-plastid"
 		if [[ ! -f "References/NCBI-Plastid/DB-plastid.fa" ]]; then
         	echo -e "\033[1;34m[RFSC]\033[0m DB-plastid.fa was not found! Aborting..."
@@ -1235,14 +1235,14 @@ if [[ "$LEN_SEQ_FLAG" -eq "1" ]]; then
 fi
 #
 if [[ "$EFETCH_FLAG" -eq "1" ]]; then
-	if [[ "$EFETCH_FOLDER" -eq "RefBased" ]]; then
+	if [[ "$EFETCH_FOLDER" == "RefBased" ]]; then
 		cd Input_Data/ReferenceBased
 		efetch -db nucleotide -format fasta -id "$EFETCH_ID" > $EFETCH_ID.fa
 		seqtk seq -F '#' $EFETCH_ID.fa > $EFETCH_ID.fq
 		gzip $EFETCH_ID.fq
 		cd ../..
 		echo -e "\033[1;34m[RFSC]\033[0m $EFETCH_ID.fa was placed in the $EFETCH_FOLDER folder."
-	elif [[ "$EFETCH_FOLDER" -eq "RefFree" ]]; then
+	elif [[ "$EFETCH_FOLDER" == "RefFree" ]]; then
 		cd Input_Data/ReferenceFree
 		efetch -db nucleotide -format fasta -id "$EFETCH_ID" > $EFETCH_ID.fa
 		seqtk seq -F '#' $EFETCH_ID.fa > $EFETCH_ID.fq
