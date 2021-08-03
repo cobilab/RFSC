@@ -25,6 +25,7 @@ conda install -c bioconda/label/cf201901 entrez-direct --yes
 conda install -c bioconda blast --yes
 conda install -c bioconda mummer4 --yes
 conda install -c bioconda art --yes
+conda install -c bioconda seqtk --yes
 #
 ./src/install_orf.sh
 #
@@ -49,4 +50,5 @@ Check_Installation "efetch";
 Check_Installation "blastn";
 Check_Installation "dnadiff";
 Check_Installation "art_illumina";
+Check_Installation "seqtk";
 Check_Installation "./ORFs/ORFfinder";
