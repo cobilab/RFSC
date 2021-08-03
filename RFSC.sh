@@ -1244,9 +1244,7 @@ if [[ "$EFETCH_FLAG" -eq "1" ]]; then
 		echo -e "\033[1;34m[RFSC]\033[0m $EFETCH_ID.fa was placed in the $EFETCH_FOLDER folder."
 	elif [[ "$EFETCH_FOLDER" == "RefFree" ]]; then
 		cd Input_Data/ReferenceFree
-		efetch -db nucleotide -format fasta -id "$EFETCH_ID" > $EFETCH_ID.fa
-		seqtk seq -F '#' $EFETCH_ID.fa > $EFETCH_ID.fq
-		gzip $EFETCH_ID.fq
+		efetch -db nucleotide -format fasta -id "$EFETCH_ID" > $EFETCH_ID.fna
 		cd ../..
 		echo -e "\033[1;34m[RFSC]\033[0m $EFETCH_ID.fa was placed in the $EFETCH_FOLDER folder."
 	else
