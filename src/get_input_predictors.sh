@@ -4,14 +4,18 @@
 MAX_LEN_DNA_DB=`python3 src/find_greatest_length.py DNA`
 MAX_LEN_AA_DB=`python3 src/find_greatest_length.py AA`
 #
-if [ -f Input_Data/ReferenceFree/*.gz ]; then
+zippedFiles=(Input_Data/ReferenceFree/*.gz)
+fnaFiles=(Input_Data/ReferenceFree/*.fna)
+fastaFiles=(Input_Data/ReferenceFree/*.fasta)
+#
+if [ -f ${zippedFiles[0]} ]; then
     echo "Start processing Sequence(s)"
-elif [ -f Input_Data/ReferenceFree/*.fna ]; then
+elif [ -f ${fnaFiles[0]} ]; then
     for file in Input_Data/ReferenceFree/*.fna
     do
         gzip $file
     done
-elif [ -f Input_Data/ReferenceFree/*.fasta ]; then
+elif [ -f ${fastaFiles[0]} ]; then
     for file in Input_Data/ReferenceFree/*.fasta
     do
         gzip $file
