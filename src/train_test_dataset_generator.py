@@ -403,28 +403,28 @@ with open('Analysis/KNN/Train.csv', 'w', newline='') as file:
     #for domain in domains:
     for x in range(0,len(virus_nm_result3)):
         if x in training_idx_viral:
-            writer.writerow([domains[0], virus_nm_result3[x], virus_pt_result3[x], virus_gc_content[x], float("{:.16f}".format(virus_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(virus_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[0], virus_nm_result3[x], virus_pt_result3[x], virus_gc_content[x], virus_nm_length[x], virus_pt_length[x]])
     for x in range(0,len(bacteria_nm_result3)):
         if x in training_idx_bacteria:
-            writer.writerow([domains[1], bacteria_nm_result3[x], bacteria_pt_result3[x], bacteria_gc_content[x], float("{:.16f}".format(bacteria_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(bacteria_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[1], bacteria_nm_result3[x], bacteria_pt_result3[x], bacteria_gc_content[x], bacteria_nm_length[x], bacteria_pt_length[x]])
     for x in range(0,len(archaea_nm_result3)):
         if x in training_idx_archaea:
-            writer.writerow([domains[2], archaea_nm_result3[x], archaea_pt_result3[x], archaea_gc_content[x], float("{:.16f}".format(archaea_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(archaea_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[2], archaea_nm_result3[x], archaea_pt_result3[x], archaea_gc_content[x], archaea_nm_length[x], archaea_pt_length[x]])
     for x in range(0,len(fungi_nm_result3)):
         if x in training_idx_fungi:
-            writer.writerow([domains[3], fungi_nm_result3[x], fungi_pt_result3[x], fungi_gc_content[x], float("{:.16f}".format(fungi_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(fungi_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[3], fungi_nm_result3[x], fungi_pt_result3[x], fungi_gc_content[x], fungi_nm_length[x], fungi_pt_length[x]])
     for x in range(0,len(plant_nm_result3)):
         if x in training_idx_plant:
-            writer.writerow([domains[4], plant_nm_result3[x], plant_pt_result3[x], plant_gc_content[x], float("{:.16f}".format(plant_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(plant_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[4], plant_nm_result3[x], plant_pt_result3[x], plant_gc_content[x], plant_nm_length[x], plant_pt_length[x]])
     for x in range(0, len(protozoa_nm_result3)):
         if x in training_idx_protozoa:
-            writer.writerow([domains[5], protozoa_nm_result3[x], protozoa_pt_result3[x], protozoa_gc_content[x], float("{:.16f}".format(protozoa_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(protozoa_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[5], protozoa_nm_result3[x], protozoa_pt_result3[x], protozoa_gc_content[x], protozoa_nm_length[x], protozoa_pt_length[x]])
     for x in range(0, len(mito_nm_result3)):
         if x in training_idx_mito:
-            writer.writerow([domains[6], mito_nm_result3[x], mito_pt_result3[x], mito_gc_content[x], float("{:.16f}".format(mito_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(mito_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[6], mito_nm_result3[x], mito_pt_result3[x], mito_gc_content[x], mito_nm_length[x], mito_pt_length[x]])
     for x in range(0, len(plastid_nm_result3)):
         if x in training_idx_plastid:
-            writer.writerow([domains[7], plastid_nm_result3[x], plastid_pt_result3[x], plastid_gc_content[x], float("{:.16f}".format(plastid_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(plastid_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[7], plastid_nm_result3[x], plastid_pt_result3[x], plastid_gc_content[x], plastid_nm_length[x], plastid_pt_length[x]])
 
 with open('Analysis/KNN/Test.csv', 'w', newline='') as file:
     writer = csv.writer(file)
@@ -432,25 +432,25 @@ with open('Analysis/KNN/Test.csv', 'w', newline='') as file:
     #for domain in domains:
     for x in range(0,len(virus_nm_result3)):
         if x not in training_idx_viral:
-            writer.writerow([domains[0], virus_nm_result3[x], virus_pt_result3[x], virus_gc_content[x], float("{:.16f}".format(virus_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(virus_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[0], virus_nm_result3[x], virus_pt_result3[x], virus_gc_content[x], virus_nm_length[x], virus_pt_length[x]])
     for x in range(0,len(bacteria_nm_result3)):
         if x not in training_idx_bacteria:
-            writer.writerow([domains[1], bacteria_nm_result3[x], bacteria_pt_result3[x], bacteria_gc_content[x], float("{:.16f}".format(bacteria_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(bacteria_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[1], bacteria_nm_result3[x], bacteria_pt_result3[x], bacteria_gc_content[x], bacteria_nm_length[x], bacteria_pt_length[x]])
     for x in range(0,len(archaea_nm_result3)):
         if x not in training_idx_archaea:
-            writer.writerow([domains[2], archaea_nm_result3[x], archaea_pt_result3[x], archaea_gc_content[x], float("{:.16f}".format(archaea_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(archaea_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[2], archaea_nm_result3[x], archaea_pt_result3[x], archaea_gc_content[x], archaea_nm_length[x], archaea_pt_length[x]])
     for x in range(0,len(fungi_nm_result3)):
         if x not in training_idx_fungi:
-            writer.writerow([domains[3], fungi_nm_result3[x], fungi_pt_result3[x], fungi_gc_content[x], float("{:.16f}".format(fungi_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(fungi_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[3], fungi_nm_result3[x], fungi_pt_result3[x], fungi_gc_content[x], fungi_nm_length[x], fungi_pt_length[x]])
     for x in range(0,len(plant_nm_result3)):
         if x not in training_idx_plant:
-            writer.writerow([domains[4], plant_nm_result3[x], plant_pt_result3[x], plant_gc_content[x], float("{:.16f}".format(plant_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(plant_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[4], plant_nm_result3[x], plant_pt_result3[x], plant_gc_content[x], plant_nm_length[x], plant_pt_length[x]])
     for x in range(0, len(protozoa_nm_result3)):
         if x not in training_idx_protozoa:
-            writer.writerow([domains[5], protozoa_nm_result3[x], protozoa_pt_result3[x], protozoa_gc_content[x], float("{:.16f}".format(protozoa_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(protozoa_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[5], protozoa_nm_result3[x], protozoa_pt_result3[x], protozoa_gc_content[x], protozoa_nm_length[x], protozoa_pt_length[x]])
     for x in range(0, len(mito_nm_result3)):
         if x not in training_idx_mito:
-            writer.writerow([domains[6], mito_nm_result3[x], mito_pt_result3[x], mito_gc_content[x], float("{:.16f}".format(mito_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(mito_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[6], mito_nm_result3[x], mito_pt_result3[x], mito_gc_content[x], mito_nm_length[x], mito_pt_length[x]])
     for x in range(0, len(plastid_nm_result3)):
         if x not in training_idx_plastid:
-            writer.writerow([domains[7], plastid_nm_result3[x], plastid_pt_result3[x], plastid_gc_content[x], float("{:.16f}".format(plastid_nm_length[x]/maxvaluefound_length_DNA)), float("{:.16f}".format(plastid_pt_length[x]/maxvaluefound_length_AA))])
+            writer.writerow([domains[7], plastid_nm_result3[x], plastid_pt_result3[x], plastid_gc_content[x], plastid_nm_length[x], plastid_pt_length[x]])
