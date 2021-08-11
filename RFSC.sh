@@ -739,7 +739,7 @@ do
 			ACCURACY_GNB_MODE="$2";
 			ACCURACY_GNB_TRAIN="$3";
 			ACCURACY_GNB_TRAIN_PERC="$4"
-			shift 3
+			shift 4
 		;;
 		-clc|--clean)
 			CLEAN=1;
