@@ -1340,7 +1340,7 @@ fi
 if [[ "$ACCURACY_GNB_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Analysing the GNB Classifier Accuracy using $ACCURACY_GNB_MODE!"
 	if [[ $ACCURACY_GNB_TRAIN == "Test" ]]; then
-		python3 Tests/accuracy_GNB.py GNB/CrossValidation $ACCURACY_GNB_TRAIN_PERC $ACCURACY_GNB_MODE
+		python3 Tests/accuracy_GNB.py GNB/Test_Train_Database $ACCURACY_GNB_TRAIN_PERC $ACCURACY_GNB_MODE
 	elif [[ $ACCURACY_GNB_TRAIN == "CV" ]]; then
 		python3 Tests/accuracy_CV.py GNB/CrossValidation $ACCURACY_GNB_MODE
 	else
