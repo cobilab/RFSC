@@ -1,4 +1,4 @@
-rm Input_Data/ReferenceBased/sample* &> /dev/null
+rm Input_Data/ReferenceBased/* &> /dev/null
 rm Input_Data/ReferenceFree/* &> /dev/null
 rm -rf GeneratedFiles/out_spades_ &> /dev/null
 rm GeneratedFiles/* &> /dev/null

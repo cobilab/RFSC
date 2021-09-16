@@ -1132,6 +1132,7 @@ fi
 #
 if [ "$GEN_ADAPTERS" -eq "1" ]; then
 	./src/gen_adapters.sh
+	mv Input_Data/adapters.fa Input_Data/ReferenceBased
 fi	
 #
 # ===================================================================
