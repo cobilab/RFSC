@@ -1249,8 +1249,12 @@ if [[ "$EFETCH_FLAG" -eq "1" ]]; then
 		cd ../..
 		echo -e "\033[1;34m[RFSC]\033[0m $EFETCH_ID.fa was placed in the $EFETCH_FOLDER folder."
 	else
-		echo -e "\033[1;34m[RFSC]\033[0m Folder not recognized! Please insert a RefBased or RefFree Folder."
-		exit 0
+		#echo -e "\033[1;34m[RFSC]\033[0m Folder not recognized! Please insert a RefBased or RefFree Folder."
+		#exit 0
+		cd $EFETCH_FOLDER
+		efetch -db nucleotide -format fasta -id "$EFETCH_ID" > $EFETCH_ID.fna
+		cd ../..
+		echo -e "\033[1;34m[RFSC]\033[0m $EFETCH_ID.fa was placed in the $EFETCH_FOLDER folder."
 	fi
 fi
 #

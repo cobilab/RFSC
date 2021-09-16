@@ -1,5 +1,6 @@
 rm Input_Data/ReferenceBased/* &> /dev/null
 rm Input_Data/ReferenceFree/* &> /dev/null
+rm Input_Data/EntrezGenomes/* &> /dev/null
 rm -rf GeneratedFiles/out_spades_ &> /dev/null
 rm GeneratedFiles/* &> /dev/null
 rm src/SyntheticGenerator/Inputs/* &> /dev/null
