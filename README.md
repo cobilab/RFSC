@@ -2,7 +2,8 @@
 
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-&nbsp;
+
+
 RFSC is a Reference-Free Sequence Classification Tool that using machine learning classifiers relies on an ensemble of experts in order to provide efficient classification in metagenomic contexts.
 
 ## Instalation
@@ -73,7 +74,7 @@ Laptop computer running Linux Ubuntu (for example, 18.04 LTS or higher) with GCC
 
 GNU GPL
 
-**Developed to make a change!**
+**✨Developed to make a change!✨**
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
