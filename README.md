@@ -20,6 +20,7 @@ cd RFSC
 ```sh
 git clone https://github.com/cobilab/RFSC
 cd RFSC
+docker-compose build
 docker-compose up -d && docker exec -it rfsc bash && docker-compose down
 ```
 

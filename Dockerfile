@@ -11,8 +11,10 @@ RUN wget \
     && bash Miniconda3-latest-Linux-x86_64.sh -b \
     && rm -f Miniconda3-latest-Linux-x86_64.sh 
 
+ADD . /RFSC
+
 WORKDIR /RFSC
 
-#RUN ./RFSC.sh --install
+RUN ./RFSC.sh --install
 
 CMD tail -f >> /dev/null
