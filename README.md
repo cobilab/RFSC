@@ -6,12 +6,22 @@
 
 RFSC is a Reference-Free Sequence Classification Tool that using machine learning classifiers relies on an ensemble of experts in order to provide efficient classification in metagenomic contexts.
 
+
 ## Instalation
 
 ```sh
 git clone https://github.com/cobilab/RFSC
 cd RFSC
 ./RFSC.sh --install
+```
+
+## Using Docker
+
+```sh
+git clone https://github.com/cobilab/RFSC
+cd RFSC
+docker-compose build
+docker-compose up -d && docker exec -it rfsc bash && docker-compose down
 ```
 
 ## Build NCBI Reference Databases
