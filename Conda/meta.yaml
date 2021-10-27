@@ -1,0 +1,18 @@
+package:
+    name: rfsc
+    version: '1.0.0'
+
+source:
+    git_rev: v1.0.0
+    git_url: https://github.com/cobilab/RFSC.git
+
+requirements:
+    build:
+        - gxx_linux-64
+        - cmake
+
+about:
+    home: https://github.com/cobilab/RFSC
+    license: GPL v3 License
+    license_family: GPL
+    summary: Reference-Free Sequence Classification Tool for DNA sequences in metagenomic samples
