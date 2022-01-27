@@ -540,7 +540,7 @@ do
 			INSTALL=1;
 			shift
 		;;
-		-c|--CONDA)
+		-c|--conda)
 			CONDA=1;
 			shift
 		;;
