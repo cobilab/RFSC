@@ -17,6 +17,7 @@ INSTALL=0;
 CLEAN=0;
 CLEAN_ALL=0;
 CONDA=0;
+YES=0;
 #
 BUILD_DB_VIRUS=0;
 BUILD_DB_BACTERIA=0;
@@ -748,11 +749,17 @@ do
 		;;
 		-clc|--clean)
 			CLEAN=1;
-			shift
+			if [[ $2 = "y" ]]; then
+				YES=1;
+			fi
+			shift 2
 		;;
 		-cla|--clean-all)
 			CLEAN_ALL=1;
-			shift
+			if [[ $2 = "y" ]]; then
+				YES=1;
+			fi
+			shift 2
 		;;
 		-all|--run-all)
 			CLEAN=1;
@@ -1212,10 +1219,14 @@ fi
 #
 if [[ "$CLEAN" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Cleaning all files..."
-	read -p "Are you sure you want to proceed? " -n 1 -r
-	echo    # (optional) move to a new line
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-    	./clean.sh
+	if [[ "$YES" -eq "1" ]]; then
+		./clean.sh
+	else
+		read -p "Are you sure you want to proceed? " -n 1 -r
+		echo    # (optional) move to a new line
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			./clean.sh
+		fi
 	fi
 fi
 #
