@@ -19,17 +19,18 @@ CLEAN_ALL=0;
 CONDA=0;
 YES=0;
 #
-BUILD_DB_VIRUS=0;
-BUILD_DB_BACTERIA=0;
-BUILD_DB_ARCHAEA=0;
-BUILD_DB_PROTOZOA=0;
-BUILD_DB_FUNGI=0;
-BUILD_DB_PLANT=0;
-#BUILD_DB_INVERTEBRATE=0;
-#BUILD_DB_VERTEBRATE_MAMMALIAN=0;
-#BUILD_DB_VERTEBRATE_OTHER=0;
-BUILD_DB_MITOCHONDRIAL=0;
-BUILD_DB_PLASTID=0;
+DOWNLOAD_DB_VIRUS=0;
+DOWNLOAD_DB_BACTERIA=0;
+DOWNLOAD_DB_ARCHAEA=0;
+DOWNLOAD_DB_PROTOZOA=0;
+DOWNLOAD_DB_FUNGI=0;
+DOWNLOAD_DB_PLANT=0;
+#DOWNLOAD_DB_INVERTEBRATE=0;
+#DOWNLOAD_DB_VERTEBRATE_MAMMALIAN=0;
+#DOWNLOAD_DB_VERTEBRATE_OTHER=0;
+DOWNLOAD_DB_MITOCHONDRIAL=0;
+DOWNLOAD_DB_PLASTID=0;
+BASE_URL="https://share.bioinformatics-ua.pt/share.cgi?ssid=c0ed19a308ae4ef2b48cc48b7e73b1cb&fid=c0ed19a308ae4ef2b48cc48b7e73b1cb&path=%2F&openfolder=forcedownload&ep="
 #
 GEN_ADAPTERS=0;
 #
@@ -562,36 +563,36 @@ do
 			SET_NODE_COVERAGE="$3";
 			shift 3
 		;;
-		-bviral|--build-ref-virus)
-			BUILD_DB_VIRUS=1;
+		-dviral|--download-ref-virus)
+			DOWNLOAD_DB_VIRUS=1;
 			shift
 		;;
-		-bbact|--build-ref-bacteria)
-			BUILD_DB_BACTERIA=1;
+		-dbact|--download-ref-bacteria)
+			DOWNLOAD_DB_BACTERIA=1;
 			shift
 		;;
-		-barch|--build-ref-archaea)
-			BUILD_DB_ARCHAEA=1;
+		-darch|--download-ref-archaea)
+			DOWNLOAD_DB_ARCHAEA=1;
 			shift
 		;;
-		-bprot|--build-ref-protozoa)
-			BUILD_DB_PROTOZOA=1;
+		-dprot|--download-ref-protozoa)
+			DOWNLOAD_DB_PROTOZOA=1;
 			shift
 		;;
-		-bfung|--build-ref-fungi)
-			BUILD_DB_FUNGI=1;
+		-dfung|--download-ref-fungi)
+			DOWNLOAD_DB_FUNGI=1;
 			shift
 		;;
-		-bplan|--build-ref-plant)
-			BUILD_DB_PLANT=1;
+		-dplan|--download-ref-plant)
+			DOWNLOAD_DB_PLANT=1;
 			shift
 		;;
-		-bmito|--build-ref-mitochondrial)
-			BUILD_DB_MITOCHONDRIAL=1;
+		-dmito|--download-ref-mitochondrial)
+			DOWNLOAD_DB_MITOCHONDRIAL=1;
 			shift
 		;;
-		-bplas|--build-ref-plastid)
-			BUILD_DB_PLASTID=1;
+		-dplas|--download-ref-plastid)
+			DOWNLOAD_DB_PLASTID=1;
 			shift
 		;;
 		-gad|--gen-adapters)
@@ -641,20 +642,6 @@ do
 		;;
 		-dec|--decrypt)
 			RUN_DECRYPT=1;
-			shift
-		;;
-		-ball|--build-ref-all)
-			BUILD_DB_VIRUS=1;
-			BUILD_DB_BACTERIA=1;
-			BUILD_DB_ARCHAEA=1;
-			BUILD_DB_PROTOZOA=1;
-			BUILD_DB_FUNGI=1;
-			BUILD_DB_PLANT=1;
-			BUILD_DB_INVERTEBRATE=1;
-			BUILD_DB_VERTEBRATE_MAMMALIAN=1;
-			BUILD_DB_VERTEBRATE_OTHER=1;
-			BUILD_DB_MITOCHONDRIAL=1;
-			BUILD_DB_PLASTID=1;
 			shift
 		;;
 		-ncd|--nc-dna-csv)
@@ -877,24 +864,24 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          Use entrez efetch to fetch a nucleotide using an ID"
 	echo "                          ID: Nucleotide Identifier                          "
 	echo "                          FOLDER: Destination Folder (RefBased or RefFree)   "
-	echo -e " \033[1;33m                       B U I L D    D A T A B A S E S                      \033[0m "
+	echo -e " \033[1;33m                   D O W N L O A D    D A T A B A S E S                    \033[0m "
 	echo "                                                                             "
-	echo "   -bviral, --build-ref-virus                                                "
-	echo -e "                          Build reference database for \033[1;36mvirus\033[0m from NCBI       "
-	echo "   -bbact,  --build-ref-bacteria                                             "
-	echo -e "                          Build reference database for \033[1;36mbacterias\033[0m from NCBI   "
-	echo "   -barch,  --build-ref-archaea                                              "
-	echo -e "                          Build reference database for \033[1;36marchaeas\033[0m from NCBI    "
-	echo "   -bprot,  --build-ref-protozoa                                             "
-	echo -e "                          Build reference database for \033[1;36mprotozoa\033[0m from NCBI    "
-	echo "   -bfung,  --build-ref-fungi                                                "
-	echo -e "                          Build reference database for \033[1;36mfungi\033[0m from NCBI       "
-	echo "   -bplan,  --build-ref-plant                                                "
-	echo -e "                          Build reference database for \033[1;36mplant\033[0m from NCBI       "
-	echo "   -bmito,  --build-ref-mitochondrial                                        "
-	echo -e "                          Build reference database for \033[1;36mmitochondrial\033[0m from NCBI"
-	echo "   -bplas,  --build-ref-plastid                                              "
-	echo -e "                          Build reference database for \033[1;36mplastid\033[0m from NCBI     "
+	echo "   -dviral, --download-ref-virus                                                "
+	echo -e "                          Download reference database for \033[1;36mvirus\033[0m         "
+	echo "   -dbact,  --download-ref-bacteria                                             "
+	echo -e "                          Download reference database for \033[1;36mbacterias\033[0m     "
+	echo "   -darch,  --download-ref-archaea                                              "
+	echo -e "                          Download reference database for \033[1;36marchaeas\033[0m      "
+	echo "   -dprot,  --download-ref-protozoa                                             "
+	echo -e "                          Download reference database for \033[1;36mprotozoa\033[0m      "
+	echo "   -dfung,  --download-ref-fungi                                                "
+	echo -e "                          Download reference database for \033[1;36mfungi\033[0m         "
+	echo "   -dplan,  --download-ref-plant                                                "
+	echo -e "                          Download reference database for \033[1;36mplant\033[0m         "
+	echo "   -dmito,  --download-ref-mitochondrial                                        "
+	echo -e "                          Download reference database for \033[1;36mmitochondrial\033[0m "
+	echo "   -dplas,  --download-ref-plastid                                              "
+	echo -e "                          Download reference database for \033[1;36mplastid\033[0m       "
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
 	echo -e " \033[1;33m              R E F E R E N C E   B A S E D   A P P R O A C H              \033[0m "
@@ -1062,88 +1049,96 @@ fi
 # ======================================================================
 # BUILD REFERENCE VIRAL DATABASE
 #
-if [ "$BUILD_DB_VIRUS" -eq "1" ]; then
+if [ "$DOWNLOAD_DB_VIRUS" -eq "1" ]; then
 	cd References/NCBI-Virus/
-	echo -e "\033[1;34m[RFSC]\033[0m Building viral database at References/NCBI-Virus/";
-	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --viral
-	gunzip DB-viral.fa.gz
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading viral database at References/NCBI-Virus/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-viral.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing viral database...";
+	lzma -d DB.fa.lzma
 	cd ../..
 fi
 #
 # ======================================================================
 # BUILD REFERENCE BACTERIAL DATABASE
 #
-if [ "$BUILD_DB_BACTERIA" -eq "1" ]; then
+if [ "$DOWNLOAD_DB_BACTERIA" -eq "1" ]; then
 	cd References/NCBI-Bacteria/
-	echo -e "\033[1;34m[RFSC]\033[0m Building bacterias database at References/NCBI-Archaea/";
-	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --bacteria
-	gunzip DB-bacteria.fa.gz
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading bacterias database at References/NCBI-Bacteria/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-bacterias.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing bacterias database...";
+	lzma -d DB.fa.lzma
 	cd ../..
 fi
 #
 # ======================================================================
 # BUILD REFERENCE ARCHAEAS DATABASE
 #
-if [ "$BUILD_DB_ARCHAEA" -eq "1" ]; then
+if [ "$DOWNLOAD_DB_ARCHAEA" -eq "1" ]; then
 	cd References/NCBI-Archaea/
-	echo -e "\033[1;34m[RFSC]\033[0m Building archaeas database at References/NCBI-Archaea/";
-	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --archaea
-	gunzip DB-archaea.fa.gz
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading archaeas database at References/NCBI-Archaea/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-archaeas.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing archaeas database...";
+	lzma -d DB.fa.lzma
 	cd ../..
 fi
 #
 # ======================================================================
 # BUILD REFERENCE PROTOZOA DATABASE
 #
-if [ "$BUILD_DB_PROTOZOA" -eq "1" ]; then
+if [ "$DOWNLOAD_DB_PROTOZOA" -eq "1" ]; then
 	cd References/NCBI-Protozoa/
-	echo -e "\033[1;34m[RFSC]\033[0m Building protozoa database at References/NCBI-Protozoa/";
-	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --protozoa
-	gunzip DB-protozoa.fa.gz
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading protozoa database at References/NCBI-Protozoa/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-protozoa.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing protozoa database...";
+	lzma -d DB.fa.lzma
 	cd ../..
 fi
 #
 # ======================================================================
 # BUILD REFERENCE FUNGI DATABASE
 #
-if [ "$BUILD_DB_FUNGI" -eq "1" ]; then
+if [ "$DOWNLOAD_DB_FUNGI" -eq "1" ]; then
 	cd References/NCBI-Fungi/
-	echo -e "\033[1;34m[RFSC]\033[0m Building fungi database at References/NCBI-Fungi/";
-	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --fungi
-	gunzip DB-fungi.fa.gz
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading fungi database at References/NCBI-Fungi/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-fungi.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing fungi database...";
+	lzma -d DB.fa.lzma
 	cd ../..
 fi
 #
 # ======================================================================
 # BUILD REFERENCE PLANT DATABASE
 #
-if [ "$BUILD_DB_PLANT" -eq "1" ]; then
+if [ "$DOWNLOAD_DB_PLANT" -eq "1" ]; then
 	cd References/NCBI-Plant/
-	echo -e "\033[1;34m[RFSC]\033[0m Building plant database at References/NCBI-Plant/";
-	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --plant
-	gunzip DB-plant.fa.gz
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading plant database at References/NCBI-Plant/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-plant.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing plant database...";
+	lzma -d DB.fa.lzma
 	cd ../..
 fi
 #
 # ======================================================================
 # BUILD REFERENCE MITOCHONDRIAL DATABASE
 #
-if [ "$BUILD_DB_MITOCHONDRIAL" -eq "1" ]; then
+if [ "$DOWNLOAD_DB_MITOCHONDRIAL" -eq "1" ]; then
 	cd References/NCBI-Mitochondrial/
-	echo -e "\033[1;34m[RFSC]\033[0m Building mitochondrial database at References/NCBI-Mitochondrial/";
-	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --mitochondrion
-	gunzip DB-mitochondrion.fa.gz
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading mitochondrial database at References/NCBI-Mitochondrial/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-mitochondrial.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing mitochondrial database...";
+	lzma -d DB.fa.lzma
 	cd ../..
 fi
 #
 # ======================================================================
 # BUILD REFERENCE PLASTID DATABASE
 #
-if [ "$BUILD_DB_PLASTID" -eq "1" ]; then
+if [ "$DOWNLOAD_DB_PLASTID" -eq "1" ]; then
 	cd References/NCBI-Plastid/
-	echo -e "\033[1;34m[RFSC]\033[0m Building plastid database at References/NCBI-Plastid/";
-	./../../src/BUILD_DB.sh --threads $THREADS_AVAILABLE --plastid
-	gunzip DB-plastid.fa.gz
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading plastid database at References/NCBI-Plastid/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-plastid.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing plastid database...";
+	lzma -d DB.fa.lzma
 	cd ../..
 fi
 #
