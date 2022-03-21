@@ -15,14 +15,6 @@ ADD . /RFSC
 
 WORKDIR /RFSC
 
-RUN conda install -c conda-forge ncbi-datasets-cli
-
-RUN conda install -c bioconda perl-lwp-protocol-https
-
-RUN conda install -c bioconda sra-tools entrez-direct
-
-RUN conda install perl-io-socket-ssl perl-net-ssleay perl-lwp-protocol-https entrez-direct
-
 RUN ./RFSC.sh --install
 
 CMD tail -f >> /dev/null
