@@ -87,7 +87,6 @@ function VIRUS_GENOME_COMPRESSION () {
         readarray -t already_processed < Analysis/GeCo/Virus/VIRAL_ID.txt
     fi
 
-    # for file in /media/alexloure/T7Touch/NCBI-Virus/NM-viral/*
     for file in References/NCBI-Virus/NM-viral/*
     do
         out_file=$(basename $file);
@@ -132,8 +131,7 @@ function BACTERIA_GENOME_COMPRESSION () {
         readarray -t already_processed < Analysis/GeCo/Bacteria/BACTERIA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Bacteria/NM-bacteria/*
-    # for file in References/NCBI-Bacteria/NM-bacteria/*
+    for file in References/NCBI-Bacteria/NM-bacteria/*
     do
 
         out_file=$(basename $file);
@@ -146,7 +144,7 @@ function BACTERIA_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            rm /media/alexloure/T7Touch/NCBI-Bacteria/NM-bacteria/*.co
+            rm References/NCBI-Bacteria/NM-bacteria/*.co
             printf "$out_file\n" >> Analysis/GeCo/Bacteria/BACTERIA_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -178,8 +176,7 @@ function ARCHAEA_GENOME_COMPRESSION () {
         readarray -t already_processed < Analysis/GeCo/Archaea/ARCHAEA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Archaea/NM-archaea/*
-    #for file in References/NCBI-Archaea/NM-archaea/*
+    for file in References/NCBI-Archaea/NM-archaea/*
     do
 
         out_file=$(basename $file);
@@ -192,7 +189,7 @@ function ARCHAEA_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
         
         else
-            rm /media/alexloure/T7Touch/NCBI-Archaea/NM-archaea/*.co
+            rm References/NCBI-Archaea/NM-archaea/*.co
             printf "$out_file\n" >> Analysis/GeCo/Archaea/ARCHAEA_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -224,8 +221,7 @@ function FUNGI_GENOME_COMPRESSION () {
         readarray -t already_processed < Analysis/GeCo/Fungi/FUNGI_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Fungi/NM-fungi/*
-    #for file in References/NCBI-Fungi/NM-fungi/*
+    for file in References/NCBI-Fungi/NM-fungi/*
     do
 
         out_file=$(basename $file);
@@ -238,7 +234,7 @@ function FUNGI_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            rm /media/alexloure/T7Touch/NCBI-Fungi/NM-fungi/*.co
+            rm References/NCBI-Fungi/NM-fungi/*.co
             printf "$out_file\n" >> Analysis/GeCo/Fungi/FUNGI_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -270,8 +266,7 @@ function PLANT_GENOME_COMPRESSION () {
         readarray -t already_processed < Analysis/GeCo/Plant/PLANT_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Plant/NM-plant/*
-    #for file in References/NCBI-Plant/NM-plant/*
+    for file in References/NCBI-Plant/NM-plant/*
     do
 
         out_file=$(basename $file);
@@ -284,7 +279,7 @@ function PLANT_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            rm /media/alexloure/T7Touch/NCBI-Plant/NM-plant/*.co
+            rm References/NCBI-Plant/NM-plant/*.co
             printf "$out_file\n" >> Analysis/GeCo/Plant/PLANT_ID.txt
 
             for l in ${testing_levels[@]}; 
@@ -316,7 +311,6 @@ function PROTOZOA_GENOME_COMPRESSION () {
         readarray -t already_processed < Analysis/GeCo/Protozoa/PROTOZOA_ID.txt
     fi
 
-    #for file in /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*
     for file in References/NCBI-Protozoa/NM-protozoa/*
     do
 
@@ -330,7 +324,6 @@ function PROTOZOA_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            #rm /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*.co
             rm References/NCBI-Protozoa/NM-protozoa/*.co
             printf "$out_file\n" >> Analysis/GeCo/Protozoa/PROTOZOA_ID.txt
 
@@ -351,10 +344,10 @@ function PROTOZOA_GENOME_COMPRESSION () {
 function PLASTID_GENOME_COMPRESSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start parsing Plastid Genomes"
     ulimit -n 1000000
-    path="/media/alexloure/T7Touch/NCBI-Plastid"
+    path="References/NCBI-Plastid"
     gunzip -k $path/DB-plastid.fa.gz
     mkdir $path-plastid
-    awk '/>/ {filename="/media/alexloure/T7Touch/NCBI-Plastid-plastid/"NR".fna"} {print > filename}' $path/DB-plastid.fa
+    awk '/>/ {filename="References/NCBI-Plastid-plastid/"NR".fna"} {print > filename}' $path/DB-plastid.fa
 
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Plastid Genomes"
 
@@ -370,7 +363,6 @@ function PLASTID_GENOME_COMPRESSION () {
         readarray -t already_processed < Analysis/GeCo/Plastid/PLASTID_ID.txt
     fi
 
-    #for file in /media/alexloure/T7Touch/NCBI-Plastid/NM-plastid/*
     for file in References/NCBI-Plastid/NM-plastid/*
     do
 
@@ -384,7 +376,6 @@ function PLASTID_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            #rm /media/alexloure/T7Touch/NCBI-Plastid/NM-plastid/*.co
             rm References/NCBI-Plastid/NM-plastid/*.co
             printf "$out_file\n" >> Analysis/GeCo/Plastid/PLASTID_ID.txt
 
@@ -406,10 +397,10 @@ function PLASTID_GENOME_COMPRESSION () {
 function MITOCHONDRIAL_GENOME_COMPRESSION () {
     echo -e "\033[1;34m[RFSC]\033[0m Start parsing Mitochondrial Genomes"
     ulimit -n 1000000
-    path="/media/alexloure/T7Touch/NCBI-Mitochondrial"
+    path="References/NCBI-Mitochondrial"
     gunzip -k $path/DB-mitochondrion.fa.gz
     mkdir $path-mitochondrion
-    awk '/>/ {filename="/media/alexloure/T7Touch/NCBI-Mitochondrial-mitochondrion/"NR".fna"} {print > filename}' $path/DB-mitochondrion.fa
+    awk '/>/ {filename="References/NCBI-Mitochondrial-mitochondrion/"NR".fna"} {print > filename}' $path/DB-mitochondrion.fa
 
     echo -e "\033[1;34m[RFSC]\033[0m Start compressing Mitochondrial Genomes"
 
@@ -425,7 +416,6 @@ function MITOCHONDRIAL_GENOME_COMPRESSION () {
         readarray -t already_processed < Analysis/GeCo/Mitochondrial/MITOCHONDRIAL_ID.txt
     fi
 
-    #for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/NM-mitochondrion/*
     for file in References/NCBI-Mitochondrial/NM-mitochondrion/*
     do
 
@@ -439,7 +429,6 @@ function MITOCHONDRIAL_GENOME_COMPRESSION () {
             echo -e "\033[1;34m[RFSC]\033[0m File ($out_file) already was processed";
 
         else
-            # rm /media/alexloure/T7Touch/NCBI-Mitochondrial/NM-mitochondrion/*.co
             rm References/NCBI-Mitochondrial/NM-mitochondrion/*.co
             printf "$out_file\n" >> Analysis/GeCo/Mitochondrial/MITOCHONDRIAL_ID.txt
 

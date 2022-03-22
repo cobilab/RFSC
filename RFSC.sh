@@ -738,15 +738,17 @@ do
 			CLEAN=1;
 			if [[ $2 = "y" ]]; then
 				YES=1;
+				shift 1
 			fi
-			shift 2
+			shift 1
 		;;
 		-cla|--clean-all)
 			CLEAN_ALL=1;
 			if [[ $2 = "y" ]]; then
 				YES=1;
+				shift 1
 			fi
-			shift 2
+			shift 1
 		;;
 		-all|--run-all)
 			CLEAN=1;
@@ -998,7 +1000,7 @@ if [ "$SHOW_VERSION" -eq "1" ]; then
 	echo "                                                         "
 	echo "                          RFSC                           "
 	echo "                                                         "
-	echo "                      Version: 1.0                       "
+	echo "                      Version: 1.1                       "
 	echo "                                                         "
 	echo "                       IEETA/DETI                        "
 	echo "             University of Aveiro, Portugal.             "
