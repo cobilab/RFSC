@@ -1057,6 +1057,10 @@ if [ "$DOWNLOAD_DB_VIRUS" -eq "1" ]; then
 	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-viral.fa.lzma"
 	echo -e "\033[1;34m[RFSC]\033[0m Decompressing viral database...";
 	lzma -d DB.fa.lzma
+	wget -O "NM.lzma" $BASE_URL"&filename=NM-viral.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing viral NM files...";
+	tar --lzma -xvf NM.lzma
+	rm DB.fa.lzma NM.lzma
 	cd ../..
 fi
 #
@@ -1065,10 +1069,14 @@ fi
 #
 if [ "$DOWNLOAD_DB_BACTERIA" -eq "1" ]; then
 	cd References/NCBI-Bacteria/
-	echo -e "\033[1;34m[RFSC]\033[0m Downloading bacterias database at References/NCBI-Bacteria/";
-	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-bacterias.fa.lzma"
-	echo -e "\033[1;34m[RFSC]\033[0m Decompressing bacterias database...";
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading bacteria database at References/NCBI-Bacteria/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-bacteria.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing bacteria database...";
 	lzma -d DB.fa.lzma
+	wget -O "NM.lzma" $BASE_URL"&filename=NM-bacteria.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing bacteria NM files...";
+	tar --lzma -xvf NM.lzma
+	rm DB.fa.lzma NM.lzma
 	cd ../..
 fi
 #
@@ -1077,10 +1085,14 @@ fi
 #
 if [ "$DOWNLOAD_DB_ARCHAEA" -eq "1" ]; then
 	cd References/NCBI-Archaea/
-	echo -e "\033[1;34m[RFSC]\033[0m Downloading archaeas database at References/NCBI-Archaea/";
-	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-archaeas.fa.lzma"
-	echo -e "\033[1;34m[RFSC]\033[0m Decompressing archaeas database...";
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading archaea database at References/NCBI-Archaea/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-archaea.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing archaea database...";
 	lzma -d DB.fa.lzma
+	wget -O "NM.lzma" $BASE_URL"&filename=NM-archaea.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing archaea NM files...";
+	tar --lzma -xvf NM.lzma
+	rm DB.fa.lzma NM.lzma
 	cd ../..
 fi
 #
@@ -1093,6 +1105,10 @@ if [ "$DOWNLOAD_DB_PROTOZOA" -eq "1" ]; then
 	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-protozoa.fa.lzma"
 	echo -e "\033[1;34m[RFSC]\033[0m Decompressing protozoa database...";
 	lzma -d DB.fa.lzma
+	wget -O "NM.lzma" $BASE_URL"&filename=NM-protozoa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing protozoa NM files...";
+	tar --lzma -xvf NM.lzma
+	rm DB.fa.lzma NM.lzma
 	cd ../..
 fi
 #
@@ -1105,6 +1121,10 @@ if [ "$DOWNLOAD_DB_FUNGI" -eq "1" ]; then
 	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-fungi.fa.lzma"
 	echo -e "\033[1;34m[RFSC]\033[0m Decompressing fungi database...";
 	lzma -d DB.fa.lzma
+	wget -O "NM.lzma" $BASE_URL"&filename=NM-fungi.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing fungi NM files...";
+	tar --lzma -xvf NM.lzma
+	rm DB.fa.lzma NM.lzma
 	cd ../..
 fi
 #
@@ -1117,6 +1137,10 @@ if [ "$DOWNLOAD_DB_PLANT" -eq "1" ]; then
 	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-plant.fa.lzma"
 	echo -e "\033[1;34m[RFSC]\033[0m Decompressing plant database...";
 	lzma -d DB.fa.lzma
+	wget -O "NM.lzma" $BASE_URL"&filename=NM-plant.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing plant NM files...";
+	tar --lzma -xvf NM.lzma
+	rm DB.fa.lzma NM.lzma
 	cd ../..
 fi
 #
@@ -1125,10 +1149,14 @@ fi
 #
 if [ "$DOWNLOAD_DB_MITOCHONDRIAL" -eq "1" ]; then
 	cd References/NCBI-Mitochondrial/
-	echo -e "\033[1;34m[RFSC]\033[0m Downloading mitochondrial database at References/NCBI-Mitochondrial/";
-	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-mitochondrial.fa.lzma"
-	echo -e "\033[1;34m[RFSC]\033[0m Decompressing mitochondrial database...";
+	echo -e "\033[1;34m[RFSC]\033[0m Downloading mitochondrion database at References/NCBI-Mitochondrial/";
+	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-mitochondrion.fa.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing mitochondrion database...";
 	lzma -d DB.fa.lzma
+	wget -O "NM.lzma" $BASE_URL"&filename=NM-mitochondrion.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing mitochondrion NM files...";
+	tar --lzma -xvf NM.lzma
+	rm DB.fa.lzma NM.lzma
 	cd ../..
 fi
 #
@@ -1141,6 +1169,10 @@ if [ "$DOWNLOAD_DB_PLASTID" -eq "1" ]; then
 	wget -O "DB.fa.lzma" $BASE_URL"&filename=DB-plastid.fa.lzma"
 	echo -e "\033[1;34m[RFSC]\033[0m Decompressing plastid database...";
 	lzma -d DB.fa.lzma
+	wget -O "NM.lzma" $BASE_URL"&filename=NM-plastid.lzma"
+	echo -e "\033[1;34m[RFSC]\033[0m Decompressing plastid NM files...";
+	tar --lzma -xvf NM.lzma
+	rm DB.fa.lzma NM.lzma
 	cd ../..
 fi
 #
