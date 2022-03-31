@@ -59,6 +59,14 @@ docker-compose up -d && docker exec -it rfsc bash && docker-compose down
 ./RFSC.sh --run-xgboost
 ```
 
+##### ✨ Run all classifiers on real data 
+&nbsp;
+```sh
+./RFSC.sh --run-all-classifiers Accuracy
+./RFSC.sh --run-all-classifiers F1Score
+./RFSC.sh --run-all-classifiers
+```
+
 ## System Requirements
 
 Laptop computer running Linux Ubuntu (for example, 18.04 LTS or higher) with GCC (https://gcc.gnu.org), Conda (https://docs.conda.io) and CMake (https://cmake.org) installed. The hardware must contain at least 8 GB of RAM, and a 800 GB disk. In the case of the this, if the database is not re-built, it is only needed near 10 GB of space.

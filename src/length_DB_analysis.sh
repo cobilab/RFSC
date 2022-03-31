@@ -155,8 +155,7 @@ function BACTERIA_DNA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Bacteria/NM/BACTERIA_DNA_ID.txt
     fi
 
-    #for file in References/NCBI-Bacteria/NM-bacteria/*
-    for file in /media/alexloure/T7Touch/NCBI-Bacteria/NM-bacteria/*
+    for file in References/NCBI-Bacteria/NM-bacteria/*
     do
 
         out_file=$(basename $file);
@@ -191,8 +190,7 @@ function BACTERIA_AA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Bacteria/NM/BACTERIA_AA_ID.txt
     fi
 
-    #for file in References/NCBI-Bacteria/PT-Bacteria/*
-    for file in /media/alexloure/T7Touch/NCBI-Bacteria/PT-Bacteria/*
+    for file in References/NCBI-Bacteria/PT-Bacteria/*
     do
 
         out_file=$(basename $file);
@@ -230,8 +228,7 @@ function ARCHAEA_DNA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Archaea/ARCHAEA_DNA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Archaea/NM-archaea/*
-    #for file in References/NCBI-Archaea/NM-archaea/*
+    for file in References/NCBI-Archaea/NM-archaea/*
     do
 
         out_file=$(basename $file);
@@ -266,8 +263,7 @@ function ARCHAEA_AA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Archaea/ARCHAEA_AA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Archaea/PT-Archaea/*
-    #for file in References/NCBI-Archaea/PT-Archaea/*
+    for file in References/NCBI-Archaea/PT-Archaea/*
     do
 
         out_file=$(basename $file);
@@ -305,8 +301,7 @@ function FUNGI_DNA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Fungi/FUNGI_DNA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Fungi/NM-fungi/*
-    #for file in References/NCBI-Fungi/NM-fungi/*
+    for file in References/NCBI-Fungi/NM-fungi/*
     do
 
         out_file=$(basename $file);
@@ -341,8 +336,7 @@ function FUNGI_AA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Fungi/FUNGI_AA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Fungi/PT-Fungi/*
-    #for file in References/NCBI-Fungi/PT-Fungi/*
+    for file in References/NCBI-Fungi/PT-Fungi/*
     do
 
         out_file=$(basename $file);
@@ -380,8 +374,7 @@ function PLANT_DNA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Plant/PLANT_DNA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Plant/NM-plant/*
-    #for file in References/NCBI-Plant/NM-plant/*
+    for file in References/NCBI-Plant/NM-plant/*
     do
         out_file=$(basename $file);
         out_file="${out_file%".fna.gz"}"
@@ -415,8 +408,7 @@ function PLANT_AA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Plant/PLANT_AA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Plant/PT-Plant/*
-    #for file in References/NCBI-Plant/PT-Plant/*
+    for file in References/NCBI-Plant/PT-Plant/*
     do
         out_file=$(basename $file);
         out_file="${out_file%".fna.gz"}"
@@ -453,8 +445,7 @@ function PROTOZOA_DNA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Protozoa/PROTOZOA_DNA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Protozoa/NM-protozoa/*
-    #for file in References/NCBI-Protozoa/NM-protozoa/*
+    for file in References/NCBI-Protozoa/NM-protozoa/*
     do
 
         out_file=$(basename $file);
@@ -489,8 +480,7 @@ function PROTOZOA_AA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Protozoa/PROTOZOA_AA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Protozoa/PT-Protozoa/*
-    #for file in References/NCBI-Protozoa/PT-Protozoa/*
+    for file in References/NCBI-Protozoa/PT-Protozoa/*
     do
 
         out_file=$(basename $file);
@@ -528,8 +518,7 @@ function PLASTID_DNA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Plastid/PLASTID_DNA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Plastid/NM-plastid/*
-    #for file in References/NCBI-Plastid/NM-plastid/*
+    for file in References/NCBI-Plastid/NM-plastid/*
     do
         out_file=$(basename $file);
         out_file="${out_file%".fna"}"
@@ -563,8 +552,7 @@ function PLASTID_AA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Plastid/PLASTID_AA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Plastid/PT-Plastid/*
-    #for file in References/NCBI-Plastid/PT-Plastid/*
+    for file in References/NCBI-Plastid/PT-Plastid/*
     do
         out_file=$(basename $file);
         out_file="${out_file%".fna"}"
@@ -601,9 +589,7 @@ function MITOCHONDRIAL_DNA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Mitochondrial/MITOCHONDRIAL_DNA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/NM-mitochondrion/*
-    #for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/PT-Mitochondrial/*
-    #for file in References/NCBI-Mitochondrial/NM-mitochondrion/*
+    for file in References/NCBI-Mitochondrial/NM-mitochondrion/*
     do
         out_file=$(basename $file);
         out_file="${out_file%".fna"}"
@@ -637,8 +623,7 @@ function MITOCHONDRIAL_AA_LENGTH () {
         readarray -t already_processed < Analysis/LengthSeq/Mitochondrial/MITOCHONDRIAL_AA_ID.txt
     fi
 
-    for file in /media/alexloure/T7Touch/NCBI-Mitochondrial/PT-Mitochondrial/*
-    #for file in References/NCBI-Mitochondrial/PT-Mitochondrial/*
+    for file in References/NCBI-Mitochondrial/PT-Mitochondrial/*
     do
         out_file=$(basename $file);
         out_file="${out_file%".fna"}"

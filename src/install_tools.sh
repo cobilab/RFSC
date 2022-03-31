@@ -26,6 +26,11 @@ conda install -c bioconda blast --yes
 conda install -c bioconda mummer4 --yes
 conda install -c bioconda art --yes
 conda install -c bioconda seqtk --yes
+conda install -c conda-forge ncbi-datasets-cli --yes
+conda install -c bioconda perl-lwp-protocol-https --yes
+conda install -c bioconda sra-tools entrez-direct --yes
+conda install perl-io-socket-ssl perl-net-ssleay perl-lwp-protocol-https entrez-direct --yes
+conda install -c bioconda orfm --yes
 #
 ./src/install_orf.sh
 #
@@ -36,19 +41,21 @@ pip install sklearn
 pip install keras
 pip install tensorflow
 pip install xgboost
+pip install matplotlib
 #
-Check_Installation "FALCON";
-Check_Installation "gto";
-Check_Installation "GeCo3";
-Check_Installation "AC";
-Check_Installation "cryfa";
-Check_Installation "trimmomatic";
-Check_Installation "fastp";
-Check_Installation "spades.py";
-Check_Installation "fastq_pair";
-Check_Installation "efetch";
-Check_Installation "blastn";
-Check_Installation "dnadiff";
-Check_Installation "art_illumina";
-Check_Installation "seqtk";
-Check_Installation "./ORFs/ORFfinder";
+#Check_Installation "FALCON";
+#Check_Installation "gto";
+#Check_Installation "GeCo3";
+#Check_Installation "AC";
+#Check_Installation "cryfa";
+#Check_Installation "trimmomatic";
+#Check_Installation "fastp";
+#Check_Installation "spades.py";
+#Check_Installation "fastq_pair";
+#Check_Installation "efetch";
+#Check_Installation "blastn";
+#Check_Installation "dnadiff";
+#Check_Installation "art_illumina";
+#Check_Installation "seqtk";
+#Check_Installation "./ORFs/ORFfinder";
+
