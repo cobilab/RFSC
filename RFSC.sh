@@ -16,7 +16,6 @@ SHOW_VERSION=0;
 INSTALL=0;
 CLEAN=0;
 CLEAN_ALL=0;
-CONDA=0;
 YES=0;
 #
 DOWNLOAD_DB_VIRUS=0;
@@ -545,10 +544,6 @@ do
 			INSTALL=1;
 			shift
 		;;
-		-c|--conda)
-			CONDA=1;
-			shift
-		;;
 		-t|--threads)
 			THREADS=1;
 			GET_THREADS="$2";
@@ -814,7 +809,6 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -h,  --help            Show this help message and exit                    "
 	echo "   -v,  --version         Show the version and some information              "
 	echo "   -i,  --install         Installation of all the needed tools               "
-	echo "   -c,  --conda         	Only active when building conda package            "
 	echo "                                                                             "
 	echo -e "   -t,  --threads \033[0;34m<THREADS>\033[0m                                                  "
 	echo "                          Number of threads to be used                       "
@@ -1031,13 +1025,6 @@ fi
 if [ "$INSTALL" -eq "1" ]; then
 	./src/install_tools.sh
 fi	
-#
-# ======================================================================
-# BUILDING CONDA PACKAGE
-#
-if [ "$CONDA" -eq "1" ]; then
-	./src/install_tools_conda.sh
-fi
 #
 # ======================================================================
 # THREADS
