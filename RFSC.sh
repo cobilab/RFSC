@@ -137,6 +137,9 @@ ACCURACY_GNB_MODE="";
 ACCURACY_GNB_TRAIN="";
 ACCURACY_GNB_TRAIN_PERC="";
 #
+RUN_CLASSIFIERS_FLAG=0;
+RUN_CLASSIFIERS_MODE="";
+#
 #
 # ==================================================================
 # VERIFICATION FUNCTIONS
@@ -734,6 +737,16 @@ do
 			ACCURACY_GNB_TRAIN_PERC="$4"
 			shift 4
 		;;
+		-runAll|--run-all-classifiers)
+			RUN_CLASSIFIERS_FLAG=1;
+			if [[ -z $2 ]]; then
+				RUN_CLASSIFIERS_MODE="All";
+			else
+				RUN_CLASSIFIERS_MODE="$2";
+				shift 1
+			fi
+			shift 1
+		;;
 		-clc|--clean)
 			CLEAN=1;
 			if [[ $2 = "y" ]]; then
@@ -935,6 +948,10 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo "                                                                             "
 	echo -e " \033[1;33m         T E S T    C L A S S I F I E R S    P E R F O R M A N C E    \033[0m      "
+	echo "                                                                             "
+	echo -e "   -runAll \033[0;34m<MODE>                                                          \033[0m "
+	echo "                          Running all classifiers                      	   "
+	echo "                          MODE: Accuracy or F1Score 						   "
 	echo "                                                                             "
 	echo -e "   -testKNN \033[0;34m<MODE>                                                          \033[0m "
 	echo "                          Deep test the KNN Classifier                       "
@@ -1404,6 +1421,15 @@ if [[ "$ACCURACY_GNB_FLAG" -eq "1" ]]; then
 	else
 		echo -e "\033[1;34m[RFSC]\033[0m $ACCURACY_KNN_MODE Testing mode is not recognized. Please insert a valid one!"
 		exit 0
+	fi
+fi
+#
+if [[ "$RUN_CLASSIFIERS_FLAG" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Running all classifiers using $RUN_CLASSIFIERS_MODE!"
+	if [[ $RUN_CLASSIFIERS_MODE == "All" ]]; then
+		python3 Tests/run_classifiers.py
+	else
+		python3 Tests/run_classifiers.py $ACCURACY_GNB_MODE
 	fi
 fi
 #
