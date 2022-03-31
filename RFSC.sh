@@ -1370,22 +1370,22 @@ fi
 #
 if [[ "$TEST_KNN_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the KNN Classifier!"
-	./src/deepTest_KNN.sh $TEST_KNN_MODE
+	./Tests/deepTest_KNN.sh $TEST_KNN_MODE
 fi
 #
 if [[ "$TEST_XGB_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the KNN Classifier!"
-	./src/deepTest_Xgbosst.sh $TEST_XGB_MODE
+	./Tests/deepTest_Xgbosst.sh $TEST_XGB_MODE
 fi
 #
 if [[ "$TEST_GNB_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the GNB Classifier using $TEST_GNB_TRAIN_PERCENTAGE % of the dataset for training!"
-	./src/deepTest_GNB_TT.sh $TEST_GNB_TRAIN_PERCENTAGE --viral --bacteria --archaea --fungi --plant --protozoa --mitochondrion --plastid
+	./Tests/deepTest_GNB_TT.sh $TEST_GNB_TRAIN_PERCENTAGE --viral --bacteria --archaea --fungi --plant --protozoa --mitochondrion --plastid
 fi
 #
 if [[ "$TEST_GNB_CV_FLAG" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Starting Testing the GNB Classifier with 5-Fold Cross-Validation!"
-	./src/deepTest_GNB.sh $TEST_GNB_DOMAIN
+	./Tests/deepTest_GNB.sh $TEST_GNB_DOMAIN
 fi
 #
 if [[ "$ACCURACY_KNN_FLAG" -eq "1" ]]; then
