@@ -12,6 +12,7 @@ RFSC is a Reference-Free Sequence Classification Tool that using machine learnin
 ```sh
 git clone https://github.com/cobilab/RFSC
 cd RFSC
+chmod +x RFSC.sh 
 ./RFSC.sh --install
 ```
 
@@ -22,6 +23,8 @@ git clone https://github.com/cobilab/RFSC
 cd RFSC
 docker-compose build
 docker-compose up -d && docker exec -it rfsc bash && docker-compose down
+chmod +x RFSC.sh 
+./RFSC.sh --install
 ```
 
 ## Build NCBI Reference Databases
