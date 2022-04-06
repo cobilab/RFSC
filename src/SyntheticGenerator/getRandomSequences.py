@@ -8,6 +8,9 @@ import wget
 import requests
 from bs4 import BeautifulSoup
 
+#ensuring reproducibility
+random.seed(0)
+
 numberOfEntries = {
     "viral" : 20,
     "bacteria" : 20,
@@ -23,19 +26,33 @@ dstPathOfOriginalSequences = "./original_sequences/"
 locationOfDatabases = "../../References/"
 multiColumnPos = 19
 
-def main():
-    _ensuringReproducibility()
-    _initialize()
+def main(split=False):
     selectedSequences = getSequences()
-    downloadSequences(selectedSequences["from_url"], dstPathOfOriginalSequences)
-    copySequences(selectedSequences["from_db"], locationOfDatabases, dstPathOfOriginalSequences)
-
-def _ensuringReproducibility():
-    random.seed(0)
+    if split:
+        splitSequences(selectedSequences, dstPathOfOriginalSequences)
+    else:
+        _initialize()
+        downloadSequences(selectedSequences["from_url"], dstPathOfOriginalSequences)
+        copySequences(selectedSequences["from_db"], locationOfDatabases, dstPathOfOriginalSequences)
 
 def _initialize():
     if not path.exists(dstPathOfOriginalSequences):
         makedirs(dstPathOfOriginalSequences)
+
+def splitSequences(selectedSequences, dstPathOfOriginalSequences):
+    allFiles = [f for f in listdir(dstPathOfOriginalSequences) if isfile(join(dstPathOfOriginalSequences, f))]
+    for x in selectedSequences:
+        for domain in selectedSequences[x]:
+            dst = join(dstPathOfOriginalSequences, domain)
+            if not path.exists(dst):
+                makedirs(dst)
+            for entry in selectedSequences[x][domain]:
+                fileName = entry
+                if "/" in entry:
+                    fileName = entry.split("/")[-1]
+                fileToMove = list(filter(lambda x: fileName in x, allFiles))[0]
+                shutil.move(join(dstPathOfOriginalSequences, fileToMove), dst)
+    print("Done!")
 
 def getSequences():
     selectedSequences = {
@@ -97,4 +114,7 @@ if __name__ == "__main__":
     if "/" in sys.argv[0]:
         print("ERROR: Please run this script inside of src/SyntheticGenerator! There are relative paths defined in this code that need to be respected!")
     else:
-        main()
+        split = False
+        if len(sys.argv) > 1:
+            split = "-s" in sys.argv[1]
+        main(split)
