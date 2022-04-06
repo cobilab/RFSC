@@ -139,6 +139,10 @@ ACCURACY_GNB_TRAIN_PERC="";
 RUN_CLASSIFIERS_FLAG=0;
 RUN_CLASSIFIERS_MODE="";
 #
+MUTATE_GET=0;
+MUTATE_GEN=0;
+MUTATE_FEATURES=0;
+MUTATE_CLASSIFICATION=0;
 #
 # ==================================================================
 # VERIFICATION FUNCTIONS
@@ -732,6 +736,22 @@ do
 			ACCURACY_GNB_TRAIN_PERC="$4"
 			shift 4
 		;;
+		-mget|--mutate-getter)
+            MUTATE_GET=1;
+            shift 1
+        ;;
+		-gmut|--generate-mutation)
+            MUTATE_GEN=1;
+            shift 1
+        ;;
+		-cfea|--compute-features-mutation)
+            MUTATE_FEATURES=1;
+            shift 1
+        ;;
+		-ccla|--compute-classification-mutation)
+            MUTATE_CLASSIFICATION=1;
+            shift 1
+        ;;
 		-runAll|--run-all-classifiers)
 			RUN_CLASSIFIERS_FLAG=1;
 			if [[ -z $2 ]]; then
@@ -873,6 +893,24 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          Use entrez efetch to fetch a nucleotide using an ID"
 	echo "                          ID: Nucleotide Identifier                          "
 	echo "                          FOLDER: Destination Folder (RefBased or RefFree)   "
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
+	echo -e " \033[1;33m                      M U T A T E D   D A T A                      \033[0m "
+	echo "                                                                             			"
+	echo "   -mget, --mutate-getter                                                				"
+	echo -e "                          Gathers small set of sequences from the 8 domains        "
+	echo -e "                          (Randomly, if seed is changed)         					"
+	echo "                                                                             			"
+	echo "   -gmut, --generate-mutation															"
+	echo -e "                          Mutate sequences from the 8 domains        				"
+	echo -e "                          (Percentage of value in the mutation: 0, 1, 2, 4, 6, 8, 10)  "
+	echo "                                                                             			"
+	echo "   -cfea, --compute-features-mutation													"
+	echo -e "                          Compute features for mutated sequences         			"
+	echo "                                                                             			"
+	echo "   -ccla, --compute-classification-mutation											"
+	echo -e "                          Compute classification for mutated sequences         	"
+	echo "                                                                             			"
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo -e " \033[1;33m                   D O W N L O A D    D A T A B A S E S                    \033[0m "
 	echo "                                                                             "
 	echo "   -dviral, --download-ref-virus                                                "
@@ -1420,3 +1458,31 @@ if [[ "$RUN_CLASSIFIERS_FLAG" -eq "1" ]]; then
 	fi
 fi
 #
+if [[ "$MUTATE_GET" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Gathering set of sequences!"
+	cd Mutations
+	python3 getRandomSequences.py
+	python3 getRandomSequences.py -s
+	cd ..
+fi
+#
+if [[ "$MUTATE_GEN" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Mutating sequences from the 8 domains!"
+	cd Mutations
+	#to do
+	cd ..
+fi
+#
+if [[ "$MUTATE_FEATURES" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Computing features for mutated sequences!"
+	cd Mutations
+	#to do
+	cd ..
+fi
+#
+if [[ "$MUTATE_CLASSIFICATION" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications for mutated sequences!"
+	cd Mutations
+	#to do
+	cd ..
+fi

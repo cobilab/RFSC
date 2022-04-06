@@ -23,7 +23,7 @@ numberOfEntries = {
 }
 summariesPath = "./summaries"
 dstPathOfOriginalSequences = "./original_sequences/"
-locationOfDatabases = "../../References/"
+locationOfDatabases = "../References/"
 multiColumnPos = 19
 
 def main(split=False):
@@ -112,7 +112,7 @@ def _move(selectedSequences, mainPath, dst):
 
 if __name__ == "__main__":
     if "/" in sys.argv[0]:
-        print("ERROR: Please run this script inside of src/SyntheticGenerator! There are relative paths defined in this code that need to be respected!")
+        print("ERROR: Please run this script inside of Mutations/! There are relative paths defined in this code that need to be respected!")
     else:
         split = False
         if len(sys.argv) > 1:
