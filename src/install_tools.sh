@@ -42,6 +42,8 @@ pip install keras
 pip install tensorflow
 pip install xgboost
 pip install matplotlib
+pip install wget
+pip install bs4
 #
 #Check_Installation "FALCON";
 #Check_Installation "gto";
