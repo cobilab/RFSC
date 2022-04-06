@@ -58,3 +58,4 @@ pip install matplotlib
 #Check_Installation "art_illumina";
 #Check_Installation "seqtk";
 #Check_Installation "./ORFs/ORFfinder";
+
