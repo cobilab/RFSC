@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+
+'''
+  Usage: python3 Tests/accuracy_Xgbosst.py Accuracy
+         python3 Tests/accuracy_Xgbosst.py F1Score
+         python3 Tests/accuracy_Xgbosst.py
+'''
+
 import warnings
 from xgboost import XGBClassifier 
 from sklearn.model_selection import train_test_split
@@ -8,6 +16,7 @@ from sklearn.metrics import f1_score
 import csv
 import sys
 import numpy as np
+from sklearn.metrics import classification_report
 
 def warn(*args, **kwargs):
     pass
@@ -15,8 +24,11 @@ warnings.warn = warn
 
 def predict_XGBClassifier():
     domains = ["Viral", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrial", "Plastid"]
-
-    Mode = str(sys.argv[1])
+    
+    if len(sys.argv) > 1:
+        Mode = str(sys.argv[1])
+    else:
+        Mode="ALL"
 
     X_train, y_train = [], []
     X_test, y_test = [], []
@@ -82,10 +94,15 @@ def predict_XGBClassifier():
     elif Mode == "F1Score":
         f1score=f1_score(y_test, y_pred, average='weighted')
         print("F1 score of : %.2f%%" % (f1score * 100.0))
+    
+    elif Mode == "ALL":
+        print(classification_report(y_test, y_pred, target_names=domains, digits=4))
+
 
     else:
-        print("Mode not found. Please insert a valid mode.")
+        print("Mode not found. Please insert a valid mode. E.g.: F1Score or Accuracy")
 
 
 if __name__ == "__main__":
+    warnings.filterwarnings(action='ignore', category=DeprecationWarning)
     predict_XGBClassifier()

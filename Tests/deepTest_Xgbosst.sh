@@ -112,7 +112,7 @@ function TEST_DATABASE () {
 #
 ################## CROSS VALIDATION ##################
 function VIRAL_CV () {
-    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Viral Cross-Validation...";
+    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Viral Cross-Validation... this may take a while... please be patient!";
 
     readarray -t trainDatabase < Analysis/Xgbosst/Train.csv
 
@@ -169,7 +169,7 @@ function VIRAL_CV () {
 }
 #
 function BACTERIA_CV () {
-    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Bacteria Cross-Validation...";
+    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Bacteria Cross-Validation... this may take a while... please be patient!";
 
     readarray -t trainDatabase < Analysis/Xgbosst/Train.csv
 
@@ -226,7 +226,7 @@ function BACTERIA_CV () {
 }
 #
 function ARCHAEA_CV () {
-    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Archaea Cross-Validation...";
+    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Archaea Cross-Validation... this may take a while... please be patient!";
 
     readarray -t trainDatabase < Analysis/Xgbosst/Train.csv
 
@@ -283,7 +283,7 @@ function ARCHAEA_CV () {
 }
 #
 function FUNGI_CV () {
-    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Fungi Cross-Validation...";
+    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Fungi Cross-Validation... this may take a while... please be patient!";
 
     readarray -t trainDatabase < Analysis/Xgbosst/Train.csv
 
@@ -340,7 +340,7 @@ function FUNGI_CV () {
 }
 #
 function PLANT_CV () {
-    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Plant Cross-Validation...";
+    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Plant Cross-Validation... this may take a while... please be patient!";
 
     readarray -t trainDatabase < Analysis/Xgbosst/Train.csv
 
@@ -397,7 +397,7 @@ function PLANT_CV () {
 }
 #
 function PROTOZOA_CV () {
-    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Protozoa Cross-Validation...";
+    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Protozoa Cross-Validation... this may take a while... please be patient!";
 
     readarray -t trainDatabase < Analysis/Xgbosst/Train.csv
 
@@ -454,7 +454,7 @@ function PROTOZOA_CV () {
 }
 #
 function MITO_CV () {
-    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Mitochondrial Cross-Validation...";
+    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Mitochondrial Cross-Validation... this may take a while... please be patient!";
 
     readarray -t trainDatabase < Analysis/Xgbosst/Train.csv
 
@@ -511,7 +511,7 @@ function MITO_CV () {
 }
 #
 function PLASTID_CV () {
-    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Plastid Cross-Validation...";
+    echo -e "\033[1;34m[RFSC]\033[0m Analysing Xgbosst Plastid Cross-Validation... this may take a while... please be patient!";
 
     readarray -t trainDatabase < Analysis/Xgbosst/Train.csv
 
