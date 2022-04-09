@@ -16,8 +16,8 @@ numberOfEntries = {
     "bacteria" : 20,
     "archaea" : 20,
     "fungi" : 20,
-    "plant" : 10,
-    "protozoa" : 10,
+    "plant" : 20,
+    "protozoa" : 20,
     "mitochondrion" : 20,
     "plastid" : 20
 }

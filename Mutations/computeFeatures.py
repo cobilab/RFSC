@@ -17,12 +17,12 @@ sequencesDir = "./original_sequences/"
 def main():
     _initialize()
     for level in percentages:
-        csvContent = getSequences(level)
-        writeCSV(level, csvContent)
+        getSequences(level)
+        #writeCSV(level, csvContent)
         os.system(f"rm -r {tmpDir}")
 
 def getSequences(mutationLevel):
-    content = [["Domain","DNA","AA","GC","L_DNA","L_AA"]]
+    writeCSVLine(mutationLevel, ["Domain","DNA","AA","GC","L_DNA","L_AA"])
     for domain in listdir(sequencesDir):
         print(f"Computing {domain}...")
         tmpPath = join(tmpDir,domain)
@@ -66,18 +66,21 @@ def getSequences(mutationLevel):
                     try:
                         csvEntry["DNA"] = str(float(fp.read().split(" ")[7])/2)
                     except:
+                        print(f"WARNING: DNA of {name} was not computed! Maybe lack of free space in RAM!")
                         csvEntry["DNA"] = ""
-                    
+                        
                 os.system(f"AC -v -l 3 {tmpPath}/{name}.fna | sed '3,4d' | sed 'N;s/\\n/ /' > {tmpPath}/RESULTS_AC")
                 with open(join(tmpPath, "RESULTS_AC"), 'r') as fp:
                     try:
                         csvEntry["AA"] = str(float(fp.read().split(" ")[15]))
                     except:
+                        print(f"WARNING: AA of {name} was not computed! Maybe lack of free space in RAM!")
                         csvEntry["AA"] = ""
                 os.system(f"rm {tmpPath}/*")
 
-                content.append(csvEntry.values())
-    return content
+                #content.append(csvEntry.values())
+                writeCSVLine(mutationLevel, csvEntry.values())
+    #return content
 
 def mutate(mutationLevel, tmpPath, filePath, name):
     os.system(f"cp {filePath} {tmpPath}/{name}.fna.gz")
@@ -87,6 +90,12 @@ def mutate(mutationLevel, tmpPath, filePath, name):
     os.system(f"mv {tmpPath}/Temporary.fna {tmpPath}/{name}.fna")
     os.system(f"gzip {tmpPath}/{name}.fna")
     
+def writeCSVLine(mutationLevel, line):
+    fileName = mutName+str(mutationLevel)+".csv"
+    f = open(join(root, fileName), 'a')
+    f.write(",".join(line))
+    f.write("\n")
+    f.close()
 
 def writeCSV(mutationLevel, content):
     fileName = mutName+str(mutationLevel)+".csv"
