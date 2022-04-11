@@ -144,6 +144,10 @@ MUTATE_GEN=0;
 MUTATE_FEATURES=0;
 MUTATE_CLASSIFICATION=0;
 #
+SYNTHETIC_GET=0;
+SYNTHETIC_FEATURES=0;
+SYNTHETIC_CLASSIFICATION=0;
+#
 # ==================================================================
 # VERIFICATION FUNCTIONS
 #
@@ -752,6 +756,18 @@ do
             MUTATE_CLASSIFICATION=1;
             shift 1
         ;;
+		-sget|--synthetic-getter)
+            SYNTHETIC_GET=1;
+            shift 1
+        ;;
+		-cfea|--compute-features-synthetic)
+			SYNTHETIC_FEATURES=1;
+		    shift 1
+        ;;
+		-ccla|--compute-classification-synthetic)
+            SYNTHETIC_CLASSIFICATION=1;
+            shift 1
+        ;;
 		-runAll|--run-all-classifiers)
 			RUN_CLASSIFIERS_FLAG=1;
 			if [[ -z $2 ]]; then
@@ -910,6 +926,20 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -ccla, --compute-classification-mutation											"
 	echo -e "                          Compute classification for mutated sequences         	"
 	echo "                                                                             			"
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
+	echo -e " \033[1;33m                   S Y N T H E T I C   D A T A                      \033[0m "
+	echo "                                                                             			"
+	echo "   -sget|--synthetic-getter                                                				"
+	echo -e "                          Gathers small set of sequences from the 8 domains        "
+	echo -e "                          (Randomly, if seed is changed)         					"
+	echo "                                                                             			"
+	echo "   -cfea|--compute-features-synthetic													"
+	echo -e "                          Creates synthetic sequences        			     		"
+	echo -e "                          Compute features for synthetic sequences         		"
+	echo "                                                                             			"
+	echo "   -ccla, -ccla|--compute-classification-synthetic									"
+	echo -e "                          Compute classification for synthetic sequences         	"
+	echo "                                                                             			" 
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo -e " \033[1;33m                   D O W N L O A D    D A T A B A S E S                    \033[0m "
 	echo "                                                                             "
@@ -1487,7 +1517,7 @@ if [[ "$MUTATE_CLASSIFICATION" -eq "1" ]]; then
 	cd ..
 fi
 #
-if [[ "$SYNTHETIC_GEN" -eq "1" ]]; then
+if [[ "$SYNTHETIC_GET" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Getting sequences from the 8 domains!"
 	cd SyntheticSequences
 		python3 getRandomSequences.py
@@ -1503,8 +1533,8 @@ if [[ "$SYNTHETIC_FEATURES" -eq "1" ]]; then
 fi
 #
 if [[ "$SYNTHETIC_CLASSIFICATION" -eq "1" ]]; then
-	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications for mutated sequences!"
-	cd Mutations
-	#to do
+	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications for synthetic sequences!"
+	cd SyntheticSequences
+	python3 classification.py
 	cd ..
 fi
