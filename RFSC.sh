@@ -1486,3 +1486,12 @@ if [[ "$MUTATE_CLASSIFICATION" -eq "1" ]]; then
 	#to do
 	cd ..
 fi
+#
+if [[ "$SYNTHETIC_GEN" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Mutating sequences from the 8 domains!"
+	cd SyntheticSequences
+		python3 getRandomSequences.py
+		python3 getRandomSequences.py -s
+	cd ..
+fi
+#
