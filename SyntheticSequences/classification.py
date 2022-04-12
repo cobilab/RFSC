@@ -30,7 +30,7 @@ def warn(*args, **kwargs):
     pass
 warnings.warn = warn
 
-def ReadTrainData():
+def ReadTrainData(test_list):
     #do not change this
     domains = {
         "Viral":0, 
@@ -48,16 +48,24 @@ def ReadTrainData():
         samples = csv.reader(file)
         next(samples)
         for row in samples:
-            X_train.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])])
-            y_train.append(domains[row[0]])
+            values=[float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])]
+            label=domains[row[0]]
+            line=[label]+values
+            if line noit in test_list:
+                X_train.append(values)
+                y_train.append(label)
     with open(os.path.join(training_path, "Test.csv"), 'r') as file:
         samples = csv.reader(file)
         next(samples)
         for row in samples:
-            X_train.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])])
-            y_train.append(domains[row[0]])
-
-    return np.array(X_train).astype('float32'), np.array(y_train).astype('int32')
+            values=[float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])]
+            label=domains[row[0]]
+            line=[label]+values
+            if line noit in test_list:
+                X_train.append(values)
+                y_train.append(label)
+    
+    return np.array(X_train).astype('float32'), np.array(y_train).astype('int32'), train_list
 
 
 def ReadTestData(filename):
@@ -80,7 +88,9 @@ def ReadTestData(filename):
             X_test.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])])
             y_test.append(domains[row[0]])
 
-    return np.array(X_test).astype('float32'), np.array(y_test).astype('int32')
+    test_list=[[y]+x for l,a in zip(y_test,X_test)]  
+
+    return np.array(X_test).astype('float32'), np.array(y_test).astype('int32'), test_list
 
 
 def Classify():
@@ -92,8 +102,8 @@ def Classify():
 
     domains = ["Viral", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrion", "Plastid"]
 
-    X_train, y_train = ReadTrainData()
-    X_test, y_test = ReadTestData(filename)
+    X_test, y_test, test_list = ReadTestData(filename)
+    X_train, y_train = ReadTrainData(test_list)
 
     model = XGBClassifier(max_depth=12, learning_rate=0.89, n_estimators=500, eval_metric='mlogloss')
     model.fit(X_train, y_train)
