@@ -25,6 +25,7 @@ from sklearn.metrics import classification_report
 
 training_path="../Analysis/KNN/"
 test_path="./features/"
+mutationLevels=["0","1","2","4","6","8","10"]
 
 def warn(*args, **kwargs):
     pass
@@ -84,7 +85,7 @@ def ReadTestData(filename):
 
 
 def Classify():
-    filename = str(sys.argv[1])
+    filename = "mutation_level_{}.csv".format(str(sys.argv[1]))
     if len(sys.argv) == 2:
         Mode="ALL"
     else:
@@ -146,6 +147,8 @@ if __name__ == "__main__":
         print("ERROR: Please run this script inside of Mutations/! There are relative paths defined in this code that need to be respected!")
     elif len(sys.argv) < 2:
         print("ERROR: Missing parameter: Mutation file with features")
+    elif sys.argv[1] not in mutationLevels:
+        print("ERROR: Mutation level not recognized!")
     else:
         warnings.filterwarnings(action='ignore', category=DeprecationWarning)
         Classify()
