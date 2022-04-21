@@ -1490,14 +1490,20 @@ fi
 if [[ "$MUTATE_FEATURES" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Computing features for mutated sequences!"
 	cd Mutations
-	#to do FICA ESTE
+	python3 computeFeatures.py
 	cd ..
 fi
 #
 if [[ "$MUTATE_CLASSIFICATION" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications for mutated sequences!"
-	cd Mutations
-	#to do
+	cd Mutations 
+	python3 doclassification.py 0
+	python3 doclassification.py 1
+	python3 doclassification.py 2
+	python3 doclassification.py 4
+	python3 doclassification.py 6
+	python3 doclassification.py 8
+	python3 doclassification.py 10
 	cd ..
 fi
 #
