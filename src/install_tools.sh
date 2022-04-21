@@ -33,6 +33,7 @@ conda install perl-io-socket-ssl perl-net-ssleay perl-lwp-protocol-https entrez-
 conda install -c bioconda orfm --yes
 #
 ./src/install_orf.sh
+chmod +x ./src/install_SoD.sh
 ./src/install_SoD.sh
 #
 pip install wheel
