@@ -9,7 +9,7 @@ from collections import Counter
 
 root = "./features/"
 mutName = "mutation_level_"
-percentages = [0,1,2,4,6,8,10]
+percentages = [1,2,4,6,8,10,0]
 tmpDir = os.path.join(root, "tmp/")
 sequencesDir = "./original_sequences/"
 
@@ -41,10 +41,14 @@ def getSequences(mutationLevel):
             }
 
             print(f"\tFile {fileName}")
-            filePath = join(sequencesDir, domain, fileName)
-            if isfile(filePath):
+            originalFilePath = join(sequencesDir, domain, fileName)
+            if isfile(originalFilePath):
                 if mutationLevel>0:
-                    mutate(mutationLevel, tmpPath, filePath, name)
+                    mutate(mutationLevel, tmpPath, originalFilePath, name)
+                else:
+                    os.system(f"cp {originalFilePath} {tmpPath}/{name}.fna.gz")
+                filePath = f"{tmpPath}/{name}.fna.gz"
+
                 os.system(f"../ORFs/orfm/orfm {filePath} > {tmpPath}/PROTEIN.fasta")
                 os.system(f'cat {tmpPath}/PROTEIN.fasta | grep -v ">" | tr -d -c "ACDEFGHIKLMNPQRSTVWY" > {tmpPath}/{name}.fna')
                 os.system(f"rm {tmpPath}/PROTEIN.fasta")
@@ -85,7 +89,8 @@ def getSequences(mutationLevel):
 def mutate(mutationLevel, tmpPath, filePath, name):
     os.system(f"cp {filePath} {tmpPath}/{name}.fna.gz")
     os.system(f"gunzip {tmpPath}/{name}.fna.gz")
-    os.system(f"gto_fasta_mutate -e {mutationLevel} -a < {tmpPath}/{name}.fna > {tmpPath}/Temporary.fna")
+    level = mutationLevel/100
+    os.system(f"gto_fasta_mutate -e {level} -a < {tmpPath}/{name}.fna > {tmpPath}/Temporary.fna")
     os.system(f"rm {tmpPath}/{name}.fna")
     os.system(f"mv {tmpPath}/Temporary.fna {tmpPath}/{name}.fna")
     os.system(f"gzip {tmpPath}/{name}.fna")
