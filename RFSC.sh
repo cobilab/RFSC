@@ -743,11 +743,11 @@ do
             MUTATE_GET=1;
             shift 1
         ;;
-		-cfea|--compute-features-mutation)
+		-cfem|--compute-features-mutation)
             MUTATE_FEATURES=1;
             shift 1
         ;;
-		-ccla|--compute-classification-mutation)
+		-cclm|--compute-classification-mutation)
             MUTATE_CLASSIFICATION=1;
             shift 1
         ;;
@@ -755,11 +755,11 @@ do
             SYNTHETIC_GET=1;
             shift 1
         ;;
-		-cfea|--compute-features-synthetic)
+		-cfes|--compute-features-synthetic)
 			SYNTHETIC_FEATURES=1;
 		    shift 1
         ;;
-		-ccla|--compute-classification-synthetic)
+		-ccls|--compute-classification-synthetic)
             SYNTHETIC_CLASSIFICATION=1;
             shift 1
         ;;
@@ -911,24 +911,24 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo -e "                          Gathers small set of sequences from the 8 domains        "
 	echo -e "                          (Randomly, if seed is changed)         					"
 	echo "                                                                             			"
-	echo "   -cfea, --compute-features-mutation													"
+	echo "   -cfem, --compute-features-mutation													"
 	echo -e "                          Compute features for mutated sequences         			"
 	echo "                                                                             			"
-	echo "   -ccla, --compute-classification-mutation											"
+	echo "   -cclm, --compute-classification-mutation											"
 	echo -e "                          Compute classification for mutated sequences         	"
 	echo "                                                                             			"
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo -e " \033[1;33m                   S Y N T H E T I C   D A T A                      \033[0m "
 	echo "                                                                             			"
-	echo "   -sget|--synthetic-getter                                                				"
+	echo "   -sget, --synthetic-getter                                                				"
 	echo -e "                          Gathers small set of sequences from the 8 domains        "
 	echo -e "                          (Randomly, if seed is changed)         					"
 	echo "                                                                             			"
-	echo "   -cfea|--compute-features-synthetic													"
+	echo "   -cfes, --compute-features-synthetic													"
 	echo -e "                          Creates synthetic sequences        			     		"
 	echo -e "                          Compute features for synthetic sequences         		"
 	echo "                                                                             			"
-	echo "   -ccla, -ccla|--compute-classification-synthetic									"
+	echo "   -ccls, --compute-classification-synthetic									"
 	echo -e "                          Compute classification for synthetic sequences         	"
 	echo "                                                                             			" 
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
