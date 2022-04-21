@@ -140,7 +140,6 @@ RUN_CLASSIFIERS_FLAG=0;
 RUN_CLASSIFIERS_MODE="";
 #
 MUTATE_GET=0;
-MUTATE_GEN=0;
 MUTATE_FEATURES=0;
 MUTATE_CLASSIFICATION=0;
 #
@@ -740,10 +739,6 @@ do
             MUTATE_GET=1;
             shift 1
         ;;
-		-gmut|--generate-mutation)
-            MUTATE_GEN=1;
-            shift 1
-        ;;
 		-cfea|--compute-features-mutation)
             MUTATE_FEATURES=1;
             shift 1
@@ -846,7 +841,7 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                                                                             "
 	echo "   -gad,  --gen-adapters  Generate FASTA file with adapters                  "
 	echo "                                                                             "
-	echo -e "   -synt, --synthetic \033[0;34m[FILE1]:[FILE3]\033[0m                                        "
+	echo -e "   -synt, --synthetic \033[0;34m[FILE1]:[FILE3]\033[0m                    "
 	echo "                          Generate a synthetical sequence using 3            "
 	echo "                          reference files for testing purposes               "
 	echo "                                                                             "
@@ -899,10 +894,6 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "   -mget, --mutate-getter                                                				"
 	echo -e "                          Gathers small set of sequences from the 8 domains        "
 	echo -e "                          (Randomly, if seed is changed)         					"
-	echo "                                                                             			"
-	echo "   -gmut, --generate-mutation															"
-	echo -e "                          Mutate sequences from the 8 domains        				"
-	echo -e "                          (Percentage of value in the mutation: 0, 1, 2, 4, 6, 8, 10)  "
 	echo "                                                                             			"
 	echo "   -cfea, --compute-features-mutation													"
 	echo -e "                          Compute features for mutated sequences         			"
@@ -1466,17 +1457,10 @@ if [[ "$MUTATE_GET" -eq "1" ]]; then
 	cd ..
 fi
 #
-if [[ "$MUTATE_GEN" -eq "1" ]]; then
-	echo -e "\033[1;34m[RFSC]\033[0m Mutating sequences from the 8 domains!"
-	cd Mutations
-	#to do
-	cd ..
-fi
-#
 if [[ "$MUTATE_FEATURES" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Computing features for mutated sequences!"
 	cd Mutations
-	#to do
+	#to do FICA ESTE
 	cd ..
 fi
 #
