@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 '''
-  Usage: python3 Mutations/classification.py File Accuracy
-         python3 Mutations/classification.py File F1Score
-         python3 Mutations/classification.py File
+  Usage: python3 SyntheticSequences/classification.py File Accuracy
+         python3 SyntheticSequences/classification.py File F1Score
+         python3 SyntheticSequences/classification.py File
 '''
 import warnings
 from xgboost import XGBClassifier 
@@ -25,7 +25,6 @@ from sklearn.metrics import classification_report
 
 training_path="../Analysis/KNN/"
 test_path="./features/"
-mutationLevels=["0","1","2","4","6","8","10"]
 
 def warn(*args, **kwargs):
     pass
@@ -88,13 +87,14 @@ def ReadTestData(filename):
         for row in samples:
             X_test.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])])
             y_test.append(domains[row[0]])
-    
+
     test_list=[[y]+x for l,a in zip(y_test,X_test)]  
+
     return np.array(X_test).astype('float32'), np.array(y_test).astype('int32'), test_list
 
 
 def Classify():
-    filename = "mutation_level_{}.csv".format(str(sys.argv[1]))
+    filename = str(sys.argv[1])
     if len(sys.argv) == 2:
         Mode="ALL"
     else:
@@ -156,8 +156,6 @@ if __name__ == "__main__":
         print("ERROR: Please run this script inside of Mutations/! There are relative paths defined in this code that need to be respected!")
     elif len(sys.argv) < 2:
         print("ERROR: Missing parameter: Mutation file with features")
-    elif sys.argv[1] not in mutationLevels:
-        print("ERROR: Mutation level not recognized!")
     else:
         warnings.filterwarnings(action='ignore', category=DeprecationWarning)
         Classify()
