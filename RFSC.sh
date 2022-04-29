@@ -146,6 +146,7 @@ MUTATE_CLASSIFICATION=0;
 SYNTHETIC_GET=0;
 SYNTHETIC_FEATURES=0;
 SYNTHETIC_CLASSIFICATION=0;
+COMPUTE_KRAKEN=0;
 #
 # ==================================================================
 # VERIFICATION FUNCTIONS
@@ -763,6 +764,10 @@ do
             SYNTHETIC_CLASSIFICATION=1;
             shift 1
         ;;
+		-ckra|--compute-kraken2)
+            COMPUTE_KRAKEN=1;
+            shift 1
+        ;;
 		-runAll|--run-all-classifiers)
 			RUN_CLASSIFIERS_FLAG=1;
 			if [[ -z $2 ]]; then
@@ -928,8 +933,12 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo -e "                          Creates synthetic sequences        			     		"
 	echo -e "                          Compute features for synthetic sequences         		"
 	echo "                                                                             			"
-	echo "   -ccls, --compute-classification-synthetic									"
+	echo "   -ccls, --compute-classification-synthetic											"
 	echo -e "                          Compute classification for synthetic sequences         	"
+	echo "                                                                             			"
+	echo "   -ckra, --compute-kraken2															"
+	echo -e "                          Compute synthetic sequences using Kraken2 				"
+	echo -e "						   (only for comparison purposes, requires Kraken2 installation)    "
 	echo "                                                                             			" 
 	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo -e " \033[1;33m                   D O W N L O A D    D A T A B A S E S                    \033[0m "
@@ -1526,5 +1535,16 @@ if [[ "$SYNTHETIC_CLASSIFICATION" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications for synthetic sequences!"
 	cd SyntheticSequences
 	python3 classification.py
+	cd ..
+fi
+#
+if [[ "$COMPUTE_KRAKEN" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications using Kraken2"
+	if ! [ -x "$(command -v kraken2)" ]; then
+        echo -e "\033[6;31mERROR\033[0;31m: kraken2 is not installed! Please follow the documentation of this tool!" >&2;
+        exit 1;
+    fi
+	cd SyntheticSequences/Kraken2
+	python3 computeWithKraken.py 
 	cd ..
 fi

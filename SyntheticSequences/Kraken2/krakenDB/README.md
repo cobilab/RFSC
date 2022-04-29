@@ -1,0 +1,2 @@
+You should download the Kraken2 database at: https://benlangmead.github.io/aws-indexes/k2 
+We used the Standard database containing "archaea, bacteria, viral, plasmid, human1, UniVec_Core" created at 5/17/2021, with 38.6GB.

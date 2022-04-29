@@ -21,3 +21,7 @@ Tests/predictions.py
 
 # Training IA Files
 test*
+
+
+SyntheticSequences/Kraken2/krakenDB/*
+!SyntheticSequences/Kraken2/krakenDB/README.md
