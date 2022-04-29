@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 '''
-  Usage: python3 SyntheticSequences/classification.py File Accuracy
-         python3 SyntheticSequences/classification.py File F1Score
-         python3 SyntheticSequences/classification.py File
+  Usage: python3 SyntheticSequences/classification.py Accuracy
+         python3 SyntheticSequences/classification.py F1Score
+         python3 SyntheticSequences/classification.py
 '''
 import warnings
 from xgboost import XGBClassifier 
@@ -25,6 +25,7 @@ from sklearn.metrics import classification_report
 
 training_path="../Analysis/KNN/"
 test_path="./features/"
+filename="synthetic_features.csv"
 
 def warn(*args, **kwargs):
     pass
@@ -51,7 +52,7 @@ def ReadTrainData(test_list):
             values=[float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])]
             label=domains[row[0]]
             line=[label]+values
-            if line noit in test_list:
+            if line not in test_list:
                 X_train.append(values)
                 y_train.append(label)
     with open(os.path.join(training_path, "Test.csv"), 'r') as file:
@@ -61,11 +62,11 @@ def ReadTrainData(test_list):
             values=[float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])]
             label=domains[row[0]]
             line=[label]+values
-            if line noit in test_list:
+            if line not in test_list:
                 X_train.append(values)
                 y_train.append(label)
     
-    return np.array(X_train).astype('float32'), np.array(y_train).astype('int32'), train_list
+    return np.array(X_train).astype('float32'), np.array(y_train).astype('int32')
 
 
 def ReadTestData(filename):
@@ -88,17 +89,15 @@ def ReadTestData(filename):
             X_test.append([float(row[1]),float(row[2]),float(row[3]),float(row[4]),float(row[5])])
             y_test.append(domains[row[0]])
 
-    test_list=[[y]+x for l,a in zip(y_test,X_test)]  
-
+    test_list=[[l]+a for l,a in zip(y_test,X_test)]  
     return np.array(X_test).astype('float32'), np.array(y_test).astype('int32'), test_list
 
 
 def Classify():
-    filename = str(sys.argv[1])
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 1:
         Mode="ALL"
     else:
-        Mode = str(sys.argv[2])
+        Mode = str(sys.argv[1])
 
     domains = ["Viral", "Bacteria", "Archaea", "Fungi", "Plant", "Protozoa", "Mitochondrion", "Plastid"]
 
@@ -154,8 +153,6 @@ def get_accuracy(predictions):
 if __name__ == "__main__":
     if "/" in sys.argv[0]:
         print("ERROR: Please run this script inside of Mutations/! There are relative paths defined in this code that need to be respected!")
-    elif len(sys.argv) < 2:
-        print("ERROR: Missing parameter: Mutation file with features")
     else:
         warnings.filterwarnings(action='ignore', category=DeprecationWarning)
         Classify()
