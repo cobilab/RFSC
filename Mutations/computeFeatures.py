@@ -79,7 +79,7 @@ def getSequences(mutationLevel):
                         csvEntry["AA"] = str(float(fp.read().split(" ")[15]))
                     except:
                         print(f"WARNING: AA of {name} was not computed! Maybe lack of free space in RAM!")
-                        csvEntry["AA"] = ""
+                        csvEntry["AA"] = 1
                 os.system(f"rm {tmpPath}/*")
 
                 #content.append(csvEntry.values())
