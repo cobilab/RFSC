@@ -21,4 +21,6 @@ ADD . /RFSC
 
 WORKDIR /RFSC
 
+RUN ./RFSC.sh --install
+
 CMD tail -f >> /dev/null

@@ -139,6 +139,14 @@ ACCURACY_GNB_TRAIN_PERC="";
 RUN_CLASSIFIERS_FLAG=0;
 RUN_CLASSIFIERS_MODE="";
 #
+MUTATE_GET=0;
+MUTATE_FEATURES=0;
+MUTATE_CLASSIFICATION=0;
+#
+SYNTHETIC_GET=0;
+SYNTHETIC_FEATURES=0;
+SYNTHETIC_CLASSIFICATION=0;
+COMPUTE_KRAKEN=0;
 #
 # ==================================================================
 # VERIFICATION FUNCTIONS
@@ -732,6 +740,34 @@ do
 			ACCURACY_GNB_TRAIN_PERC="$4"
 			shift 4
 		;;
+		-mget|--mutate-getter)
+            MUTATE_GET=1;
+            shift 1
+        ;;
+		-cfem|--compute-features-mutation)
+            MUTATE_FEATURES=1;
+            shift 1
+        ;;
+		-cclm|--compute-classification-mutation)
+            MUTATE_CLASSIFICATION=1;
+            shift 1
+        ;;
+		-sget|--synthetic-getter)
+            SYNTHETIC_GET=1;
+            shift 1
+        ;;
+		-cfes|--compute-features-synthetic)
+			SYNTHETIC_FEATURES=1;
+		    shift 1
+        ;;
+		-ccls|--compute-classification-synthetic)
+            SYNTHETIC_CLASSIFICATION=1;
+            shift 1
+        ;;
+		-ckra|--compute-kraken2)
+            COMPUTE_KRAKEN=1;
+            shift 1
+        ;;
 		-runAll|--run-all-classifiers)
 			RUN_CLASSIFIERS_FLAG=1;
 			if [[ -z $2 ]]; then
@@ -826,7 +862,7 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                                                                             "
 	echo "   -gad,  --gen-adapters  Generate FASTA file with adapters                  "
 	echo "                                                                             "
-	echo -e "   -synt, --synthetic \033[0;34m[FILE1]:[FILE3]\033[0m                                        "
+	echo -e "   -synt, --synthetic \033[0;34m[FILE1]:[FILE3]\033[0m                    "
 	echo "                          Generate a synthetical sequence using 3            "
 	echo "                          reference files for testing purposes               "
 	echo "                                                                             "
@@ -873,6 +909,38 @@ if [ "$SHOW_HELP" -eq "1" ]; then
 	echo "                          Use entrez efetch to fetch a nucleotide using an ID"
 	echo "                          ID: Nucleotide Identifier                          "
 	echo "                          FOLDER: Destination Folder (RefBased or RefFree)   "
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
+	echo -e " \033[1;33m                      M U T A T E D   D A T A                      \033[0m "
+	echo "                                                                             			"
+	echo "   -mget, --mutate-getter                                                				"
+	echo -e "                          Gathers small set of sequences from the 8 domains        "
+	echo -e "                          (Randomly, if seed is changed)         					"
+	echo "                                                                             			"
+	echo "   -cfem, --compute-features-mutation													"
+	echo -e "                          Compute features for mutated sequences         			"
+	echo "                                                                             			"
+	echo "   -cclm, --compute-classification-mutation											"
+	echo -e "                          Compute classification for mutated sequences         	"
+	echo "                                                                             			"
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
+	echo -e " \033[1;33m                   S Y N T H E T I C   D A T A                      \033[0m "
+	echo "                                                                             			"
+	echo "   -sget, --synthetic-getter                                                				"
+	echo -e "                          Gathers small set of sequences from the 8 domains        "
+	echo -e "                          (Randomly, if seed is changed)         					"
+	echo "                                                                             			"
+	echo "   -cfes, --compute-features-synthetic													"
+	echo -e "                          Creates synthetic sequences        			     		"
+	echo -e "                          Compute features for synthetic sequences         		"
+	echo "                                                                             			"
+	echo "   -ccls, --compute-classification-synthetic											"
+	echo -e "                          Compute classification for synthetic sequences         	"
+	echo "                                                                             			"
+	echo "   -ckra, --compute-kraken2															"
+	echo -e "                          Compute synthetic sequences using Kraken2 				"
+	echo -e "						   (only for comparison purposes, requires Kraken2 installation)    "
+	echo "                                                                             			" 
+	echo -e " \033[1;33m                - - - - - - - - - - - - - - - - - - - - - -                \033[0m "
 	echo -e " \033[1;33m                   D O W N L O A D    D A T A B A S E S                    \033[0m "
 	echo "                                                                             "
 	echo "   -dviral, --download-ref-virus                                                "
@@ -1420,3 +1488,63 @@ if [[ "$RUN_CLASSIFIERS_FLAG" -eq "1" ]]; then
 	fi
 fi
 #
+if [[ "$MUTATE_GET" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Gathering set of sequences!"
+	cd Mutations
+	python3 getRandomSequences.py
+	python3 getRandomSequences.py -s
+	cd ..
+fi
+#
+if [[ "$MUTATE_FEATURES" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Computing features for mutated sequences!"
+	cd Mutations
+	python3 computeFeatures.py
+	cd ..
+fi
+#
+if [[ "$MUTATE_CLASSIFICATION" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications for mutated sequences!"
+	cd Mutations 
+	python3 doclassification.py 0
+	python3 doclassification.py 1
+	python3 doclassification.py 2
+	python3 doclassification.py 4
+	python3 doclassification.py 6
+	python3 doclassification.py 8
+	python3 doclassification.py 10
+	cd ..
+fi
+#
+if [[ "$SYNTHETIC_GET" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Getting sequences from the 8 domains!"
+	cd SyntheticSequences
+		python3 getRandomSequences.py
+		python3 getRandomSequences.py -s
+	cd ..
+fi
+#
+if [[ "$SYNTHETIC_FEATURES" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Generating Synthetic Features and Computing their features!"
+	cd SyntheticSequences
+	python3 computeSyntheticFeatures.py
+	cd ..
+fi
+#
+if [[ "$SYNTHETIC_CLASSIFICATION" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications for synthetic sequences!"
+	cd SyntheticSequences
+	python3 classification.py
+	cd ..
+fi
+#
+if [[ "$COMPUTE_KRAKEN" -eq "1" ]]; then
+	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications using Kraken2"
+	if ! [ -x "$(command -v kraken2)" ]; then
+        echo -e "\033[6;31mERROR\033[0;31m: kraken2 is not installed! Please follow the documentation of this tool!" >&2;
+        exit 1;
+    fi
+	cd SyntheticSequences/Kraken2
+	python3 computeWithKraken.py 
+	cd ../..
+fi

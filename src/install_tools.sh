@@ -33,6 +33,8 @@ conda install perl-io-socket-ssl perl-net-ssleay perl-lwp-protocol-https entrez-
 conda install -c bioconda orfm --yes
 #
 ./src/install_orf.sh
+chmod +x ./src/install_SoD.sh
+./src/install_SoD.sh
 #
 pip install wheel
 pip install pandas
@@ -42,7 +44,8 @@ pip install keras
 pip install tensorflow
 pip install xgboost
 pip install matplotlib
-
+pip install wget
+pip install bs4
 #
 #Check_Installation "FALCON";
 #Check_Installation "gto";
@@ -59,4 +62,3 @@ pip install matplotlib
 #Check_Installation "art_illumina";
 #Check_Installation "seqtk";
 #Check_Installation "./ORFs/ORFfinder";
-

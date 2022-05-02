@@ -6,8 +6,13 @@
 import sys, csv, math
 import os, os.path
 import numpy as np
+from os.path import join
 
-Type = str(sys.argv[1]) # DNA | AA
+Type = None
+root = "../"
+if len(sys.argv)==2:
+    root=""
+    Type = str(sys.argv[1]) # DNA | AA
 
 maxvaluefound_length_DNA = 0
 maxvaluefound_length_AA = 0
@@ -38,7 +43,7 @@ plastid_nm_length, plastid_pt_length = [], []
 
 def virusData(virus_nm_length, virus_pt_length):
     # Viral CSV files
-    with open('Analysis/LengthSeq/Virus/length_Viral.csv', 'r') as file:
+    with open(join(root,'Analysis/LengthSeq/Virus/length_Viral.csv'), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             virus_nm_length.append(row[0].split("\t")[1])
@@ -52,7 +57,7 @@ def virusData(virus_nm_length, virus_pt_length):
 
 def bacteriaData(bacteria_nm_length, bacteria_pt_length):
     # Bacterias CSV files
-    with open('Analysis/LengthSeq/Bacteria/length_Bacteria.csv', 'r') as file:
+    with open(join(root,'Analysis/LengthSeq/Bacteria/length_Bacteria.csv'), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             bacteria_nm_length.append(row[0].split("\t")[1])
@@ -66,7 +71,7 @@ def bacteriaData(bacteria_nm_length, bacteria_pt_length):
 
 def archaeaData(archaea_nm_length, archaea_pt_length):
     # Archaeas CSV files
-    with open('Analysis/LengthSeq/Archaea/length_Archaea.csv', 'r') as file:
+    with open(join(root,'Analysis/LengthSeq/Archaea/length_Archaea.csv'), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             archaea_nm_length.append(row[0].split("\t")[1])
@@ -80,7 +85,7 @@ def archaeaData(archaea_nm_length, archaea_pt_length):
 
 def fungiData(fungi_nm_length, fungi_pt_length):
     # Fungis CSV files
-    with open('Analysis/LengthSeq/Fungi/length_Fungi.csv', 'r') as file:
+    with open(join(root,'Analysis/LengthSeq/Fungi/length_Fungi.csv'), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             fungi_nm_length.append(row[0].split("\t")[1])
@@ -94,7 +99,7 @@ def fungiData(fungi_nm_length, fungi_pt_length):
 
 def plantData(plant_nm_length, plant_pt_length):
     # Plants CSV files
-    with open('Analysis/LengthSeq/Plant/length_Plant.csv', 'r') as file:
+    with open(join(root,'Analysis/LengthSeq/Plant/length_Plant.csv'), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             plant_nm_length.append(row[0].split("\t")[1])
@@ -108,7 +113,7 @@ def plantData(plant_nm_length, plant_pt_length):
 
 def protozoaData(protozoa_nm_length, protozoa_pt_length):
     # Protozoa CSV files
-    with open('Analysis/LengthSeq/Protozoa/length_Protozoa.csv', 'r') as file:
+    with open(join(root,'Analysis/LengthSeq/Protozoa/length_Protozoa.csv'), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             protozoa_nm_length.append(row[0].split("\t")[1])
@@ -122,7 +127,7 @@ def protozoaData(protozoa_nm_length, protozoa_pt_length):
 
 def mitoData(mito_nm_length, mito_pt_length):
     # Mitochondrial CSV files
-    with open('Analysis/LengthSeq/Mitochondrial/length_Mitochondrial.csv', 'r') as file:
+    with open(join(root,'Analysis/LengthSeq/Mitochondrial/length_Mitochondrial.csv'), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             mito_nm_length.append(row[0].split("\t")[1])
@@ -136,7 +141,7 @@ def mitoData(mito_nm_length, mito_pt_length):
 
 def plastidData(plastid_nm_length, plastid_pt_length):
     # Plastid CSV files
-    with open('Analysis/LengthSeq/Plastid/length_Plastid.csv', 'r') as file:
+    with open(join(root,'Analysis/LengthSeq/Plastid/length_Plastid.csv'), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             plastid_nm_length.append(row[0].split("\t")[1])

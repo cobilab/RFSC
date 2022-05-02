@@ -1,0 +1,48 @@
+GNB
+               precision    recall  f1-score   support
+
+        Viral     0.4211    0.8000    0.5517        20
+     Bacteria     0.6250    0.2500    0.3571        20
+      Archaea     0.6111    0.5500    0.5789        20
+        Fungi     0.0556    0.0500    0.0526        20
+        Plant     0.3571    1.0000    0.5263        20
+     Protozoa     0.0000    0.0000    0.0000        20
+Mitochondrion     0.6818    0.7500    0.7143        20
+      Plastid     0.0000    0.0000    0.0000        20
+
+     accuracy                         0.4250       160
+    macro avg     0.3440    0.4250    0.3476       160
+ weighted avg     0.3440    0.4250    0.3476       160
+
+KNN
+               precision    recall  f1-score   support
+
+        Viral     0.4615    0.9000    0.6102        20
+     Bacteria     0.5833    0.3500    0.4375        20
+      Archaea     0.6111    0.5500    0.5789        20
+        Fungi     0.2105    0.2000    0.2051        20
+        Plant     0.3529    0.9000    0.5070        20
+     Protozoa     0.0000    0.0000    0.0000        20
+Mitochondrion     0.9444    0.8500    0.8947        20
+      Plastid     0.3333    0.0500    0.0870        20
+
+     accuracy                         0.4750       160
+    macro avg     0.4372    0.4750    0.4151       160
+ weighted avg     0.4372    0.4750    0.4151       160
+
+XGB
+               precision    recall  f1-score   support
+
+        Viral     0.4872    0.9500    0.6441        20
+     Bacteria     0.7500    0.4500    0.5625        20
+      Archaea     0.7333    0.5500    0.6286        20
+        Fungi     0.3077    1.0000    0.4706        20
+        Plant     0.1429    0.0500    0.0741        20
+     Protozoa     0.0000    0.0000    0.0000        20
+Mitochondrion     1.0000    0.7500    0.8571        20
+      Plastid     0.6667    0.2000    0.3077        20
+
+     accuracy                         0.4938       160
+    macro avg     0.5110    0.4938    0.4431       160
+ weighted avg     0.5110    0.4938    0.4431       160
+
