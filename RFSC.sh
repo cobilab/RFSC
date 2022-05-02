@@ -1546,5 +1546,5 @@ if [[ "$COMPUTE_KRAKEN" -eq "1" ]]; then
     fi
 	cd SyntheticSequences/Kraken2
 	python3 computeWithKraken.py 
-	cd ..
+	cd ../..
 fi

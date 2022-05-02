@@ -2,6 +2,8 @@ import sys
 from os import listdir, path, makedirs
 from os.path import isfile, join
 from pprint import pprint
+import os
+import warnings
 
 dbLocation="./krakenDB"
 synth_sequences="../synth_merged_sequences/"
@@ -28,7 +30,7 @@ def compute():
     for domain in listdir(synth_sequences):
         rights = right[domain]
         total = right[domain] + wrong[domain]
-        acc = right/total
+        acc = rights/total
         print(f"Accuracy for {domain}: {acc}")
 
 if __name__ == "__main__":
