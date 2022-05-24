@@ -1,0 +1,11 @@
+100.00	1	0	974	974	R	1	root
+100.00	1	0	972	972	R1	131567	  cellular organisms
+100.00	1	0	934	934	D	2	    Bacteria
+100.00	1	0	453	453	D1	1783272	      Terrabacteria group
+100.00	1	0	424	424	P	201174	        Actinobacteria
+100.00	1	0	415	415	C	1760	          Actinomycetia
+100.00	1	0	156	156	O	85011	            Streptomycetales
+100.00	1	0	156	156	F	2062	              Streptomycetaceae
+100.00	1	0	149	149	G	1883	                Streptomyces
+100.00	1	0	47	47	G1	2593676	                  unclassified Streptomyces
+100.00	1	1	2	2	S	1488356	                    Streptomyces sp. MBT27

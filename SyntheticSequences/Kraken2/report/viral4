@@ -1,0 +1,10 @@
+100.00	1	0	2	2	R	1	root
+100.00	1	0	2	2	R1	131567	  cellular organisms
+100.00	1	0	2	2	D	2	    Bacteria
+100.00	1	0	1	1	D1	1783272	      Terrabacteria group
+100.00	1	0	1	1	P	1239	        Firmicutes
+100.00	1	0	1	1	C	91061	          Bacilli
+100.00	1	0	1	1	O	1385	            Bacillales
+100.00	1	0	1	1	F	186823	              Alicyclobacillaceae
+100.00	1	0	1	1	G	1129704	                Kyrpidia
+100.00	1	1	1	1	S	2055160	                  Kyrpidia spormannii

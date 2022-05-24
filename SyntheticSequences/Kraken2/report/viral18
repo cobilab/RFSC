@@ -1,0 +1,11 @@
+100.00	1	0	2	2	R	1	root
+100.00	1	0	2	2	R1	131567	  cellular organisms
+100.00	1	0	2	2	D	2	    Bacteria
+100.00	1	0	1	1	D1	1783272	      Terrabacteria group
+100.00	1	0	1	1	P	201174	        Actinobacteria
+100.00	1	0	1	1	C	1760	          Actinomycetia
+100.00	1	0	1	1	O	85004	            Bifidobacteriales
+100.00	1	0	1	1	F	31953	              Bifidobacteriaceae
+100.00	1	0	1	1	G	1678	                Bifidobacterium
+100.00	1	0	1	1	S	216816	                  Bifidobacterium longum
+100.00	1	1	1	1	S1	1679	                    Bifidobacterium longum subsp. longum
