@@ -1506,13 +1506,13 @@ fi
 if [[ "$MUTATE_CLASSIFICATION" -eq "1" ]]; then
 	echo -e "\033[1;34m[RFSC]\033[0m Computing classifications for mutated sequences!"
 	cd Mutations 
-	python3 doclassification.py 0
-	python3 doclassification.py 1
-	python3 doclassification.py 2
-	python3 doclassification.py 4
-	python3 doclassification.py 6
-	python3 doclassification.py 8
-	python3 doclassification.py 10
+	python3 classification.py 0
+	python3 classification.py 1
+	python3 classification.py 2
+	python3 classification.py 4
+	python3 classification.py 6
+	python3 classification.py 8
+	python3 classification.py 10
 	cd ..
 fi
 #
