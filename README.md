@@ -21,6 +21,8 @@ chmod +x RFSC.sh
 ```sh
 git clone https://github.com/cobilab/RFSC
 cd RFSC
+chmod +x RFSC.sh 
+chmod +777 src/*.sh
 docker-compose build
 docker-compose up -d && docker exec -it rfsc bash && docker-compose down
 chmod +x RFSC.sh 
