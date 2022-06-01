@@ -1,0 +1,11 @@
+100.00	1	0	243	243	R	1	root
+100.00	1	0	242	242	R1	131567	  cellular organisms
+100.00	1	0	224	224	D	2	    Bacteria
+100.00	1	0	108	108	P	1224	      Proteobacteria
+100.00	1	0	43	43	C	1236	        Gammaproteobacteria
+100.00	1	0	19	19	O	72274	          Pseudomonadales
+100.00	1	0	19	19	F	135621	            Pseudomonadaceae
+100.00	1	0	19	19	G	286	              Pseudomonas
+100.00	1	0	5	5	G1	136843	                Pseudomonas fluorescens group
+100.00	1	0	5	5	S	294	                  Pseudomonas fluorescens
+100.00	1	1	1	1	S1	743713	                    Pseudomonas fluorescens R124

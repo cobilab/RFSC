@@ -1,0 +1,11 @@
+100.00	1	0	3	3	R	1	root
+100.00	1	0	3	3	R1	131567	  cellular organisms
+100.00	1	0	3	3	D	2	    Bacteria
+100.00	1	0	1	1	D1	1783272	      Terrabacteria group
+100.00	1	0	1	1	P	1239	        Firmicutes
+100.00	1	0	1	1	C	186801	          Clostridia
+100.00	1	0	1	1	O	68295	            Thermoanaerobacterales
+100.00	1	0	1	1	F	543371	              Thermoanaerobacterales Family III. Incertae Sedis
+100.00	1	0	1	1	G	44000	                Caldicellulosiruptor
+100.00	1	0	1	1	S	413888	                  Caldicellulosiruptor hydrothermalis
+100.00	1	1	1	1	S1	632292	                    Caldicellulosiruptor hydrothermalis 108
