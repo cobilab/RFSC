@@ -36,8 +36,17 @@ def main(split=False):
         copySequences(selectedSequences["from_db"], locationOfDatabases, dstPathOfOriginalSequences)
 
 def _initialize():
+    if (not path.exists(join(locationOfDatabases, "NCBI-Plastid/NM-plastid/"))) or len(listdir(join(locationOfDatabases, "NCBI-Plastid/NM-plastid/" ))) == 0:
+        print("The plastid folder is empty, please download the database using the script:")
+        print("./RFSC.sh  --download-ref-plastid ")
+    if (not path.exists(join(locationOfDatabases, "NCBI-Mitochondrial/NM-mitochondrion/"))) or len(listdir(join(locationOfDatabases, "NCBI-Mitochondrial/NM-mitochondrion/" ))) == 0:
+        print("The mitochondrion folder is empty, please download the database using the script:")
+        print("./RFSC.sh  --download-ref-mitochondrial")
+        sys.exit()
     if not path.exists(dstPathOfOriginalSequences):
         makedirs(dstPathOfOriginalSequences)
+    
+    
 
 def splitSequences(selectedSequences, dstPathOfOriginalSequences):
     allFiles = [f for f in listdir(dstPathOfOriginalSequences) if isfile(join(dstPathOfOriginalSequences, f))]
