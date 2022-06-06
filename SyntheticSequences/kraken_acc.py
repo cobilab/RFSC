@@ -33,7 +33,7 @@ def compute():
 
 if __name__ == "__main__":
     if "/" in sys.argv[0]:
-        print("ERROR: Please run this script inside of Kraken2/! There are relative paths defined in this code that need to be respected!")
+        print("ERROR: Please run this script inside of SyntheticSequences/! There are relative paths defined in this code that need to be respected!")
     else:
         warnings.filterwarnings(action='ignore', category=DeprecationWarning)
         compute()
