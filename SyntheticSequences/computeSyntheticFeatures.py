@@ -18,7 +18,7 @@ import itertools
 sequencesDir = "./original_sequences/"
 mergedPath="./synth_merged_sequences"
 root = "./features/"
-sodPath="../SoD/"
+sodPath="../src/SoD/"
 
 synthName = "synthetic_features"
 percentages = [0,1,2,4,6,8,10]
@@ -64,6 +64,7 @@ def mergeAsSynthetic(toMergeList):
         os.system(f'{sodPath}SoD -u 7 a=1/1 d=1/100 -bs 50 -n {avgSz} -o {tmpSeqPath}/out.seq {tmpSeqPath}/output.seq')
         os.system(f'gto_fasta_from_seq < {tmpSeqPath}/out.seq > {tmpSeqPath}/{filename}')
         os.system(f'gzip {tmpSeqPath}/{filename}')
+        os.system(f'ls {tmpSeqPath}')
         os.replace(join(tmpSeqPath,filename + ".gz"),join(mergedPath,domain, filename + ".gz"))
         os.system(f'rm {tmpSeqPath}/output.seq {tmpSeqPath}/out.seq')
         counter+=1
