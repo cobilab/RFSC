@@ -7,16 +7,9 @@
 RFSC is a Reference-Free Sequence Classification Tool that using machine learning classifiers relies on an ensemble of experts in order to provide efficient classification in metagenomic contexts.
 
 
-## Instalation
+## <b>Installation</b>
 
-```sh
-git clone https://github.com/cobilab/RFSC
-cd RFSC
-chmod +x RFSC.sh 
-./RFSC.sh --install
-```
-
-## Using Docker
+### <b>Using Docker</b>
 
 ```sh
 git clone https://github.com/cobilab/RFSC
@@ -25,17 +18,77 @@ chmod +x RFSC.sh
 chmod +777 src/*.sh
 docker-compose build
 docker-compose up -d && docker exec -it rfsc bash && docker-compose down
-chmod +x RFSC.sh 
-./RFSC.sh --install
+./RFSC.sh --install #install tools
 ```
 
-## Build NCBI Reference Databases
+### <b>Build NCBI Reference Databases</b>
 
 ```sh
 ./RFSC.sh --build-ref-virus --build-ref-bacteria --build-ref-archaea --build-ref-protozoa \ --build-ref-fungi --build-ref-plant --build-ref-mitochondrial --build-ref-plastid
 ```
 
-## Running Examples
+or 
+
+```sh
+./RFSC.sh -dviral -dbact -darch -dprot -dfung -dplan -dmito -dplas
+```
+
+# Global Results
+
+### <b>Real Sequence Classification </b>
+Obtain classification report of KNN, GNB and XGBoost. 
+
+```sh
+./RFSC.sh -runAll #classification report table
+./RFSC.sh -runAll F1Score # Weighted-averaged F1-score
+./RFSC.sh -runAll Accuracy # Average Accuracy
+```
+
+### <b>Generate mutated data, and perform classification</b>
+
+#### To gathers a small set of sequences from the 8 domains, run the script:
+```sh
+./RFSC.sh -mget  
+```
+
+#### To compute features for mutated sequences, run the script:
+```sh
+./RFSC.sh -cfem
+```
+
+#### To perform classification for all mutated sequences, run the script:
+```sh
+./RFSC.sh -cclm 
+```
+
+### <b>Synthetic Sequence Generation and Classification</b>
+
+##### To gathers a small set of sequences from the 8 domains, run the script:
+```sh
+./RFSC.sh -sget
+```
+
+#### To create the synthetic hybrid sequences and compute their features, run the script:
+
+```sh
+./RFSC.sh -cfes
+```
+
+#### To perform classification of the synthetic hybrid sequences and obtain classification report of KNN, GNB and XGBoost, run the script:
+
+```sh
+./RFSC.sh -ccls
+```
+
+#### To compute synthetic sequences using Kraken2, run the script:
+#####  (only for comparison purposes, requires Kraken2 installation)
+##### You should download the Kraken2 database at: https://benlangmead.github.io/aws-indexes/k2 
+##### To obtain the same results, use the Standard database containing "archaea, bacteria, viral, plasmid, human1, UniVec_Core" created at 5/17/2021, with 38.6GB.
+```sh
+./RFSC.sh -ckra
+```
+
+# Running Examples
 
 ##### ✨ Generate a synthetic sequence and subsequently proceed to a Reference-Free Reconstruction of the same:
 &nbsp;
@@ -64,17 +117,9 @@ chmod +x RFSC.sh
 ./RFSC.sh --run-xgboost
 ```
 
-##### ✨ Run all classifiers on real data 
-&nbsp;
-```sh
-./RFSC.sh --run-all-classifiers Accuracy
-./RFSC.sh --run-all-classifiers F1Score
-./RFSC.sh --run-all-classifiers
-```
-
 ## System Requirements
 
-Laptop computer running Linux Ubuntu (for example, 18.04 LTS or higher) with GCC (https://gcc.gnu.org), Conda (https://docs.conda.io) and CMake (https://cmake.org) installed. The hardware must contain at least 8 GB of RAM, and a 800 GB disk. In the case of the this, if the database is not re-built, it is only needed near 10 GB of space.
+Laptop computer running Linux Ubuntu (for example, 18.04 LTS or higher) with GCC (https://gcc.gnu.org), Conda (https://docs.conda.io) and CMake (https://cmake.org) installed. The hardware must contain at least 32 GB of RAM, and a 800 GB disk. In the case of the this, if the database is not re-built, it is only needed near 10 GB of space.
 
 ## Tools Integrated in RFSC
 
