@@ -117,7 +117,7 @@ Obtain classification report of KNN, GNB and XGBoost.
 ./RFSC.sh --run-xgboost
 ```
 
-## System Requirements
+# System Requirements
 
 Laptop computer running Linux Ubuntu (for example, 18.04 LTS or higher) with GCC (https://gcc.gnu.org), Conda (https://docs.conda.io) and CMake (https://cmake.org) installed. The hardware must contain at least 32 GB of RAM, and a 800 GB disk. In the case of the this, if the database is not re-built, it is only needed near 10 GB of space.
 
@@ -125,19 +125,19 @@ Laptop computer running Linux Ubuntu (for example, 18.04 LTS or higher) with GCC
 
 | Tool | URL |
 | ------ | ------ |
-| Trimmomatic | [http://www.usadellab.org/cms/?page=trimmomatic][PlDb] |
-| FASTP | [https://github.com/OpenGene/fastp][PlGh] |
-| metaSPAdes | [https://cab.spbu.ru/software/meta-spades/][PlGd] |
-| GTO | [https://cobilab.github.io/gto/][PlOd] |
+| AC | [https://github.com/cobilab/ac][PlGa] |
+| Blastn | [https://blast.ncbi.nlm.nih.gov/Blast.cgi][PlOd] |
+| Cryfa | [https://github.com/cobilab/cryfa][PlGd] |
 | Entrez | [https://www.ncbi.nlm.nih.gov/genome][PlMe] |
 | FALCON-meta | [https://github.com/cobilab/falcon][PlGa] |
-| Cryfa | [https://github.com/cobilab/cryfa][PlGd] |
-| Blastn | [https://blast.ncbi.nlm.nih.gov/Blast.cgi][PlOd] |
+| FASTP | [https://github.com/OpenGene/fastp][PlGh] |
+| GeCo3 | [https://github.com/cobilab/geco3][PlMe] |
+| GTO | [https://cobilab.github.io/gto/][PlOd] |
+| metaSPAdes | [https://cab.spbu.ru/software/meta-spades/][PlGd] |
 | ORFfinder | [https://www.ncbi.nlm.nih.gov/orffinder/][PlMe] |
 | ORFM | [https://github.com/wwood/OrfM][PlGa] |
-| GeCo3 | [https://github.com/cobilab/geco3][PlMe] |
-| AC | [https://github.com/cobilab/ac][PlGa] |
-
+| SoD | [https://github.com/pratas/SoD.git][PlDb] |
+| Trimmomatic | [http://www.usadellab.org/cms/?page=trimmomatic][PlDb] |
 ## License
 
 GNU GPL
