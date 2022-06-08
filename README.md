@@ -21,7 +21,7 @@ docker-compose up -d && docker exec -it rfsc bash && docker-compose down
 ./RFSC.sh --install #install tools
 ```
 
-### <b>Build NCBI Reference Databases</b>
+### <b>Download NCBI Reference Databases</b>
 
 ```sh
 ./RFSC.sh --build-ref-virus --build-ref-bacteria --build-ref-archaea --build-ref-protozoa \ --build-ref-fungi --build-ref-plant --build-ref-mitochondrial --build-ref-plastid
@@ -80,7 +80,7 @@ Obtain classification report of KNN, GNB and XGBoost.
 ./RFSC.sh -ccls
 ```
 
-#### To compute synthetic sequences using Kraken2, run the script:
+#### To perform classification of the synthetic sequences using Kraken2, run the script:
 #####  (only for comparison purposes, requires Kraken2 installation)
 ##### You should download the Kraken2 database at: https://benlangmead.github.io/aws-indexes/k2 
 ##### To obtain the same results, use the Standard database containing "archaea, bacteria, viral, plasmid, human1, UniVec_Core" created at 5/17/2021, with 38.6GB.
