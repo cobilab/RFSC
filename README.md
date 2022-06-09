@@ -120,7 +120,7 @@ Obtain classification report of KNN, GNB and XGBoost.
 # System Requirements
 
 Laptop computer running Linux Ubuntu (for example, 18.04 LTS or higher) with GCC (https://gcc.gnu.org), Conda (https://docs.conda.io) and CMake (https://cmake.org) installed. The hardware must contain at least 32 GB of RAM, and a 800 GB disk. In the case of the this, if the database is not re-built, it is only needed near 10 GB of space.
-
+Furthermore, to perform installation correctly, docker and docker compose must be installed in the system (https://docs.docker.com/engine/install/ubuntu/).
 ## Tools Integrated in RFSC
 
 | Tool | URL |
