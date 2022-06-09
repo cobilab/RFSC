@@ -279,8 +279,8 @@ PARSE_SCAFFOLDS() {
 #
 FALCON_SELECT_DOMAIN() {
 	if [[ "$FALCON_DOMAIN" == "Viral" ]]; then
-		FALCON_TARGET_DOMAIN="DB-viral"
-		if [[ ! -f "References/NCBI-Virus/DB-viral.fa" ]]; then
+		FALCON_TARGET_DOMAIN="DB"
+		if [[ ! -f "References/NCBI-Virus/DB.fa" ]]; then
         	echo -e "\033[1;34m[RFSC]\033[0m DB-viral.fa was not found! Aborting..."
 			exit 0
     	fi
