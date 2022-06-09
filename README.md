@@ -6,6 +6,10 @@
 
 RFSC is a Reference-Free Sequence Classification Tool that using machine learning classifiers relies on an ensemble of experts in order to provide efficient classification in metagenomic contexts.
 
+# System Requirements
+
+Laptop computer running Linux Ubuntu (for example, 18.04 LTS or higher) with GCC (https://gcc.gnu.org), Conda (https://docs.conda.io) and CMake (https://cmake.org) installed. The hardware must contain at least 32 GB of RAM, and a 800 GB disk. In the case of the this, if the database is not re-built, it is only needed near 10 GB of space.
+Furthermore, to perform installation correctly, docker and docker compose must be installed in the system (https://docs.docker.com/engine/install/ubuntu/).
 
 ## <b>Installation</b>
 
@@ -108,6 +112,7 @@ Obtain classification report of KNN, GNB and XGBoost.
 ```sh
 ./RFSC.sh --threads 8 --set-len-cov 100 3 --set-threshold-max-min 70 1 --run-falcon SO Viral
 ```
+###### Results show the list of possible candidates for this sequence.
 
 
 ##### ✨ Reference-Free Classification, using XBoost 
@@ -116,11 +121,8 @@ Obtain classification report of KNN, GNB and XGBoost.
 ./RFSC.sh --threads 8 --efetch-fasta 155971 RefFree
 ./RFSC.sh --run-xgboost
 ```
+###### The expected result of this test is viral sequence.
 
-# System Requirements
-
-Laptop computer running Linux Ubuntu (for example, 18.04 LTS or higher) with GCC (https://gcc.gnu.org), Conda (https://docs.conda.io) and CMake (https://cmake.org) installed. The hardware must contain at least 32 GB of RAM, and a 800 GB disk. In the case of the this, if the database is not re-built, it is only needed near 10 GB of space.
-Furthermore, to perform installation correctly, docker and docker compose must be installed in the system (https://docs.docker.com/engine/install/ubuntu/).
 ## Tools Integrated in RFSC
 
 | Tool | URL |
